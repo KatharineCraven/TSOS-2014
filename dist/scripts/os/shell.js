@@ -53,6 +53,17 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
 
+            //date
+            sc = new TSOS.ShellCommand(this.shellDate, "date", "- Displays the date.");
+            this.commandList[this.commandList.length] = sc;
+
+            //whereami
+            sc = new TSOS.ShellCommand(this.shellWhereAmI, "whereami", "- Ask where you are.");
+            this.commandList[this.commandList.length] = sc;
+
+            sc = new TSOS.ShellCommand(this.shellImSad, "imsad", "- Type if you are feeling sad.");
+            this.commandList[this.commandList.length] = sc;
+
             // processes - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -262,6 +273,27 @@ var TSOS;
             } else {
                 _StdOut.putText("Usage: prompt <string>  Please supply a string.");
             }
+        };
+
+        Shell.prototype.shellDate = function () {
+            _StdOut.putText(new Date().toDateString());
+        };
+
+        Shell.prototype.shellWhereAmI = function () {
+            _StdOut.putText("Somewhere with an internet connection, probably.");
+        };
+
+        Shell.prototype.shellImSad = function () {
+            _StdOut.putText("Do not be sad. Here is a kitten:");
+            _StdOut.advanceLine();
+            _StdOut.advanceLine();
+            _StdOut.putText("   /\\/\\");
+            _StdOut.advanceLine();
+            _StdOut.putText(" =( o.o )=");
+            _StdOut.advanceLine();
+            _StdOut.putText("   >   <");
+            _StdOut.advanceLine();
+            _StdOut.putText("===============");
         };
         return Shell;
     })();
