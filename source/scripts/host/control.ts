@@ -30,12 +30,17 @@ module TSOS {
         public static hostInit(): void {
             // Get a global reference to the canvas.  TODO: Move this stuff into a Display Device Driver, maybe?
             _Canvas = <HTMLCanvasElement>document.getElementById('display');
+            _CanvasTwo = <HTMLCanvasElement>document.getElementById('taskBarDisplay');
 
             // Get a global reference to the drawing context.
             _DrawingContext = _Canvas.getContext('2d');
+            _DrawingContextTwo = _CanvasTwo.getContext('2d');
 
             // Enable the added-in canvas text functions (see canvastext.ts for provenance and details).
             CanvasTextFunctions.enable(_DrawingContext);   // Text functionality is now built in to the HTML5 canvas. But this is old-school, and fun.
+            CanvasTextFunctions.enable(_DrawingContextTwo);
+            _DrawingContextTwo.font = "18px Arial";
+            _DrawingContextTwo.fillStyle = "#BDAEC6";
 
             // Clear the log text box.
             // Use the TypeScript cast to HTMLInputElement

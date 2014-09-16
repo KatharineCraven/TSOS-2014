@@ -64,6 +64,10 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellImSad, "imsad", "- Type if you are feeling sad.");
             this.commandList[this.commandList.length] = sc;
 
+            // status <string>
+            sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Sets status message.");
+            this.commandList[this.commandList.length] = sc;
+
             // processes - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -276,7 +280,7 @@ var TSOS;
         };
 
         Shell.prototype.shellDate = function () {
-            _StdOut.putText(new Date().toDateString());
+            _StdOut.putText(new Date().toLocaleString());
         };
 
         Shell.prototype.shellWhereAmI = function () {
@@ -294,6 +298,10 @@ var TSOS;
             _StdOut.putText("   >   <");
             _StdOut.advanceLine();
             _StdOut.putText("===============");
+        };
+
+        Shell.prototype.shellStatus = function (args) {
+            _StatusMessage = args;
         };
         return Shell;
     })();

@@ -86,6 +86,12 @@ module TSOS {
             sc = new ShellCommand(this.shellImSad, "imsad", "- Type if you are feeling sad.")
             this.commandList[this.commandList.length] = sc;
 
+            // status <string>
+            sc = new ShellCommand(this.shellStatus,
+                                  "status",
+                                  "<string> - Sets status message.");
+            this.commandList[this.commandList.length] = sc;
+
             // processes - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -291,7 +297,7 @@ module TSOS {
         }
 
         public shellDate(){
-        	_StdOut.putText(new Date().toDateString());
+        	_StdOut.putText(new Date().toLocaleString());
         }
 
         public shellWhereAmI(){
@@ -310,6 +316,10 @@ module TSOS {
             _StdOut.advanceLine();
             _StdOut.putText("===============");
 
+        }
+
+        public shellStatus(args){
+        	_StatusMessage = args;
         }
 
     }

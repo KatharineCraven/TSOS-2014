@@ -37,6 +37,9 @@ var _DefaultFontFamily = "sans";        // Ignored, I think. The was just a plac
 var _DefaultFontSize = 13;
 var _FontHeightMargin = 4;              // Additional space added to font size when advancing a line.
 
+var _CanvasTwo: HTMLCanvasElement = null;
+var _DrawingContextTwo = null;
+var _StatusMessage = "";
 
 var _Trace: boolean = true;  // Default the OS trace to be on.
 

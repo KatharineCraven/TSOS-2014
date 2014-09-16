@@ -34,6 +34,10 @@ var _DefaultFontFamily = "sans";
 var _DefaultFontSize = 13;
 var _FontHeightMargin = 4;
 
+var _CanvasTwo = null;
+var _DrawingContextTwo = null;
+var _StatusMessage = "";
+
 var _Trace = true;
 
 // The OS Kernel and its queues.
