@@ -53,6 +53,9 @@ var _KernelInputQueue = null;
 var _StdIn  = null;
 var _StdOut = null;
 
+//UserCode
+var _UserCode;
+
 // UI
 var _Console: TSOS.Console;
 var _OsShell: TSOS.Shell;

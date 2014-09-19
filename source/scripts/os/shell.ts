@@ -92,6 +92,9 @@ module TSOS {
                                   "<string> - Sets status message.");
             this.commandList[this.commandList.length] = sc;
 
+            sc = new ShellCommand(this.shellLoad, "load", "- Checks if input is valid.");
+            this.commandList[this.commandList.length] = sc;
+
             // processes - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -320,6 +323,33 @@ module TSOS {
 
         public shellStatus(args){
         	_StatusMessage = args;
+        }
+
+        public shellLoad(){
+            var s = _UserCode.value;
+            var v = "valid";
+            var c = '';
+            var cList = ['\n', ' ', 'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+            for (var i = 0; i< s.length; i++){
+                c = s.charAt(i);
+                
+                for(var j = 0; j < cList.length; j++){
+                    if( c ==  cList[j]){
+                        v = "valid";
+                        break;
+                    }
+
+                    v = "invalid";
+                }
+
+                if (v == "invalid"){
+                    break;
+                }
+            }
+
+            _StdOut.putText(v);
+                
         }
 
     }
