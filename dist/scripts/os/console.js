@@ -47,6 +47,14 @@ var TSOS;
 
                     // ... and reset our buffer.
                     this.buffer = "";
+                } else if (chr === String.fromCharCode(8)) {
+                    //backspace
+                    if (this.buffer != ">") {
+                        ;
+                        this.currentXPosition = TSOS.CanvasTextFunctions.backspace((this.buffer.charAt(this.buffer.length - 1)), this.currentYPosition, this.buffer);
+
+                        this.buffer = this.buffer.substring(0, this.buffer.length - 1);
+                    }
                 } else {
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...

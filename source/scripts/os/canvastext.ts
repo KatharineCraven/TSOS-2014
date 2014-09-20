@@ -193,5 +193,13 @@ module TSOS {
                 return CanvasTextFunctions.draw( ctx, font,size,x-w/2,y,text);
             };
         }
+
+        public static backspace(c, y, b){
+            var z= this.measure(_DefaultFontFamily, _DefaultFontSize, b);
+            var w = this.measure(_DefaultFontFamily, _DefaultFontSize, c);
+           _DrawingContext.clearRect(12.48+z-w, y-21, w, 26);
+           return 12.48+z-w;
+
+        }
     }
 }
