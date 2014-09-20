@@ -41,6 +41,10 @@ var _CanvasTwo: HTMLCanvasElement = null;
 var _DrawingContextTwo = null;
 var _StatusMessage = "";
 
+var _TempCan: HTMLCanvasElement = null;
+var _TempContext = null;
+var _ConsoleDiv = null;
+
 var _Trace: boolean = true;  // Default the OS trace to be on.
 
 // The OS Kernel and its queues.

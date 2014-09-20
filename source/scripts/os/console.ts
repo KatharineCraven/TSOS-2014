@@ -77,6 +77,16 @@ module TSOS {
             this.currentXPosition = 0;
             this.currentYPosition += _DefaultFontSize + _FontHeightMargin;
             // TODO: Handle scrolling. (Project 1)
+
+            if(this.currentYPosition > 480){
+                _TempCan.width = _Canvas.width;
+                _TempCan.height = _Canvas.height+ 17;
+                _TempContext.drawImage(_Canvas, 0 ,0);
+                _Canvas.height = _Canvas.height+ 17;
+                _DrawingContext.drawImage(_TempCan, 0, 0);
+                _ConsoleDiv.scrollTop = _ConsoleDiv.scrollHeight;
+            }
+
         }
     }
  }

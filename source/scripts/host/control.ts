@@ -31,10 +31,12 @@ module TSOS {
             // Get a global reference to the canvas.  TODO: Move this stuff into a Display Device Driver, maybe?
             _Canvas = <HTMLCanvasElement>document.getElementById('display');
             _CanvasTwo = <HTMLCanvasElement>document.getElementById('taskBarDisplay');
+            _TempCan = <HTMLCanvasElement>document.createElement('canvas');
 
             // Get a global reference to the drawing context.
             _DrawingContext = _Canvas.getContext('2d');
             _DrawingContextTwo = _CanvasTwo.getContext('2d');
+            _TempContext = _TempCan.getContext('2d');
 
             // Enable the added-in canvas text functions (see canvastext.ts for provenance and details).
             CanvasTextFunctions.enable(_DrawingContext);   // Text functionality is now built in to the HTML5 canvas. But this is old-school, and fun.
@@ -51,6 +53,8 @@ module TSOS {
             (<HTMLInputElement> document.getElementById("btnStartOS")).focus();
 
             _UserCode = (<HTMLInputElement> document.getElementById("taProgramInput"));
+
+            _ConsoleDiv = document.getElementById('divConsole');
 
             // Check for our testing and enrichment core.
             if (typeof Glados === "function") {

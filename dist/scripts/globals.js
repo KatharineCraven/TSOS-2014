@@ -38,6 +38,10 @@ var _CanvasTwo = null;
 var _DrawingContextTwo = null;
 var _StatusMessage = "";
 
+var _TempCan = null;
+var _TempContext = null;
+var _ConsoleDiv = null;
+
 var _Trace = true;
 
 // The OS Kernel and its queues.

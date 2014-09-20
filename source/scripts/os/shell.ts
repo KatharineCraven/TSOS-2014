@@ -240,6 +240,7 @@ module TSOS {
         public shellCls(args) {
             _StdOut.clearScreen();
             _StdOut.resetXY();
+            _Canvas.height = 500;
         }
 
         public shellMan(args) {

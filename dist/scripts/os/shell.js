@@ -223,6 +223,7 @@ var TSOS;
         Shell.prototype.shellCls = function (args) {
             _StdOut.clearScreen();
             _StdOut.resetXY();
+            _Canvas.height = 500;
         };
 
         Shell.prototype.shellMan = function (args) {
