@@ -95,6 +95,9 @@ module TSOS {
             sc = new ShellCommand(this.shellLoad, "load", "- Checks if input is valid.");
             this.commandList[this.commandList.length] = sc;
 
+            sc = new ShellCommand(this.shellBSOD, "bsod", "- Kernel Trap Test");
+            this.commandList[this.commandList.length] = sc;
+
             // processes - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -393,6 +396,10 @@ module TSOS {
 
             _StdOut.putText(v);
                 
+        }
+
+        public shellBSOD(){
+            _Kernel.krnTrapError("Testing Trap");
         }
 
     }

@@ -40,6 +40,7 @@ var _FontHeightMargin = 4;              // Additional space added to font size w
 var _CanvasTwo: HTMLCanvasElement = null;
 var _DrawingContextTwo = null;
 var _StatusMessage = "";
+var _BSODD = new Image(); //blue screen of death
 
 var _TempCan: HTMLCanvasElement = null;
 var _TempContext = null;

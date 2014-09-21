@@ -71,6 +71,9 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Checks if input is valid.");
             this.commandList[this.commandList.length] = sc;
 
+            sc = new TSOS.ShellCommand(this.shellBSOD, "bsod", "- Kernel Trap Test");
+            this.commandList[this.commandList.length] = sc;
+
             // processes - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -372,6 +375,10 @@ var TSOS;
             }
 
             _StdOut.putText(v);
+        };
+
+        Shell.prototype.shellBSOD = function () {
+            _Kernel.krnTrapError("Testing Trap");
         };
         return Shell;
     })();

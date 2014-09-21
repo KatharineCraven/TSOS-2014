@@ -58,6 +58,7 @@ module TSOS {
 
         public krnShutdown() {
             this.krnTrace("begin shutdown OS");
+
             // TODO: Check for running processes.  Alert if there are some, alert and stop.  Else...
             // ... Disable the Interrupts.
             this.krnTrace("Disabling the interrupts.");
@@ -67,6 +68,7 @@ module TSOS {
             // More?
             //
             this.krnTrace("end shutdown OS");
+
         }
 
 
@@ -173,7 +175,13 @@ module TSOS {
 
         public krnTrapError(msg) {
             Control.hostLog("OS ERROR - TRAP: " + msg);
+            _BSODD.src = 'BSOD.jpg';
             // TODO: Display error on console, perhaps in some sort of colored screen. (Perhaps blue?)
+            _StdOut.clearScreen();
+            _StdOut.resetXY();
+            _Canvas.height = 500;
+            _DrawingContext.drawImage(_BSODD, 0, 0, 500, 500);
+
             this.krnShutdown();
         }
     }

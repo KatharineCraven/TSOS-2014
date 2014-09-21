@@ -37,6 +37,7 @@ var _FontHeightMargin = 4;
 var _CanvasTwo = null;
 var _DrawingContextTwo = null;
 var _StatusMessage = "";
+var _BSODD = new Image();
 
 var _TempCan = null;
 var _TempContext = null;
