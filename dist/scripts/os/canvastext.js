@@ -106,8 +106,15 @@ var TSOS;
         CanvasTextFunctions.backspace = function (c, y, b) {
             var z = this.measure(_DefaultFontFamily, _DefaultFontSize, b);
             var w = this.measure(_DefaultFontFamily, _DefaultFontSize, c);
-            _DrawingContext.clearRect(12.48 + z - w, y - 21, w, 26);
+            _DrawingContext.clearRect(12.48 + z - w, y + 10, w + 1, -23.5);
             return 12.48 + z - w;
+        };
+
+        CanvasTextFunctions.cmdHistory = function (y, buff, cmd) {
+            var w = this.measure(_DefaultFontFamily, _DefaultFontSize, buff);
+            _DrawingContext.clearRect(12.48, y + 10, w, -23.5);
+            _DrawingContext.drawText(_DefaultFontFamily, _DefaultFontSize, 12.48, y, cmd);
+            return cmd;
         };
         CanvasTextFunctions.letters = {
             ' ': { width: 16, points: [] },

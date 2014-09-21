@@ -17,6 +17,8 @@ module TSOS {
                     public currentFontSize = _DefaultFontSize,
                     public currentXPosition = 0,
                     public currentYPosition = _DefaultFontSize,
+                    public commandHistory = [""],
+                    public cmdCounter = 0,
                     public buffer = "") {
 
         }
@@ -24,6 +26,12 @@ module TSOS {
         public init(): void {
             this.clearScreen();
             this.resetXY();
+            this.commandHistory = [""];
+        }
+
+        public addCommandHistory(cmd): void{
+            this.commandHistory.push(cmd);
+            this.cmdCounter = this.commandHistory.length;
         }
 
         private clearScreen(): void {
@@ -40,12 +48,17 @@ module TSOS {
                 // Get the next character from the kernel input queue.
                 var chr = _KernelInputQueue.dequeue();
                 // Check to see if it's "special" (enter or ctrl-c) or "normal" (anything else that the keyboard device driver gave us).
+
                 if (chr === String.fromCharCode(13)) { //     Enter key
                     // The enter key marks the end of a console command, so ...
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
+                    this.buffer = Utils.trim(this.buffer);
+                    this.buffer = this.buffer.toLowerCase();
+                    this.addCommandHistory(this.buffer);
                     // ... and reset our buffer.
                     this.buffer = "";
+                    this.cmdCounter = this.commandHistory.length;
                 } else if(chr === String.fromCharCode(8)){ 
                     //backspace
                     if (this.buffer != ">"){;
@@ -53,6 +66,27 @@ module TSOS {
                             CanvasTextFunctions.backspace((this.buffer.charAt(this.buffer.length-1)), this.currentYPosition, this.buffer);
 
                         this.buffer = this.buffer.substring(0, this.buffer.length-1)
+                    }
+
+                }else if(chr == String.fromCharCode(40)){
+                    this.cmdCounter++;
+                    if(this.cmdCounter < this.commandHistory.length){
+                        this.buffer = CanvasTextFunctions.cmdHistory(this.currentYPosition, this.buffer, this.commandHistory[this.cmdCounter]);
+
+                    }else if(this.cmdCounter == this.commandHistory.length){
+                        this.buffer = CanvasTextFunctions.cmdHistory(this.currentYPosition, this.buffer, "");
+
+                    }else{
+                        this.cmdCounter = this.commandHistory.length;
+                    }
+
+                }else if(chr == String.fromCharCode(38)){
+                    this.cmdCounter--;
+                    if(this.cmdCounter >= 0){
+                        this.buffer = CanvasTextFunctions.cmdHistory(this.currentYPosition, this.buffer, this.commandHistory[this.cmdCounter]);
+
+                    }else{
+                        this.cmdCounter = 0;
                     }
 
                 }else {
