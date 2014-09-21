@@ -82,6 +82,33 @@ var TSOS;
             _StdOut.putText(this.promptStr);
         };
 
+        Shell.prototype.autoComplete = function () {
+            var possibles = [];
+            var l = _StdOut.buffer.length;
+            for (var i = 0; i < this.commandList.length; i++) {
+                if (_StdOut.buffer === this.commandList[i].command.substring(0, l)) {
+                    possibles.push(this.commandList[i].command);
+                }
+            }
+
+            if (possibles.length == 0) {
+                _StdOut.advanceLine();
+                _StdOut.putText("No suggestions.");
+                _StdOut.advanceLine();
+            } else if (possibles.length == 1) {
+                _StdOut.buffer = TSOS.CanvasTextFunctions.cmdHistory(_StdOut.currentYPosition, _StdOut.buffer, possibles[0]);
+            } else {
+                _StdOut.advanceLine();
+                _StdOut.putText("Did you mean...");
+                _StdOut.advanceLine();
+
+                for (i = 0; i < possibles.length; i++) {
+                    _StdOut.putText(possibles[0]);
+                    _StdOut.advanceLine();
+                }
+            }
+        };
+
         Shell.prototype.handleInput = function (buffer) {
             _Kernel.krnTrace("Shell Command~" + buffer);
 

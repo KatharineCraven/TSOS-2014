@@ -85,6 +85,8 @@ var TSOS;
                     } else {
                         this.cmdCounter = 0;
                     }
+                } else if (chr == String.fromCharCode(9)) {
+                    _OsShell.autoComplete();
                 } else {
                     // This is a "normal" character, so ...
                     // ... draw it on the screen...

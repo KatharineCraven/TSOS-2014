@@ -107,6 +107,34 @@ module TSOS {
             _StdOut.putText(this.promptStr);
         }
 
+        public autoComplete(){
+            var possibles = [];
+            var l = _StdOut.buffer.length;
+            for (var i =0; i< this.commandList.length; i++){
+                if(_StdOut.buffer === this.commandList[i].command.substring(0,l)){
+                    possibles.push(this.commandList[i].command);
+                }
+            }
+
+            if(possibles.length == 0){
+                _StdOut.advanceLine();
+                _StdOut.putText("No suggestions.");
+                _StdOut.advanceLine();
+            }else if (possibles.length == 1){
+                _StdOut.buffer = CanvasTextFunctions.cmdHistory(_StdOut.currentYPosition, _StdOut.buffer, possibles[0]);
+            }else{
+                _StdOut.advanceLine();
+                _StdOut.putText("Did you mean...");
+                _StdOut.advanceLine();
+
+                for(i=0; i< possibles.length; i++){
+                    _StdOut.putText(possibles[0]);
+                    _StdOut.advanceLine();
+                }
+            }
+            
+        }
+
         public handleInput(buffer) {
             _Kernel.krnTrace("Shell Command~" + buffer);
             //
