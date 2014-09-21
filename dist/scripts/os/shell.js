@@ -85,27 +85,40 @@ var TSOS;
         Shell.prototype.autoComplete = function () {
             var possibles = [];
             var l = _StdOut.buffer.length;
-            for (var i = 0; i < this.commandList.length; i++) {
-                if (_StdOut.buffer === this.commandList[i].command.substring(0, l)) {
-                    possibles.push(this.commandList[i].command);
-                }
-            }
 
-            if (possibles.length == 0) {
-                _StdOut.advanceLine();
-                _StdOut.putText("No suggestions.");
-                _StdOut.advanceLine();
-            } else if (possibles.length == 1) {
-                _StdOut.buffer = TSOS.CanvasTextFunctions.cmdHistory(_StdOut.currentYPosition, _StdOut.buffer, possibles[0]);
+            if (l != 0) {
+                for (var i = 0; i < this.commandList.length; i++) {
+                    if (_StdOut.buffer === this.commandList[i].command.substring(0, l)) {
+                        possibles.push(this.commandList[i].command);
+                    }
+                }
+
+                if (possibles.length == 0) {
+                    _StdOut.advanceLine();
+                    _StdOut.putText("No suggestions.");
+                    _StdOut.advanceLine();
+                    _StdOut.buffer = "";
+                    this.putPrompt();
+                } else if (possibles.length == 1) {
+                    _StdOut.buffer = TSOS.CanvasTextFunctions.cmdHistory(_StdOut.currentYPosition, _StdOut.buffer, possibles[0]);
+                    _StdOut.currentXPosition = TSOS.CanvasTextFunctions.measure(_DefaultFontFamily, _DefaultFontSize, _StdOut.buffer) + 12.48;
+                } else {
+                    _StdOut.advanceLine();
+                    _StdOut.putText("Did you mean...");
+                    _StdOut.advanceLine();
+
+                    for (i = 0; i < possibles.length; i++) {
+                        _StdOut.putText(possibles[i]);
+                        _StdOut.advanceLine();
+                    }
+                    _StdOut.buffer = "";
+                    this.putPrompt();
+                }
             } else {
                 _StdOut.advanceLine();
-                _StdOut.putText("Did you mean...");
+                _StdOut.putText("Nothing to autoComplete.");
                 _StdOut.advanceLine();
-
-                for (i = 0; i < possibles.length; i++) {
-                    _StdOut.putText(possibles[0]);
-                    _StdOut.advanceLine();
-                }
+                this.putPrompt();
             }
         };
 
