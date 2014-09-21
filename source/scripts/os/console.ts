@@ -19,6 +19,7 @@ module TSOS {
                     public currentYPosition = _DefaultFontSize,
                     public commandHistory = [""],
                     public cmdCounter = 0,
+                    public prevX = [],
                     public buffer = "") {
 
         }
@@ -41,6 +42,7 @@ module TSOS {
         private resetXY(): void {
             this.currentXPosition = 0;
             this.currentYPosition = this.currentFontSize;
+            this.prevX= [];
         }
 
         public handleInput(): void {
@@ -112,6 +114,11 @@ module TSOS {
             // UPDATE: Even though we are now working in TypeScript, char and string remain undistinguished.
             if (text !== "") {
                 // Draw the text at the current X and Y coordinates.
+                var x = text.length/2;
+                if(CanvasTextFunctions.measure(this.currentFont, this.currentFontSize, text) > (500 -this.currentXPosition)){
+                    this.advanceLine();
+                }
+
                 _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text);
                 // Move the current X position.
                 var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
@@ -120,6 +127,7 @@ module TSOS {
          }
 
         public advanceLine(): void {
+            this.prevX.push(this.currentXPosition);
             this.currentXPosition = 0;
             this.currentYPosition += _DefaultFontSize + _FontHeightMargin;
             // TODO: Handle scrolling. (Project 1)

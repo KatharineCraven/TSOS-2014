@@ -92,9 +92,11 @@ module TSOS {
                                   "<string> - Sets status message.");
             this.commandList[this.commandList.length] = sc;
 
+            //load user program
             sc = new ShellCommand(this.shellLoad, "load", "- Checks if input is valid.");
             this.commandList[this.commandList.length] = sc;
 
+            //blue screen of death
             sc = new ShellCommand(this.shellBSOD, "bsod", "- Kernel Trap Test");
             this.commandList[this.commandList.length] = sc;
 

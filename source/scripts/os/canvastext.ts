@@ -153,6 +153,11 @@ module TSOS {
 
             for (var i = 0; i < len; i++) {
                 var c = CanvasTextFunctions.letter(str.charAt(i));
+
+                if((500 - _StdOut.currentXPosition) < this.measure(_DefaultFontFamily, _DefaultFontSize, c)){
+                    _StdOut.advanceLine();
+                }
+
                 if (!c) {
                     continue;
                 }
@@ -195,9 +200,27 @@ module TSOS {
         }
 
         public static backspace(c, y, b){
+
             var z= this.measure(_DefaultFontFamily, _DefaultFontSize, b);
             var w = this.measure(_DefaultFontFamily, _DefaultFontSize, c);
+
+            if(z >= 500){
+
+                while(z>500){
+                    z = z-500;
+                }
+
+                z += w -12.48;    
+            }
+
+
            _DrawingContext.clearRect(12.48+z-w, y+10, w+1, -23.5);
+
+            if(_StdOut.currentXPosition <= w){
+                _DrawingContext.clearRect(0, y+10, w+1, -23.5);
+                _StdOut.currentYPosition -= (_DefaultFontSize + _FontHeightMargin);
+                z = _StdOut.prevX.pop() +w - 12.48;
+            }
            return 12.48+z-w;
 
         }

@@ -8,13 +8,14 @@ Note: This is not the Shell.  The Shell is the "command line interface" (CLI) or
 var TSOS;
 (function (TSOS) {
     var Console = (function () {
-        function Console(currentFont, currentFontSize, currentXPosition, currentYPosition, commandHistory, cmdCounter, buffer) {
+        function Console(currentFont, currentFontSize, currentXPosition, currentYPosition, commandHistory, cmdCounter, prevX, buffer) {
             if (typeof currentFont === "undefined") { currentFont = _DefaultFontFamily; }
             if (typeof currentFontSize === "undefined") { currentFontSize = _DefaultFontSize; }
             if (typeof currentXPosition === "undefined") { currentXPosition = 0; }
             if (typeof currentYPosition === "undefined") { currentYPosition = _DefaultFontSize; }
             if (typeof commandHistory === "undefined") { commandHistory = [""]; }
             if (typeof cmdCounter === "undefined") { cmdCounter = 0; }
+            if (typeof prevX === "undefined") { prevX = []; }
             if (typeof buffer === "undefined") { buffer = ""; }
             this.currentFont = currentFont;
             this.currentFontSize = currentFontSize;
@@ -22,6 +23,7 @@ var TSOS;
             this.currentYPosition = currentYPosition;
             this.commandHistory = commandHistory;
             this.cmdCounter = cmdCounter;
+            this.prevX = prevX;
             this.buffer = buffer;
         }
         Console.prototype.init = function () {
@@ -42,6 +44,7 @@ var TSOS;
         Console.prototype.resetXY = function () {
             this.currentXPosition = 0;
             this.currentYPosition = this.currentFontSize;
+            this.prevX = [];
         };
 
         Console.prototype.handleInput = function () {
@@ -108,6 +111,11 @@ var TSOS;
             // UPDATE: Even though we are now working in TypeScript, char and string remain undistinguished.
             if (text !== "") {
                 // Draw the text at the current X and Y coordinates.
+                var x = text.length / 2;
+                if (TSOS.CanvasTextFunctions.measure(this.currentFont, this.currentFontSize, text) > (500 - this.currentXPosition)) {
+                    this.advanceLine();
+                }
+
                 _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text);
 
                 // Move the current X position.
@@ -117,6 +125,7 @@ var TSOS;
         };
 
         Console.prototype.advanceLine = function () {
+            this.prevX.push(this.currentXPosition);
             this.currentXPosition = 0;
             this.currentYPosition += _DefaultFontSize + _FontHeightMargin;
 

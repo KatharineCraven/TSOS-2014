@@ -68,9 +68,11 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Sets status message.");
             this.commandList[this.commandList.length] = sc;
 
+            //load user program
             sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Checks if input is valid.");
             this.commandList[this.commandList.length] = sc;
 
+            //blue screen of death
             sc = new TSOS.ShellCommand(this.shellBSOD, "bsod", "- Kernel Trap Test");
             this.commandList[this.commandList.length] = sc;
 
