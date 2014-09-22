@@ -37,14 +37,14 @@ var _DefaultFontFamily = "sans";        // Ignored, I think. The was just a plac
 var _DefaultFontSize = 13;
 var _FontHeightMargin = 4;              // Additional space added to font size when advancing a line.
 
-var _CanvasTwo: HTMLCanvasElement = null;
-var _DrawingContextTwo = null;
-var _StatusMessage = "";
+var _CanvasTwo: HTMLCanvasElement = null; //canvas for graphic bar
+var _DrawingContextTwo = null; //canvas drawing context for graphic bar
+var _StatusMessage = ""; //status message
 var _BSODD = new Image(); //blue screen of death
 
-var _TempCan: HTMLCanvasElement = null;
-var _TempContext = null;
-var _ConsoleDiv = null;
+var _TempCan: HTMLCanvasElement = null; //used for canvas editing
+var _TempContext = null; //used for canvas editing
+var _ConsoleDiv = null; //DIV element.
 
 var _Trace: boolean = true;  // Default the OS trace to be on.
 

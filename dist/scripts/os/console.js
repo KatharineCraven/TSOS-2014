@@ -111,7 +111,7 @@ var TSOS;
             // UPDATE: Even though we are now working in TypeScript, char and string remain undistinguished.
             if (text !== "") {
                 // Draw the text at the current X and Y coordinates.
-                var x = text.length / 2;
+                //in progress attempt to linewrap
                 if (TSOS.CanvasTextFunctions.measure(this.currentFont, this.currentFontSize, text) > (500 - this.currentXPosition)) {
                     this.advanceLine();
                 }

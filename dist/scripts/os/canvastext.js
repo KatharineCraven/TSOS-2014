@@ -55,6 +55,7 @@ var TSOS;
             for (var i = 0; i < len; i++) {
                 var c = CanvasTextFunctions.letter(str.charAt(i));
 
+                //in progress line wrapping
                 if ((500 - _StdOut.currentXPosition) < this.measure(_DefaultFontFamily, _DefaultFontSize, c)) {
                     _StdOut.advanceLine();
                 }
@@ -108,6 +109,7 @@ var TSOS;
             };
         };
 
+        //backspace works on a single line, does not work perfectly for line wrap except for W.
         CanvasTextFunctions.backspace = function (c, y, b) {
             var z = this.measure(_DefaultFontFamily, _DefaultFontSize, b);
             var w = this.measure(_DefaultFontFamily, _DefaultFontSize, c);
@@ -130,6 +132,7 @@ var TSOS;
             return 12.48 + z - w;
         };
 
+        //command history handler
         CanvasTextFunctions.cmdHistory = function (y, buff, cmd) {
             var w = this.measure(_DefaultFontFamily, _DefaultFontSize, buff);
             _DrawingContext.clearRect(12.48, y + 10, w, -23.5);

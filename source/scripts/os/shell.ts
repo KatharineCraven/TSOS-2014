@@ -355,6 +355,7 @@ module TSOS {
         	_StdOut.putText("Somewhere with an internet connection, probably.")
         }
 
+        //Kitty for when you are sad
         public shellImSad(){
         	_StdOut.putText("Do not be sad. Here is a kitten:");
             _StdOut.advanceLine();
@@ -366,23 +367,29 @@ module TSOS {
             _StdOut.putText("   >   <");
             _StdOut.advanceLine();
             _StdOut.putText("===============");
-
         }
 
         public shellStatus(args){
         	_StatusMessage = args;
         }
 
+        //loads user input
         public shellLoad(){
             var s = _UserCode.value;
             var v = "valid";
             var c = '';
             var cList = ['\n', ' ', 'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+            var notSpace = 0;
 
             for (var i = 0; i< s.length; i++){
                 c = s.charAt(i);
+
+                if((c != ' ') && (c != '\n')){
+                    notSpace++;
+                }
                 
                 for(var j = 0; j < cList.length; j++){
+
                     if( c ==  cList[j]){
                         v = "valid";
                         break;
@@ -396,8 +403,11 @@ module TSOS {
                 }
             }
 
-            _StdOut.putText(v);
-                
+            if(notSpace%2 != 0){
+                v = "invalid";
+            }
+
+            _StdOut.putText(v);        
         }
 
         public shellBSOD(){

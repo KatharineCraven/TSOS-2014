@@ -73,6 +73,7 @@ var TSOS;
             This is NOT the same as a TIMER, which causes an interrupt and is handled like other interrupts.
             This, on the other hand, is the clock pulse from the hardware (or host) that tells the kernel
             that it has to look for interrupts and process them if it finds any.                           */
+            //status message
             _DrawingContextTwo.clearRect(0, 0, 500, 100);
             _DrawingContextTwo.fillText(new Date().toLocaleString() + ",  Status: " + _StatusMessage, 8, 30);
 
@@ -162,6 +163,8 @@ var TSOS;
 
         Kernel.prototype.krnTrapError = function (msg) {
             TSOS.Control.hostLog("OS ERROR - TRAP: " + msg);
+
+            //blue screan of death image
             _BSODD.src = 'BSOD.jpg';
 
             // TODO: Display error on console, perhaps in some sort of colored screen. (Perhaps blue?)

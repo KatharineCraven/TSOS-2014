@@ -170,10 +170,11 @@ module TSOS {
 
                 }
             _KernelInputQueue.enqueue(chr);
-            }else if((keyCode == 40) || (keyCode == 38) ){
+            }else if((keyCode == 40) || (keyCode == 38) ){ //up down arrows
                 chr = String.fromCharCode(keyCode);
                 _KernelInputQueue.enqueue(chr);
             }else if(keyCode == 9){
+                //tab
                 chr = String.fromCharCode(keyCode);
                 _KernelInputQueue.enqueue(chr);
             }

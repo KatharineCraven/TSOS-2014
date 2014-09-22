@@ -154,6 +154,7 @@ module TSOS {
             for (var i = 0; i < len; i++) {
                 var c = CanvasTextFunctions.letter(str.charAt(i));
 
+                //in progress line wrapping
                 if((500 - _StdOut.currentXPosition) < this.measure(_DefaultFontFamily, _DefaultFontSize, c)){
                     _StdOut.advanceLine();
                 }
@@ -199,6 +200,7 @@ module TSOS {
             };
         }
 
+        //backspace works on a single line, does not work perfectly for line wrap except for W.
         public static backspace(c, y, b){
 
             var z= this.measure(_DefaultFontFamily, _DefaultFontSize, b);
@@ -225,6 +227,7 @@ module TSOS {
 
         }
 
+        //command history handler
         public static cmdHistory(y, buff, cmd){
             var w = this.measure(_DefaultFontFamily, _DefaultFontSize, buff);
             _DrawingContext.clearRect(12.48, y+10,  w, -23.5);
