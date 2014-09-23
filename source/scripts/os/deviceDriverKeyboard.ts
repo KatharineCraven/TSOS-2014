@@ -173,9 +173,9 @@ module TSOS {
             }else if((keyCode == 40) || (keyCode == 38) ){ //up down arrows
                 if(!isShifted){
                     if(keyCode == 40){
-                        chr = "upArrow";
-                    }else{
                         chr = "downArrow";
+                    }else{
+                        chr = "upArrow";
                     }
                     _KernelInputQueue.enqueue(chr);
                 }
