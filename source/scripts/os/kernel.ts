@@ -184,7 +184,7 @@ module TSOS {
             _StdOut.resetXY();
             _Canvas.height = 500;
 
-            //backup BSOD
+            //backup BSOD for image
             _DrawingContext.rect(0,0, 500, 500);
             _DrawingContext.fillStyle = 'blue';
             _DrawingContext.fill();
