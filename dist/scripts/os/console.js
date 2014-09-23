@@ -72,7 +72,7 @@ var TSOS;
 
                         this.buffer = this.buffer.substring(0, this.buffer.length - 1);
                     }
-                } else if (chr == String.fromCharCode(40)) {
+                } else if (chr == "upArrow") {
                     this.cmdCounter++;
                     if (this.cmdCounter < this.commandHistory.length) {
                         this.buffer = TSOS.CanvasTextFunctions.cmdHistory(this.currentYPosition, this.buffer, this.commandHistory[this.cmdCounter]);
@@ -81,7 +81,7 @@ var TSOS;
                     } else {
                         this.cmdCounter = this.commandHistory.length;
                     }
-                } else if (chr == String.fromCharCode(38)) {
+                } else if (chr == "downArrow") {
                     this.cmdCounter--;
                     if (this.cmdCounter >= 0) {
                         this.buffer = TSOS.CanvasTextFunctions.cmdHistory(this.currentYPosition, this.buffer, this.commandHistory[this.cmdCounter]);

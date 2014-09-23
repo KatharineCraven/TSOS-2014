@@ -59,7 +59,7 @@ module TSOS {
                             chr = String.fromCharCode(35);
                             break;
                         case 52:
-                            chr = String.fromCharCode(36);
+                            chr = '$';
                             break;
                         case 53:
                             chr = String.fromCharCode(37);
@@ -68,13 +68,13 @@ module TSOS {
                             chr = String.fromCharCode(94);
                             break;
                         case 55:
-                            chr = String.fromCharCode(38);
+                            chr = '&';
                             break;
                         case 56:
                             chr = String.fromCharCode(42);
                             break;
                         case 57:
-                            chr = String.fromCharCode(40);
+                            chr = '(';
                             break;
                         case 48:
                             chr = String.fromCharCode(41);
@@ -171,8 +171,15 @@ module TSOS {
                 }
             _KernelInputQueue.enqueue(chr);
             }else if((keyCode == 40) || (keyCode == 38) ){ //up down arrows
-                chr = String.fromCharCode(keyCode);
-                _KernelInputQueue.enqueue(chr);
+                if(!isShifted){
+                    if(keyCode == 40){
+                        chr = "upArrow";
+                    }else{
+                        chr = "downArrow";
+                    }
+                    _KernelInputQueue.enqueue(chr);
+                }
+
             }else if(keyCode == 9){
                 //tab
                 chr = String.fromCharCode(keyCode);
