@@ -168,9 +168,17 @@ var TSOS;
             _BSODD.src = 'BSOD.jpg';
 
             // TODO: Display error on console, perhaps in some sort of colored screen. (Perhaps blue?)
-            _StdOut.clearScreen();
+            //_StdOut.clearScreen();
             _StdOut.resetXY();
             _Canvas.height = 500;
+
+            //backup BSOD
+            _DrawingContext.rect(0, 0, 500, 500);
+            _DrawingContext.fillStyle = 'blue';
+            _DrawingContext.fill();
+            _StdOut.putText("ERROR");
+
+            //intended BSOD, only works when page is reset or program is halted and reset
             _DrawingContext.drawImage(_BSODD, 0, 0, 500, 500);
 
             this.krnShutdown();
