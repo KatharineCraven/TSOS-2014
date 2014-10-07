@@ -387,6 +387,10 @@ var TSOS;
                 v = "invalid";
             }
 
+            if (notSpace == 0) {
+                v = "invalid";
+            }
+
             _StdOut.putText(v);
         };
 
