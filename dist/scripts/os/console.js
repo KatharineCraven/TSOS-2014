@@ -132,11 +132,12 @@ var TSOS;
             // TODO: Handle scrolling. (Project 1)
             if (this.currentYPosition > 480) {
                 _TempCan.width = _Canvas.width;
-                _TempCan.height = _Canvas.height + 17;
+                _TempCan.height = _Canvas.height;
                 _TempContext.drawImage(_Canvas, 0, 0);
-                _Canvas.height = _Canvas.height + 17;
-                _DrawingContext.drawImage(_TempCan, 0, 0);
+                _Canvas.height = _Canvas.height;
+                _DrawingContext.drawImage(_TempCan, 0, -17);
                 _ConsoleDiv.scrollTop = _ConsoleDiv.scrollHeight;
+                this.currentYPosition -= 17;
             }
         };
         return Console;
