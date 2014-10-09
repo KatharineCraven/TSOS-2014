@@ -54,6 +54,8 @@ module TSOS {
 
             _UserCode = (<HTMLInputElement> document.getElementById("taProgramInput"));
 
+            _MemoryOutput = document.getElementById("taMemoryInput");
+
             _ConsoleDiv = document.getElementById('divConsole');
 
             // Check for our testing and enrichment core.

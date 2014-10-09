@@ -50,6 +50,7 @@ var _Kernel;
 var _KernelInterruptQueue = null;
 var _KernelBuffers = null;
 var _KernelInputQueue = null;
+var _MainMemory = null;
 
 // Standard input and output
 var _StdIn = null;
@@ -57,6 +58,9 @@ var _StdOut = null;
 
 //UserCode
 var _UserCode;
+
+//Memory
+var _MemoryOutput;
 
 // UI
 var _Console;
