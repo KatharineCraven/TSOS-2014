@@ -17,7 +17,6 @@ module TSOS {
         //
         public krnBootstrap() {      // Page 8. {
             Control.hostLog("bootstrap", "host");  // Use hostLog because we ALWAYS want this, even if _Trace is off.
-
             // Initialize our global queues.
             _KernelInterruptQueue = new Queue();  // A (currently) non-priority queue for interrupt requests (IRQs).
             _KernelBuffers = new Array();         // Buffers... for the kernel.
@@ -77,9 +76,8 @@ module TSOS {
                This is NOT the same as a TIMER, which causes an interrupt and is handled like other interrupts.
                This, on the other hand, is the clock pulse from the hardware (or host) that tells the kernel
                that it has to look for interrupts and process them if it finds any.                           */
-
                //memory output
-               _MemoryOutput.value = "Working on it";//_MainMemory.displayMem();
+               _MemoryOutput.value = _MainMemory.displayMem();
 
                //status message
                _DrawingContextTwo.clearRect(0, 0, 500, 100);

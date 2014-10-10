@@ -8,10 +8,9 @@ Memory Prototype
 module TSOS{
 
 	export class Memory{
-		constructor(public mem = [], public xc = 0){
-			for(var i = 0; i< 256; i++){
-				this.mem.push("Hi");
-			}
+
+		constructor(public mem = new Array(), public xc = 0){
+
 		}
 
 		public setLength(){
@@ -19,18 +18,35 @@ module TSOS{
 		}
 
 		public addToMem(hex){
-			this.xc += 1;
 			if(this.xc > 255){
 				this.xc = 0; //wrap memory for now
 			}
 
-			this.mem.push(hex);
+			this.mem[this.xc] =hex;
+
+			this.xc += 1;
 		}
 
 		public displayMem(){
-			var s = this.mem[0];
-			for(var i = 1; i< this.mem.length; i++){
-				s += this.mem[i];
+			var j = this.xc;
+			var s = "";
+			if(j == 0){
+				for(var i = 0; i< 256; i++){
+					s += "00 ";
+				}
+
+			}else if(j < 256){
+				for(var i = 0; i< this.mem.length; i++){
+					s += this.mem[i] +" ";
+				}
+
+				for(var k = j; i< 2; k++){
+					s+= "00 "
+				}
+			}
+
+			for(var i = 1; i< 256; i++){
+				s += "00 ";
 			}
 
 			return s;
