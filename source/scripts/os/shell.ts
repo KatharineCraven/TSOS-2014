@@ -376,7 +376,7 @@ module TSOS {
         //loads user input
         public shellLoad(){
             var s = _UserCode.value;
-            var v = "valid";
+            var v = true;
             var c = '';
             var cList = ['\n', ' ', 'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
             var notSpace = 0;
@@ -391,27 +391,33 @@ module TSOS {
                 for(var j = 0; j < cList.length; j++){
 
                     if( c ==  cList[j]){
-                        v = "valid";
+                        v = true;
                         break;
                     }
 
-                    v = "invalid";
+                    v = false;
                 }
 
-                if (v == "invalid"){
+                if (v == false){
                     break;
                 }
             }
 
             if(notSpace%2 != 0){
-                v = "invalid";
+                v = false;
             }
 
             if(notSpace == 0){
-                v = "invalid";
+                v = false;
             }
 
-            _StdOut.putText(v);        
+            if(v == false){
+               _StdOut.putText("Invalid Input");   
+            }else{
+                //debugger;
+                _MainMemory.write(s.replace(/\s/g,''));
+                _StdOut.putText("written");  
+            }       
         }
 
         public shellBSOD(){

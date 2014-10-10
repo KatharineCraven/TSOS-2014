@@ -15,6 +15,12 @@ var TSOS;
             this.mem.length = 256;
         };
 
+        Memory.prototype.write = function (input) {
+            for (var l = 0; l < input.length; l = l + 2) {
+                this.addToMem("" + input.charAt(l) + input.charAt(l + 1));
+            }
+        };
+
         Memory.prototype.addToMem = function (hex) {
             if (this.xc > 255) {
                 this.xc = 0; //wrap memory for now
@@ -33,17 +39,23 @@ var TSOS;
                     s += "00 ";
                 }
             } else if (j < 256) {
-                for (var i = 0; i < this.mem.length; i++) {
+                for (var i = 0; i < j; i++) {
                     s += this.mem[i] + " ";
                 }
 
-                for (var k = j; i < 2; k++) {
-                    s += "00 ";
-                }
-            }
+                if (this.mem.length < 256) {
+                    for (var k = j; k < 256; k++) {
+                        s += "00 ";
+                    }
+                } else {
+                    for (var k = j; k < this.mem.length; k++) {
+                        s += this.mem[i] + " ";
+                    }
 
-            for (var i = 1; i < 256; i++) {
-                s += "00 ";
+                    for (var m = this.mem.length; m < 256; m++) {
+                        s += "00 ";
+                    }
+                }
             }
 
             return s;
