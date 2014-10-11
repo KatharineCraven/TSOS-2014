@@ -23,6 +23,9 @@ var TSOS;
             _Console = new TSOS.Console(); // The command line interface / console I/O device.
             _MemoryManager = new TSOS.MemoryManager(); //memory manager
 
+            //Ready Queue
+            _ReadyQueue = new TSOS.Queue();
+
             // Initialize the console.
             _Console.init();
 
@@ -87,6 +90,8 @@ var TSOS;
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             } else if (_CPU.isExecuting) {
                 _CPU.cycle();
+            } else if (_ReadyQueue > 0) {
+                var prgm = _ReadyQueue.dequeue();
             } else {
                 this.krnTrace("Idle");
             }

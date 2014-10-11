@@ -44,12 +44,26 @@ module TSOS {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
+
+            //this.getFromPCB()
+        }
+
+        public getFromPCB(prCoBl){
+            this.PC = prCoBl.getPC();
+            this.Acc = prCoBl.getAccum();
+            this.Xreg = prCoBl.getXReg();
+            this.Yreg = prCoBl.getYReg();
+            this.Zflag = prCoBl.getZFlag();
+            this.instructionReg = prCoBl.getPC();
+            //is executing = true?
         }
 
         //load accumulartor with constant
         public a9LDA(){
             this.PC += 1;
             this.Acc = parseInt(_MemoryManager.getMemValue(this.PC), 16);
+            //increment to next command
+            this.PC += 1;
         }
 
         //load accumulator from memory
@@ -60,6 +74,8 @@ module TSOS {
             this.PC +=1;
             hexVal = _MemoryManager.getMemValue(this.PC) + hexVal;
             this.Acc = parseInt(_MemoryManager.getMemValue(parseInt(hexVal, 16)), 16);
+            //increment to next command
+            this.PC += 1;
         }
 
         public STA(){
@@ -69,6 +85,8 @@ module TSOS {
             this.PC += 1;
             location = _MemoryManager.getMemValue(this.PC) + location;
             _MemoryManager.addAt(parseInt(location, 16), this.Acc);
+            //increment to next command
+            this.PC += 1;
         }
 
         public ADC(){
@@ -78,11 +96,15 @@ module TSOS {
             this.PC += 1;
             location = _MemoryManager.getMemValue(this.PC) + location;
             this.Acc +=  parseInt(_MemoryManager.getMemValue(parseInt(location, 16)), 16);
+            //increment to next command
+            this.PC += 1;
         }
 
         public a2LDX(){
             this.PC += 1;
             this.Xreg = parseInt(_MemoryManager.getMemValue(this.PC), 16);
+            //increment to next command
+            this.PC += 1;
         }
 
         public aeLDX(){
@@ -92,11 +114,15 @@ module TSOS {
             this.PC += 1;
             location = _MemoryManager.getMemValue(this.PC) + location;
             this.Xreg = parseInt(_MemoryManager.getMemValue(parseInt(location, 16)), 16);
+            //increment to next command
+            this.PC += 1;
         }
 
         public a0LDY(){
             this.PC += 1;
-            this.Yreg = parseInt(_MemoryManager.getMemValue(this.PC), 16)
+            this.Yreg = parseInt(_MemoryManager.getMemValue(this.PC), 16);
+            //increment to next command
+            this.PC += 1;
         }
 
         public acLDY(){
@@ -106,12 +132,92 @@ module TSOS {
             this.PC += 1;
             location = _MemoryManager.getMemValue(this.PC) + location;
             this.Yreg = parseInt(_MemoryManager.getMemValue(parseInt(location, 16)), 16);
+            //increment to next command
+            this.PC += 1;
         }
 
+        public BRK(){
+            this.isExecuting = false;
+            this.PC = 0;
+        }
 
-        //pc on current hex number
-        public getMethod(instructionReg){
-            switch(instructionReg){
+        public ecCPX(){
+            var location = "";
+            this.PC += 1;
+            location += _MemoryManager.getMemValue(this.PC);
+            this.PC += 1;
+            location = _MemoryManager.getMemValue(this.PC) + location;
+            var cmpr = parseInt(_MemoryManager.getMemValue(parseInt(location, 16)), 16);
+            if(cmpr == this.Xreg){
+                this.Zflag = 1;
+            }else{
+                this.Zflag = 0;
+            }
+
+            //increment to next command
+            this.PC += 1;
+        }
+
+        public d0BNE(){
+
+            if(this.Zflag == 1){
+                var location = this.PC;
+                this.PC += 1;
+                location += parseInt(_MemoryManager.getMemValue(this.PC));
+
+                while (location > 255){
+                    location -= 256;
+                }
+
+                this.PC = location;
+            }
+        }
+
+        public eeINC(){
+            var location = "";
+            this.PC += 1;
+            location += _MemoryManager.getMemValue(this.PC);
+            this.PC += 1;
+            location = _MemoryManager.getMemValue(this.PC) + location;
+
+            var i = parseInt(_MemoryManager.getMemValue(parseInt(location, 16)), 16);
+            i++;
+
+            _MemoryManager.addAt(parseInt(location, 16), i);
+        }
+
+        public ffSYS(){
+            if(this.Xreg == 1){
+                _StdOut.put(this.Yreg);
+            }else if(this.Xreg == 2){
+                var s = this.Yreg.toString(16);
+
+                var tempS;
+                var n = "";
+                var c1;
+                var c2;
+                for(var i = 0; i<s.length; i += 2){
+                    c1 = s.charAt(i);
+                    c2 = s.charAt(i+1);
+                    tempS = ""+c1+c2;
+
+                    if(tempS == "00"){
+                        break;
+                    }else{
+                        n += String.fromCharCode(parseInt(tempS, 16));
+                    }
+
+                }
+
+                _StdOut.put(n);
+            }
+        }
+
+        //pc on current hex number - will need to check CPU is not over 255 after function
+        public getMethod(){
+            var iR = this.instructionReg.toString(16);
+
+            switch(iR){
                 case "A9":
                     //load acc. with constant
                     this.a9LDA();
@@ -147,30 +253,36 @@ module TSOS {
                 case "EA":
                     //no operation
                     //no params
+                    this.PC+1;
                     break;
                 case "00":
                     //break
                     //no params
-                    //TODO: Stop executing?
+                    this.BRK();
                     break;
                 case "EC":
                     //compare byte in memory to x reg, sets z flag if equal
-                    //takes in 2 params
+                    this.ecCPX();
                     break;
                 case "D0":
                     //branch x bytes if zFlag = 0
-                    //takes in 1 param
+                    this.d0BNE();
                     break;
                 case "EE":
                     //Increment the value of a byte
                     //takes in 2 params
+                    this.eeINC();
                     break;
                 case "FF":
                     //System call
                     //no params
+                    this.ffSYS();
                     break;
                 default:
                     //ERROR
+                    _StdOut.put("Input Error");
+                    this.isExecuting = false;
+                    this.PC = 0;
                     break;
             }
         }

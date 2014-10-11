@@ -23,8 +23,13 @@ module TSOS {
             _KernelInputQueue = new Queue();      // Where device input lands before being processed out somewhere.
             _Console = new Console();          // The command line interface / console I/O device.
             _MemoryManager = new MemoryManager(); //memory manager
+
+            //Ready Queue
+            _ReadyQueue = new Queue();
+
             // Initialize the console.
             _Console.init();
+
 
             // Initialize standard input and output to the _Console.
             _StdIn  = _Console;
@@ -39,6 +44,7 @@ module TSOS {
             //
             // ... more?
             //
+
 
             // Enable the OS Interrupts.  (Not the CPU clock interrupt, as that is done in the hardware sim.)
             this.krnTrace("Enabling the interrupts.");
@@ -90,6 +96,10 @@ module TSOS {
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             } else if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed. {
                 _CPU.cycle();
+            } else if(_ReadyQueue > 0){
+                var prgm = _ReadyQueue.dequeue();
+
+
             } else {                      // If there are no interrupts and there is nothing being executed then just be idle. {
                 this.krnTrace("Idle");
             }

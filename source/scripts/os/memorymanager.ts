@@ -16,10 +16,17 @@ module TSOS{
 		}
 
 		public addAt(i, input){
+			while(i> 255){
+				i -= 256;
+			}
+
 			this.mry.write(i, input);
 		}
 
 		public getMemValue(i){
+			while(i> 255){
+				i -= 256;
+			}
 			return this.mry.read(i);
 		}
 

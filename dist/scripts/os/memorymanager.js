@@ -16,10 +16,17 @@ var TSOS;
         };
 
         MemoryManager.prototype.addAt = function (i, input) {
+            while (i > 255) {
+                i -= 256;
+            }
+
             this.mry.write(i, input);
         };
 
         MemoryManager.prototype.getMemValue = function (i) {
+            while (i > 255) {
+                i -= 256;
+            }
             return this.mry.read(i);
         };
 
