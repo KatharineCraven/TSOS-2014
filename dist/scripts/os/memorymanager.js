@@ -15,6 +15,14 @@ var TSOS;
             }
         };
 
+        MemoryManager.prototype.addAt = function (i, input) {
+            this.mry.write(i, input);
+        };
+
+        MemoryManager.prototype.getMemValue = function (i) {
+            return this.mry.read(i);
+        };
+
         MemoryManager.prototype.putHex = function (hex) {
             if (this.xc > 255) {
                 this.xc = 0; //wrap memory for now

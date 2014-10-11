@@ -396,7 +396,7 @@ var TSOS;
                 _StdOut.putText("Invalid Input");
             } else {
                 debugger;
-                _MemoryManager.addToMem(s.replace(/\s/g, ''));
+                _MemoryManager.addToMem(s.replace(/\s/g, '').toUpperCase());
                 _pcbArray[_pidCount] = new TSOS.PCB();
                 _StdOut.putText("pid: " + _pidCount);
                 _pidCount++;

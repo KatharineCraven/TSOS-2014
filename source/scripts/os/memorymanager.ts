@@ -15,6 +15,14 @@ module TSOS{
 			}
 		}
 
+		public addAt(i, input){
+			this.mry.write(i, input);
+		}
+
+		public getMemValue(i){
+			return this.mry.read(i);
+		}
+
 		public putHex(hex){
 			if(this.xc > 255){
 				this.xc = 0; //wrap memory for now
