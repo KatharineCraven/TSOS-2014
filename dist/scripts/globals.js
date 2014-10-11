@@ -52,15 +52,18 @@ var _KernelBuffers = null;
 var _KernelInputQueue = null;
 var _MemoryManager = null;
 
+//Memory
+var _MemoryOutput;
+
+var _pidCount;
+var _pcbArray = new Array();
+
 // Standard input and output
 var _StdIn = null;
 var _StdOut = null;
 
 //UserCode
 var _UserCode;
-
-//Memory
-var _MemoryOutput;
 
 // UI
 var _Console;

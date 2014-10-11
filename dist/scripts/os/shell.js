@@ -15,6 +15,7 @@ var TSOS;
             this.commandList = [];
             this.curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
             this.apologies = "[sorry]";
+            debugger;
         }
         Shell.prototype.init = function () {
             var sc = null;
@@ -394,9 +395,11 @@ var TSOS;
             if (v == false) {
                 _StdOut.putText("Invalid Input");
             } else {
-                //debugger;
+                debugger;
                 _MemoryManager.addToMem(s.replace(/\s/g, ''));
-                _StdOut.putText("written");
+                _pcbArray[_pidCount] = new TSOS.PCB();
+                _StdOut.putText("pid: " + _pidCount);
+                _pidCount++;
             }
         };
 

@@ -55,6 +55,7 @@ module TSOS {
             _UserCode = (<HTMLInputElement> document.getElementById("taProgramInput"));
 
             _MemoryOutput = document.getElementById("taMemoryInput");
+            _pidCount = 0;
 
             _ConsoleDiv = document.getElementById('divConsole');
 

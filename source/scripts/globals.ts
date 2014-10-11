@@ -53,8 +53,13 @@ var _Kernel: TSOS.Kernel;
 var _KernelInterruptQueue = null;
 var _KernelBuffers: any[] = null;
 var _KernelInputQueue = null;
-var _MemoryManager = null;
+var _MemoryManager = null; //memory manager
 
+//Memory
+var _MemoryOutput;
+
+var _pidCount;
+var _pcbArray = new Array();
 // Standard input and output
 var _StdIn  = null;
 var _StdOut = null;
@@ -62,9 +67,6 @@ var _StdOut = null;
 //UserCode
 var _UserCode;
 
-//Memory
-
-var _MemoryOutput;
 
 // UI
 var _Console: TSOS.Console;

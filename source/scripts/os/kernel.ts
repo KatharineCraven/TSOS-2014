@@ -22,7 +22,7 @@ module TSOS {
             _KernelBuffers = new Array();         // Buffers... for the kernel.
             _KernelInputQueue = new Queue();      // Where device input lands before being processed out somewhere.
             _Console = new Console();          // The command line interface / console I/O device.
-            _MemoryManager = new MemoryManager();
+            _MemoryManager = new MemoryManager(); //memory manager
             // Initialize the console.
             _Console.init();
 
