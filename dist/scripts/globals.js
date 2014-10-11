@@ -51,7 +51,7 @@ var _KernelInterruptQueue = null;
 var _KernelBuffers = null;
 var _KernelInputQueue = null;
 
-var _ReadyQueue = null;
+var _LoadedProgram = null;
 
 var _MemoryManager = null;
 

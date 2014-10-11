@@ -23,9 +23,6 @@ var TSOS;
             _Console = new TSOS.Console(); // The command line interface / console I/O device.
             _MemoryManager = new TSOS.MemoryManager(); //memory manager
 
-            //Ready Queue
-            _ReadyQueue = new TSOS.Queue();
-
             // Initialize the console.
             _Console.init();
 
@@ -88,12 +85,24 @@ var TSOS;
                 // TODO: Implement a priority queue based on the IRQ number/id to enforce interrupt priority.
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
+                if (_LoadedProgram != null) {
+                    if (_LoadedProgram.getState() === "RUNNING") {
+                        _LoadedProgram.setState("WAITING");
+                    }
+                }
             } else if (_CPU.isExecuting) {
                 _CPU.cycle();
-            } else if (_ReadyQueue > 0) {
-                var prgm = _ReadyQueue.dequeue();
+            } else if (_LoadedProgram != null) {
+                if ((_LoadedProgram.getState() === "READY") || (_LoadedProgram.getState() === "WAITING")) {
+                    _CPU.isExecuting = true;
+                    _LoadedProgram.updateState("RUNNING");
+                }
             } else {
                 this.krnTrace("Idle");
+            }
+
+            if (_LoadedProgram.getState() === "TERMINATED") {
+                _LoadedProgram === null;
             }
 
             _MemoryOutput.value = _MemoryManager.displayMem();

@@ -45,7 +45,8 @@ module TSOS {
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
 
-            //this.getFromPCB()
+            this.getFromPCB(_LoadedProgram);
+            this.getMethod(_LoadedProgram);
         }
 
         public getFromPCB(prCoBl){
@@ -54,8 +55,15 @@ module TSOS {
             this.Xreg = prCoBl.getXReg();
             this.Yreg = prCoBl.getYReg();
             this.Zflag = prCoBl.getZFlag();
-            this.instructionReg = prCoBl.getPC();
-            //is executing = true?
+            this.instructionReg = parseInt(_MemoryManager.getMemValue(prCoBl.getPC()), 16);
+        }
+
+        public updatePCB(prCoBl){
+            prCoBl.setPC(this.PC);
+            prCoBl.setAccum(this.Acc);
+            prCoBl.setXReg(this.Xreg);
+            prCoBl.setYReg(this.Yreg);
+            prCoBl.setZFlag(this.Zflag);
         }
 
         //load accumulartor with constant
@@ -136,8 +144,9 @@ module TSOS {
             this.PC += 1;
         }
 
-        public BRK(){
+        public BRK(aPCB){
             this.isExecuting = false;
+            aPCB.setStatus("TERMIATED");
             this.PC = 0;
         }
 
@@ -201,7 +210,7 @@ module TSOS {
                     c2 = s.charAt(i+1);
                     tempS = ""+c1+c2;
 
-                    if(tempS == "00"){
+                    if(tempS === "00"){
                         break;
                     }else{
                         n += String.fromCharCode(parseInt(tempS, 16));
@@ -214,7 +223,7 @@ module TSOS {
         }
 
         //pc on current hex number - will need to check CPU is not over 255 after function
-        public getMethod(){
+        public getMethod(tPCB){
             var iR = this.instructionReg.toString(16);
 
             switch(iR){
@@ -258,7 +267,7 @@ module TSOS {
                 case "00":
                     //break
                     //no params
-                    this.BRK();
+                    this.BRK(tPCB);
                     break;
                 case "EC":
                     //compare byte in memory to x reg, sets z flag if equal
