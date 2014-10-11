@@ -415,7 +415,7 @@ module TSOS {
                _StdOut.putText("Invalid Input");   
             }else{
                 //debugger;
-                _MainMemory.write(s.replace(/\s/g,''));
+                _MemoryManager.addToMem(s.replace(/\s/g,''));
                 _StdOut.putText("written");  
             }       
         }

@@ -22,7 +22,7 @@ module TSOS {
             _KernelBuffers = new Array();         // Buffers... for the kernel.
             _KernelInputQueue = new Queue();      // Where device input lands before being processed out somewhere.
             _Console = new Console();          // The command line interface / console I/O device.
-            _MainMemory = new Memory();
+            _MemoryManager = new MemoryManager();
             // Initialize the console.
             _Console.init();
 
@@ -77,7 +77,6 @@ module TSOS {
                This, on the other hand, is the clock pulse from the hardware (or host) that tells the kernel
                that it has to look for interrupts and process them if it finds any.                           */
                //memory output
-               _MemoryOutput.value = _MainMemory.displayMem();
 
                //status message
                _DrawingContextTwo.clearRect(0, 0, 500, 100);
@@ -94,6 +93,8 @@ module TSOS {
             } else {                      // If there are no interrupts and there is nothing being executed then just be idle. {
                 this.krnTrace("Idle");
             }
+
+            _MemoryOutput.value = _MemoryManager.displayMem();
 
         }
 

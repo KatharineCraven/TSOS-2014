@@ -21,7 +21,7 @@ var TSOS;
             _KernelBuffers = new Array(); // Buffers... for the kernel.
             _KernelInputQueue = new TSOS.Queue(); // Where device input lands before being processed out somewhere.
             _Console = new TSOS.Console(); // The command line interface / console I/O device.
-            _MainMemory = new TSOS.Memory();
+            _MemoryManager = new TSOS.MemoryManager();
 
             // Initialize the console.
             _Console.init();
@@ -75,8 +75,6 @@ var TSOS;
             This, on the other hand, is the clock pulse from the hardware (or host) that tells the kernel
             that it has to look for interrupts and process them if it finds any.                           */
             //memory output
-            _MemoryOutput.value = _MainMemory.displayMem();
-
             //status message
             _DrawingContextTwo.clearRect(0, 0, 500, 100);
             _DrawingContextTwo.fillText(new Date().toLocaleString() + ",  Status: " + _StatusMessage, 8, 30);
@@ -92,6 +90,8 @@ var TSOS;
             } else {
                 this.krnTrace("Idle");
             }
+
+            _MemoryOutput.value = _MemoryManager.displayMem();
         };
 
         //
