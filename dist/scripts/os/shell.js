@@ -15,7 +15,7 @@ var TSOS;
             this.commandList = [];
             this.curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
             this.apologies = "[sorry]";
-            //debugger;
+            ;
         }
         Shell.prototype.init = function () {
             var sc = null;
@@ -398,7 +398,6 @@ var TSOS;
             if (v == false) {
                 _StdOut.putText("Invalid Input");
             } else {
-                //debugger;
                 if (_LoadedProgram == -1) {
                     _MemoryManager.clearAllMem();
                     _MemoryManager.addToMem(s.replace(/\s/g, '').toUpperCase());
@@ -416,7 +415,6 @@ var TSOS;
         };
 
         Shell.prototype.shellRun = function (args) {
-            debugger;
             if (args >= _pidCount) {
                 _StdOut.putText("Invalid pid");
             } else if (_LoadedProgram != -1) {

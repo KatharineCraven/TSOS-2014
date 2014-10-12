@@ -81,7 +81,6 @@ var TSOS;
 
             // Check for an interrupt, are any. Page 560
             if (_KernelInterruptQueue.getSize() > 0) {
-                //debugger;
                 if (_LoadedProgram != -1) {
                     if (_pcbArray[_LoadedProgram].getState() === "RUNNING") {
                         _pcbArray[_LoadedProgram].setState("WAITING");

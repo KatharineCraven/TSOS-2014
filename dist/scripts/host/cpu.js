@@ -60,7 +60,7 @@ var TSOS;
         };
 
         Cpu.prototype.getFromPCB = function (prCoBl) {
-            debugger;
+            //debugger;
             this.PC = prCoBl.getPC();
             this.Acc = prCoBl.getAccum();
             this.Xreg = prCoBl.getXReg();
@@ -160,6 +160,7 @@ var TSOS;
         };
 
         Cpu.prototype.acLDY = function () {
+            debugger;
             var location = "";
             this.PC += 1;
             location += _MemoryManager.getMemValue(this.PC);
@@ -177,6 +178,8 @@ var TSOS;
             this.updatePCB();
             _pcbArray[_LoadedProgram].setState("TERMINATED");
             _LoadedProgram = -1;
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
         };
 
         Cpu.prototype.ecCPX = function () {
@@ -198,16 +201,18 @@ var TSOS;
         };
 
         Cpu.prototype.d0BNE = function () {
-            if (this.Zflag == 1) {
-                var location = this.PC;
+            if (this.Zflag == 0) {
                 this.PC += 1;
-                location += parseInt(_MemoryManager.getMemValue(this.PC));
+                var location = this.PC;
+                location += parseInt(_MemoryManager.getMemValue(this.PC), 16);
 
                 while (location > 255) {
                     location -= 256;
                 }
 
-                this.PC = location;
+                this.PC = location + 1;
+            } else {
+                this.PC += 2;
             }
 
             this.updatePCB();
@@ -223,6 +228,7 @@ var TSOS;
             var i = parseInt(_MemoryManager.getMemValue(parseInt(location, 16)), 16);
             i++;
 
+            this.PC += 1;
             _MemoryManager.addAt(parseInt(location, 16), i);
             this.updatePCB();
         };
@@ -232,29 +238,21 @@ var TSOS;
             if (this.Xreg == 1) {
                 _StdOut.putText(this.Yreg.toString());
             } else if (this.Xreg == 2) {
-                var s = this.Yreg.toString(16);
-
-                var tempS;
+                debugger;
+                var i = this.Yreg;
                 var n = "";
-                var c1;
-                var c2;
-                for (var i = 0; i < s.length; i += 2) {
-                    c1 = s.charAt(i);
-                    c2 = s.charAt(i + 1);
-                    tempS = "" + c1 + c2;
+                var temp = "";
 
-                    if (tempS === "00") {
-                        break;
-                    } else {
-                        n += String.fromCharCode(parseInt(tempS, 16));
-                    }
+                temp = String.fromCharCode(parseInt(_MemoryManager.getMemValue(i), 16));
+                while (_MemoryManager.getMemValue(i) != "00") {
+                    n = n + temp;
+                    i++;
+                    temp = String.fromCharCode(parseInt(_MemoryManager.getMemValue(i), 16));
                 }
 
                 _StdOut.putText(n);
             }
 
-            _StdOut.advanceLine();
-            _OsShell.putPrompt();
             this.PC += 1;
             this.updatePCB();
         };
@@ -262,7 +260,7 @@ var TSOS;
         //pc on current hex number - will need to check CPU is not over 255 after function
         Cpu.prototype.getMethod = function () {
             var iR = this.instructionReg.toString(16).toUpperCase();
-            debugger;
+
             switch (iR) {
                 case "A9":
                     //load acc. with constant

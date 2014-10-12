@@ -18,8 +18,7 @@ module TSOS {
         public curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
         public apologies = "[sorry]";
 
-        constructor() {
-            //debugger;
+        constructor() {;
         }
 
         public init() {
@@ -416,7 +415,6 @@ module TSOS {
             if(v == false){
                _StdOut.putText("Invalid Input");   
             }else{
-                //debugger;
 
                 if(_LoadedProgram == -1){
                     _MemoryManager.clearAllMem();
@@ -435,7 +433,6 @@ module TSOS {
         }
 
         public shellRun(args){
-            debugger;
             if(args >= _pidCount){
                 _StdOut.putText("Invalid pid");
             }else if(_LoadedProgram != -1){
