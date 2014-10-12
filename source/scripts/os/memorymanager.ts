@@ -10,12 +10,20 @@ module TSOS{
 		}
 
 		public addToMem(input){
+			if(input.length< 2){
+				input = "0"+input;
+			}
+
 			for(var l = 0; l< input.length; l = l+2){
 				this.putHex(""+input.charAt(l)+input.charAt(l+1));
 			}
 		}
 
 		public addAt(i, input){
+			if(input.length< 2){
+				input = "0"+input;
+			}
+
 			while(i> 255){
 				i -= 256;
 			}

@@ -10,12 +10,20 @@ var TSOS;
             this.xc = xc;
         }
         MemoryManager.prototype.addToMem = function (input) {
+            if (input.length < 2) {
+                input = "0" + input;
+            }
+
             for (var l = 0; l < input.length; l = l + 2) {
                 this.putHex("" + input.charAt(l) + input.charAt(l + 1));
             }
         };
 
         MemoryManager.prototype.addAt = function (i, input) {
+            if (input.length < 2) {
+                input = "0" + input;
+            }
+
             while (i > 255) {
                 i -= 256;
             }

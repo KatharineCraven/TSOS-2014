@@ -106,7 +106,7 @@ module TSOS {
             location += _MemoryManager.getMemValue(this.PC);
             this.PC += 1;
             location = _MemoryManager.getMemValue(this.PC) + location;
-            _MemoryManager.addAt(parseInt(location, 16), this.Acc);
+            _MemoryManager.addAt(parseInt(location, 16), this.Acc.toString(16));
             //increment to next command
             this.PC += 1;
         }
@@ -159,11 +159,9 @@ module TSOS {
         }
 
         public BRK(){
-            this.isExecuting = false;
+            this.init();
             _pcbArray[_LoadedProgram].setState("TERMINATED");
             _LoadedProgram = -1;
-            this.PC = 0;
-            this.instructionReg = 0;
         }
 
         public ecCPX(){
@@ -285,9 +283,13 @@ module TSOS {
                     //no params
                     this.PC+1;
                     break;
-                case "00":
+                case "0":
                     //break
                     //no params
+                    //debugger;
+                    this.BRK();
+                    break;
+                case "00":
                     this.BRK();
                     break;
                 case "EC":
@@ -312,8 +314,7 @@ module TSOS {
                     //ERROR
                     _StdOut.putText("Input Error D");
                     _StdOut.advanceLine();
-                    this.isExecuting = false;
-                    this.PC = 0;
+                    this.init();
                     _pcbArray[_LoadedProgram].setState("TERMINATED");
                     _LoadedProgram = -1;
                     break;
