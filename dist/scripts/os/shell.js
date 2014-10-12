@@ -15,7 +15,7 @@ var TSOS;
             this.commandList = [];
             this.curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
             this.apologies = "[sorry]";
-            debugger;
+            //debugger;
         }
         Shell.prototype.init = function () {
             var sc = null;
@@ -75,6 +75,9 @@ var TSOS;
 
             //blue screen of death
             sc = new TSOS.ShellCommand(this.shellBSOD, "bsod", "- Kernel Trap Test");
+            this.commandList[this.commandList.length] = sc;
+
+            sc = new TSOS.ShellCommand(this.shellRun, "run", "<pid> - Run program corresponding to <pid>");
             this.commandList[this.commandList.length] = sc;
 
             // processes - list the running processes and their IDs
@@ -395,16 +398,35 @@ var TSOS;
             if (v == false) {
                 _StdOut.putText("Invalid Input");
             } else {
-                debugger;
-                _MemoryManager.addToMem(s.replace(/\s/g, '').toUpperCase());
-                _pcbArray[_pidCount] = new TSOS.PCB();
-                _StdOut.putText("pid: " + _pidCount);
-                _pidCount++;
+                //debugger;
+                if (_LoadedProgram == -1) {
+                    _MemoryManager.clearAllMem();
+                    _MemoryManager.addToMem(s.replace(/\s/g, '').toUpperCase());
+                    _pcbArray[_pidCount] = new TSOS.PCB();
+                    _StdOut.putText("pid: " + _pidCount);
+                    _pidCount++;
+                } else {
+                    _StdOut.putText("Please wait until program finishes running");
+                }
             }
         };
 
         Shell.prototype.shellBSOD = function () {
             _Kernel.krnTrapError("Testing Trap");
+        };
+
+        Shell.prototype.shellRun = function (args) {
+            //debugger;
+            if (args >= _pidCount) {
+                _StdOut.putText("Invalid pid");
+            } else if (_LoadedProgram != -1) {
+                _StdOut.putText("Please wait for program to finish");
+            } else if (args < (_pidCount - 1)) {
+                _StdOut.putText("Program has been wiped from memory");
+            } else {
+                _LoadedProgram = args;
+                _pcbArray[args].setState("READY");
+            }
         };
         return Shell;
     })();

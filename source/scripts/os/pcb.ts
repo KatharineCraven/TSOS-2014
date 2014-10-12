@@ -9,7 +9,7 @@ module TSOS{
 
 		}
 		
-		public updateState(status){
+		public setState(status){
 			this.processState = status;
 		}
 

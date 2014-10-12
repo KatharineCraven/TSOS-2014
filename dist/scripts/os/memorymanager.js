@@ -40,6 +40,11 @@ var TSOS;
             this.xc += 1;
         };
 
+        MemoryManager.prototype.clearAllMem = function () {
+            this.mry = new TSOS.Memory();
+            this.xc = 0;
+        };
+
         MemoryManager.prototype.displayMem = function () {
             var j = this.xc;
             var counter = 0;

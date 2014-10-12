@@ -19,7 +19,7 @@ var TSOS;
             this.accumulator = accumulator;
             this.zFlag = zFlag;
         }
-        PCB.prototype.updateState = function (status) {
+        PCB.prototype.setState = function (status) {
             this.processState = status;
         };
 

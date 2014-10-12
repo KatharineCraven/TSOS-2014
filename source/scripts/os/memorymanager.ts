@@ -40,6 +40,11 @@ module TSOS{
 			this.xc += 1;
 		}
 
+		public clearAllMem(){
+			this.mry = new Memory();
+			this.xc = 0;
+		}
+
 		public displayMem(){
 			var j = this.xc;
 			var counter = 0;

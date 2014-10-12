@@ -19,7 +19,7 @@ module TSOS {
         public apologies = "[sorry]";
 
         constructor() {
-            debugger;
+            //debugger;
         }
 
         public init() {
@@ -100,6 +100,8 @@ module TSOS {
             sc = new ShellCommand(this.shellBSOD, "bsod", "- Kernel Trap Test");
             this.commandList[this.commandList.length] = sc;
 
+            sc = new ShellCommand(this.shellRun, "run", "<pid> - Run program corresponding to <pid>");
+            this.commandList[this.commandList.length] = sc;
             // processes - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -414,16 +416,36 @@ module TSOS {
             if(v == false){
                _StdOut.putText("Invalid Input");   
             }else{
-                debugger;
-                _MemoryManager.addToMem(s.replace(/\s/g,'').toUpperCase());
-                _pcbArray[_pidCount] = new PCB();
-                _StdOut.putText("pid: "+_pidCount); 
-                _pidCount++; 
+                //debugger;
+
+                if(_LoadedProgram == -1){
+                    _MemoryManager.clearAllMem();
+                    _MemoryManager.addToMem(s.replace(/\s/g,'').toUpperCase());
+                    _pcbArray[_pidCount] = new PCB();
+                    _StdOut.putText("pid: "+_pidCount); 
+                    _pidCount++; 
+                }else{
+                    _StdOut.putText("Please wait until program finishes running");
+                }
             }       
         }
 
         public shellBSOD(){
             _Kernel.krnTrapError("Testing Trap");
+        }
+
+        public shellRun(args){
+            //debugger;
+            if(args >= _pidCount){
+                _StdOut.putText("Invalid pid");
+            }else if(_LoadedProgram != -1){
+                 _StdOut.putText("Please wait for program to finish");
+            }else if(args < (_pidCount-1)){ //temporary: this program has been deleted from memory in proj 2
+                _StdOut.putText("Program has been wiped from memory");
+            }else{
+                _LoadedProgram = args;
+                _pcbArray[args].setState("READY");
+            }
         }
 
     }

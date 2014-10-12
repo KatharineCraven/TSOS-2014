@@ -51,12 +51,14 @@ var _KernelInterruptQueue = null;
 var _KernelBuffers = null;
 var _KernelInputQueue = null;
 
-var _LoadedProgram = null;
+var _LoadedProgram = -1;
 
 var _MemoryManager = null;
 
 //Memory
 var _MemoryOutput;
+
+var _CPUOutput;
 
 var _pidCount;
 var _pcbArray = new Array();

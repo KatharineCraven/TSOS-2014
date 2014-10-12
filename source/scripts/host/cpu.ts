@@ -45,8 +45,22 @@ module TSOS {
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
 
-            this.getFromPCB(_LoadedProgram);
-            this.getMethod(_LoadedProgram);
+            this.getFromPCB(_pcbArray[_LoadedProgram]);
+            this.getMethod();
+            this.updatePCB();
+        }
+
+        public displayCPU(){
+            var st = "PC: " + this.PC+ "\n";
+            st += "AC: " + this.Acc + "\n";
+            st += "X:  " + this.Xreg + "\n";
+            st += "Y:  " + this.Yreg + "\n";
+            st += "Z:  " + this.Zflag + "\n";
+            st += "IR: " + this.instructionReg.toString(16);
+
+            return st;
+
+
         }
 
         public getFromPCB(prCoBl){
@@ -58,12 +72,12 @@ module TSOS {
             this.instructionReg = parseInt(_MemoryManager.getMemValue(prCoBl.getPC()), 16);
         }
 
-        public updatePCB(prCoBl){
-            prCoBl.setPC(this.PC);
-            prCoBl.setAccum(this.Acc);
-            prCoBl.setXReg(this.Xreg);
-            prCoBl.setYReg(this.Yreg);
-            prCoBl.setZFlag(this.Zflag);
+        public updatePCB(){
+            _pcbArray[_LoadedProgram].setPC(this.PC);
+            _pcbArray[_LoadedProgram].setAccum(this.Acc);
+            _pcbArray[_LoadedProgram].setXReg(this.Xreg);
+            _pcbArray[_LoadedProgram].setYReg(this.Yreg);
+            _pcbArray[_LoadedProgram].setZFlag(this.Zflag);
         }
 
         //load accumulartor with constant
@@ -144,10 +158,12 @@ module TSOS {
             this.PC += 1;
         }
 
-        public BRK(aPCB){
+        public BRK(){
             this.isExecuting = false;
-            aPCB.setStatus("TERMIATED");
+            _pcbArray[_LoadedProgram].setState("TERMINATED");
+            _LoadedProgram = -1;
             this.PC = 0;
+            this.instructionReg = 0;
         }
 
         public ecCPX(){
@@ -196,8 +212,9 @@ module TSOS {
         }
 
         public ffSYS(){
+            _StdOut.advanceLine();
             if(this.Xreg == 1){
-                _StdOut.put(this.Yreg);
+                _StdOut.putText(this.Yreg.toString());
             }else if(this.Xreg == 2){
                 var s = this.Yreg.toString(16);
 
@@ -218,14 +235,18 @@ module TSOS {
 
                 }
 
-                _StdOut.put(n);
+                _StdOut.putText(n);
             }
+
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
+            this.PC += 1;
         }
 
         //pc on current hex number - will need to check CPU is not over 255 after function
-        public getMethod(tPCB){
-            var iR = this.instructionReg.toString(16);
-
+        public getMethod(){
+            var iR = this.instructionReg.toString(16).toUpperCase();
+            debugger;
             switch(iR){
                 case "A9":
                     //load acc. with constant
@@ -267,7 +288,7 @@ module TSOS {
                 case "00":
                     //break
                     //no params
-                    this.BRK(tPCB);
+                    this.BRK();
                     break;
                 case "EC":
                     //compare byte in memory to x reg, sets z flag if equal
@@ -289,9 +310,12 @@ module TSOS {
                     break;
                 default:
                     //ERROR
-                    _StdOut.put("Input Error");
+                    _StdOut.putText("Input Error D");
+                    _StdOut.advanceLine();
                     this.isExecuting = false;
                     this.PC = 0;
+                    _pcbArray[_LoadedProgram].setState("TERMINATED");
+                    _LoadedProgram = -1;
                     break;
             }
         }
