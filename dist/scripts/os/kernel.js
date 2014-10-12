@@ -22,6 +22,7 @@ var TSOS;
             _KernelInputQueue = new TSOS.Queue(); // Where device input lands before being processed out somewhere.
             _Console = new TSOS.Console(); // The command line interface / console I/O device.
             _MemoryManager = new TSOS.MemoryManager(); //memory manager
+            _CPUOutput.value = _CPU.displayCPU();
 
             // Initialize the console.
             _Console.init();
@@ -103,7 +104,11 @@ var TSOS;
             }
 
             _MemoryOutput.value = _MemoryManager.displayMem();
-            _CPUOutput.value = _CPU.displayCPU();
+
+            if (_LoadedProgram != -1) {
+                _CPUOutput.value = _CPU.displayCPU();
+                //whut
+            }
         };
 
         //

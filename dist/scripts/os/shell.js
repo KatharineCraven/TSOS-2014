@@ -400,6 +400,7 @@ var TSOS;
             } else {
                 if (_LoadedProgram == -1) {
                     _MemoryManager.clearAllMem();
+                    _CPUOutput.value = _CPU.displayCPU();
                     _MemoryManager.addToMem(s.replace(/\s/g, '').toUpperCase());
                     _pcbArray[_pidCount] = new TSOS.PCB();
                     _StdOut.putText("pid: " + _pidCount);
@@ -415,6 +416,7 @@ var TSOS;
         };
 
         Shell.prototype.shellRun = function (args) {
+            _CPUOutput.value = _CPU.displayCPU();
             if (args >= _pidCount) {
                 _StdOut.putText("Invalid pid");
             } else if (_LoadedProgram != -1) {
