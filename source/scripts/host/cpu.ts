@@ -47,7 +47,6 @@ module TSOS {
 
             this.getFromPCB(_pcbArray[_LoadedProgram]);
             this.getMethod();
-            this.updatePCB();
         }
 
         public displayCPU(){
@@ -64,6 +63,7 @@ module TSOS {
         }
 
         public getFromPCB(prCoBl){
+            debugger;
             this.PC = prCoBl.getPC();
             this.Acc = prCoBl.getAccum();
             this.Xreg = prCoBl.getXReg();
@@ -73,6 +73,7 @@ module TSOS {
         }
 
         public updatePCB(){
+            //_pcbArray[_LoadedProgram].setPC(this.PC);
             _pcbArray[_LoadedProgram].setPC(this.PC);
             _pcbArray[_LoadedProgram].setAccum(this.Acc);
             _pcbArray[_LoadedProgram].setXReg(this.Xreg);
@@ -86,6 +87,7 @@ module TSOS {
             this.Acc = parseInt(_MemoryManager.getMemValue(this.PC), 16);
             //increment to next command
             this.PC += 1;
+            this.updatePCB();
         }
 
         //load accumulator from memory
@@ -98,6 +100,7 @@ module TSOS {
             this.Acc = parseInt(_MemoryManager.getMemValue(parseInt(hexVal, 16)), 16);
             //increment to next command
             this.PC += 1;
+            this.updatePCB();
         }
 
         public STA(){
@@ -109,6 +112,7 @@ module TSOS {
             _MemoryManager.addAt(parseInt(location, 16), this.Acc.toString(16));
             //increment to next command
             this.PC += 1;
+            this.updatePCB();
         }
 
         public ADC(){
@@ -120,6 +124,7 @@ module TSOS {
             this.Acc +=  parseInt(_MemoryManager.getMemValue(parseInt(location, 16)), 16);
             //increment to next command
             this.PC += 1;
+            this.updatePCB();
         }
 
         public a2LDX(){
@@ -127,6 +132,7 @@ module TSOS {
             this.Xreg = parseInt(_MemoryManager.getMemValue(this.PC), 16);
             //increment to next command
             this.PC += 1;
+            this.updatePCB();
         }
 
         public aeLDX(){
@@ -138,6 +144,7 @@ module TSOS {
             this.Xreg = parseInt(_MemoryManager.getMemValue(parseInt(location, 16)), 16);
             //increment to next command
             this.PC += 1;
+            this.updatePCB();
         }
 
         public a0LDY(){
@@ -145,6 +152,7 @@ module TSOS {
             this.Yreg = parseInt(_MemoryManager.getMemValue(this.PC), 16);
             //increment to next command
             this.PC += 1;
+            this.updatePCB();
         }
 
         public acLDY(){
@@ -156,10 +164,12 @@ module TSOS {
             this.Yreg = parseInt(_MemoryManager.getMemValue(parseInt(location, 16)), 16);
             //increment to next command
             this.PC += 1;
+            this.updatePCB();
         }
 
         public BRK(){
             this.init();
+            this.updatePCB();
             _pcbArray[_LoadedProgram].setState("TERMINATED");
             _LoadedProgram = -1;
         }
@@ -179,6 +189,7 @@ module TSOS {
 
             //increment to next command
             this.PC += 1;
+            this.updatePCB();
         }
 
         public d0BNE(){
@@ -194,6 +205,8 @@ module TSOS {
 
                 this.PC = location;
             }
+
+            this.updatePCB();
         }
 
         public eeINC(){
@@ -207,6 +220,7 @@ module TSOS {
             i++;
 
             _MemoryManager.addAt(parseInt(location, 16), i);
+            this.updatePCB();
         }
 
         public ffSYS(){
@@ -239,6 +253,7 @@ module TSOS {
             _StdOut.advanceLine();
             _OsShell.putPrompt();
             this.PC += 1;
+            this.updatePCB();
         }
 
         //pc on current hex number - will need to check CPU is not over 255 after function
@@ -315,6 +330,7 @@ module TSOS {
                     _StdOut.putText("Input Error D");
                     _StdOut.advanceLine();
                     this.init();
+                    this.updatePCB();
                     _pcbArray[_LoadedProgram].setState("TERMINATED");
                     _LoadedProgram = -1;
                     break;

@@ -416,7 +416,7 @@ var TSOS;
         };
 
         Shell.prototype.shellRun = function (args) {
-            //debugger;
+            debugger;
             if (args >= _pidCount) {
                 _StdOut.putText("Invalid pid");
             } else if (_LoadedProgram != -1) {

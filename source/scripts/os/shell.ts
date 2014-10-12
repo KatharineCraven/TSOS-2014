@@ -435,7 +435,7 @@ module TSOS {
         }
 
         public shellRun(args){
-            //debugger;
+            debugger;
             if(args >= _pidCount){
                 _StdOut.putText("Invalid pid");
             }else if(_LoadedProgram != -1){

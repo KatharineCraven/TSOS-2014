@@ -46,7 +46,6 @@ var TSOS;
             // Do the real work here. Be sure to set this.isExecuting appropriately.
             this.getFromPCB(_pcbArray[_LoadedProgram]);
             this.getMethod();
-            this.updatePCB();
         };
 
         Cpu.prototype.displayCPU = function () {
@@ -61,6 +60,7 @@ var TSOS;
         };
 
         Cpu.prototype.getFromPCB = function (prCoBl) {
+            debugger;
             this.PC = prCoBl.getPC();
             this.Acc = prCoBl.getAccum();
             this.Xreg = prCoBl.getXReg();
@@ -70,6 +70,7 @@ var TSOS;
         };
 
         Cpu.prototype.updatePCB = function () {
+            //_pcbArray[_LoadedProgram].setPC(this.PC);
             _pcbArray[_LoadedProgram].setPC(this.PC);
             _pcbArray[_LoadedProgram].setAccum(this.Acc);
             _pcbArray[_LoadedProgram].setXReg(this.Xreg);
@@ -84,6 +85,7 @@ var TSOS;
 
             //increment to next command
             this.PC += 1;
+            this.updatePCB();
         };
 
         //load accumulator from memory
@@ -97,6 +99,7 @@ var TSOS;
 
             //increment to next command
             this.PC += 1;
+            this.updatePCB();
         };
 
         Cpu.prototype.STA = function () {
@@ -109,6 +112,7 @@ var TSOS;
 
             //increment to next command
             this.PC += 1;
+            this.updatePCB();
         };
 
         Cpu.prototype.ADC = function () {
@@ -121,6 +125,7 @@ var TSOS;
 
             //increment to next command
             this.PC += 1;
+            this.updatePCB();
         };
 
         Cpu.prototype.a2LDX = function () {
@@ -129,6 +134,7 @@ var TSOS;
 
             //increment to next command
             this.PC += 1;
+            this.updatePCB();
         };
 
         Cpu.prototype.aeLDX = function () {
@@ -141,6 +147,7 @@ var TSOS;
 
             //increment to next command
             this.PC += 1;
+            this.updatePCB();
         };
 
         Cpu.prototype.a0LDY = function () {
@@ -149,6 +156,7 @@ var TSOS;
 
             //increment to next command
             this.PC += 1;
+            this.updatePCB();
         };
 
         Cpu.prototype.acLDY = function () {
@@ -161,10 +169,12 @@ var TSOS;
 
             //increment to next command
             this.PC += 1;
+            this.updatePCB();
         };
 
         Cpu.prototype.BRK = function () {
             this.init();
+            this.updatePCB();
             _pcbArray[_LoadedProgram].setState("TERMINATED");
             _LoadedProgram = -1;
         };
@@ -184,6 +194,7 @@ var TSOS;
 
             //increment to next command
             this.PC += 1;
+            this.updatePCB();
         };
 
         Cpu.prototype.d0BNE = function () {
@@ -198,6 +209,8 @@ var TSOS;
 
                 this.PC = location;
             }
+
+            this.updatePCB();
         };
 
         Cpu.prototype.eeINC = function () {
@@ -211,6 +224,7 @@ var TSOS;
             i++;
 
             _MemoryManager.addAt(parseInt(location, 16), i);
+            this.updatePCB();
         };
 
         Cpu.prototype.ffSYS = function () {
@@ -242,6 +256,7 @@ var TSOS;
             _StdOut.advanceLine();
             _OsShell.putPrompt();
             this.PC += 1;
+            this.updatePCB();
         };
 
         //pc on current hex number - will need to check CPU is not over 255 after function
@@ -318,6 +333,7 @@ var TSOS;
                     _StdOut.putText("Input Error D");
                     _StdOut.advanceLine();
                     this.init();
+                    this.updatePCB();
                     _pcbArray[_LoadedProgram].setState("TERMINATED");
                     _LoadedProgram = -1;
                     break;
