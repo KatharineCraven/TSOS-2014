@@ -114,9 +114,37 @@ module TSOS {
             // UPDATE: Even though we are now working in TypeScript, char and string remain undistinguished.
             if (text !== "") {
                 // Draw the text at the current X and Y coordinates.
+                var word = "";
+                var remaining = "";
+                debugger;
+                //in progress attempt to linewrap by breaking into words
+                for(var i = 0; i< text.length; i++){
+                    word += text.charAt(i);
 
-                //in progress attempt to linewrap
-                if(CanvasTextFunctions.measure(this.currentFont, this.currentFontSize, text) > (500 -this.currentXPosition)){
+                    if (text.charAt(i) === " "){
+                            this.handleWords(word);
+                            text = text.substring(0, i) + text.substring(i+1, text.length);
+                            word = ""
+                        if(word === " "){
+                            //word = word.substring(0, text.length-1);
+                        }else{
+                            break;
+                        }
+
+                        
+                    }
+                }
+
+                this.handleWords(word);
+                this.putText(text.substring(i, text.length));
+
+            }
+         }
+
+        //function for line handling LETS DO THIS
+        public handleWords(text){
+            text.trim();
+            if(CanvasTextFunctions.measure(this.currentFont, this.currentFontSize, text) > (500 -this.currentXPosition)){
                     this.advanceLine();
                 }
 
@@ -124,8 +152,7 @@ module TSOS {
                 // Move the current X position.
                 var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
                 this.currentXPosition = this.currentXPosition + offset;
-            }
-         }
+        }
 
         public advanceLine(): void {
             this.prevX.push(this.currentXPosition);

@@ -56,10 +56,9 @@ var TSOS;
                 var c = CanvasTextFunctions.letter(str.charAt(i));
 
                 //in progress line wrapping
-                if ((500 - _StdOut.currentXPosition) < this.measure(_DefaultFontFamily, _DefaultFontSize, c)) {
-                    _StdOut.advanceLine();
-                }
-
+                /*if((500 - _StdOut.currentXPosition) < this.measure(_DefaultFontFamily, _DefaultFontSize, c)){
+                _StdOut.advanceLine();
+                }*/
                 if (!c) {
                     continue;
                 }

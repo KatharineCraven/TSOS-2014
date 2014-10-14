@@ -111,17 +111,42 @@ var TSOS;
             // UPDATE: Even though we are now working in TypeScript, char and string remain undistinguished.
             if (text !== "") {
                 // Draw the text at the current X and Y coordinates.
-                //in progress attempt to linewrap
-                if (TSOS.CanvasTextFunctions.measure(this.currentFont, this.currentFontSize, text) > (500 - this.currentXPosition)) {
-                    this.advanceLine();
+                var word = "";
+                var remaining = "";
+                debugger;
+
+                for (var i = 0; i < text.length; i++) {
+                    word += text.charAt(i);
+
+                    if (text.charAt(i) === " ") {
+                        this.handleWords(word);
+                        text = text.substring(0, i) + text.substring(i + 1, text.length);
+                        word = "";
+                        if (word === " ") {
+                            //word = word.substring(0, text.length-1);
+                        } else {
+                            break;
+                        }
+                    }
                 }
 
-                _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text);
-
-                // Move the current X position.
-                var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
-                this.currentXPosition = this.currentXPosition + offset;
+                this.handleWords(word);
+                this.putText(text.substring(i, text.length));
             }
+        };
+
+        //function for line handling LETS DO THIS
+        Console.prototype.handleWords = function (text) {
+            text.trim();
+            if (TSOS.CanvasTextFunctions.measure(this.currentFont, this.currentFontSize, text) > (500 - this.currentXPosition)) {
+                this.advanceLine();
+            }
+
+            _DrawingContext.drawText(this.currentFont, this.currentFontSize, this.currentXPosition, this.currentYPosition, text);
+
+            // Move the current X position.
+            var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
+            this.currentXPosition = this.currentXPosition + offset;
         };
 
         Console.prototype.advanceLine = function () {
