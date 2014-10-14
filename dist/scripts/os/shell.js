@@ -70,7 +70,7 @@ var TSOS;
             this.commandList[this.commandList.length] = sc;
 
             //load user program
-            sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Checks if input is valid.");
+            sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Loads valid program input.");
             this.commandList[this.commandList.length] = sc;
 
             //blue screen of death
@@ -415,6 +415,7 @@ var TSOS;
             _Kernel.krnTrapError("Testing Trap");
         };
 
+        //run command
         Shell.prototype.shellRun = function (args) {
             _CPUOutput.value = _CPU.displayCPU();
             if (args >= _pidCount) {

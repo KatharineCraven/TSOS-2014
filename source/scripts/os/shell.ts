@@ -92,7 +92,7 @@ module TSOS {
             this.commandList[this.commandList.length] = sc;
 
             //load user program
-            sc = new ShellCommand(this.shellLoad, "load", "- Checks if input is valid.");
+            sc = new ShellCommand(this.shellLoad, "load", "- Loads valid program input.");
             this.commandList[this.commandList.length] = sc;
 
             //blue screen of death
@@ -432,7 +432,7 @@ module TSOS {
         public shellBSOD(){
             _Kernel.krnTrapError("Testing Trap");
         }
-
+//run command
         public shellRun(args){
             _CPUOutput.value = _CPU.displayCPU();
             if(args >= _pidCount){
