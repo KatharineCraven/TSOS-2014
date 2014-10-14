@@ -15,6 +15,7 @@
    <script type="text/javascript" src="dist/scripts/host/control.js"></script>
    <script type="text/javascript" src="dist/scripts/host/devices.js"></script>
    <script type="text/javascript" src="dist/scripts/host/cpu.js"></script>
+   <script type="text/javascript" src="dist/scripts/host/memory.js"></script>
 
    <!-- Virtual OS Routines: Make sure Kernel code is last, since it needs those above it. -->
    <script type="text/javascript" src="dist/scripts/os/interrupt.js"></script>
@@ -27,6 +28,8 @@
    <script type="text/javascript" src="dist/scripts/os/shellCommand.js"></script>
    <script type="text/javascript" src="dist/scripts/os/userCommand.js"></script>
    <script type="text/javascript" src="dist/scripts/os/kernel.js"></script>
+   <script type="text/javascript" src="dist/scripts/os/memorymanager.js"></script>
+   <script type="text/javascript" src="dist/scripts/os/pcb.js"></script>
 
    <!-- Other Routines -->
    <script type="text/javascript" src="dist/scripts/utils.js"></script>
@@ -65,6 +68,18 @@
              tabindex="2"
              onclick="TSOS.Control.hostBtnReset_click(this);">
    </div>
+      <div id="divMemoryScreen" style= "float: right; margin-right:250px; margin-top 15px; width:300px">
+   		<label>Memory
+   			<br>
+   			<textarea name="taMemoryInput"
+   					  id = "taMemoryInput"
+   					  rows= "8"
+   					  cols= "32">
+   			</textarea>
+   		</label>
+
+   </div>
+
 
    <div id="divConsole" style="margin:4px; width:520px; height:520px; float:left;">
 
@@ -74,6 +89,17 @@
               tabindex="3">
       </canvas>
 
+   </div>
+
+    <div id="divCPUSCreen" style= "float:right; margin-right:250px; margin-top 800px; width:300px">
+      <label>CPU
+        <br>
+        <textarea name="taCPUStatus"
+              id = "taCPUStatus"
+              rows= "8"
+              cols= "32">
+        </textarea>
+      </label>
    </div>
 
        <div id="taskBar" style=" width:500px; height:51px;">

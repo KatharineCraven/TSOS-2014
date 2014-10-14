@@ -21,7 +21,7 @@ var TIMER_IRQ: number = 0;  // Pages 23 (timer), 9 (interrupts), and 561 (interr
                             // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
 var KEYBOARD_IRQ: number = 1;
 
-
+var _TEST = "";
 //
 // Global Variables
 //
@@ -54,12 +54,25 @@ var _KernelInterruptQueue = null;
 var _KernelBuffers: any[] = null;
 var _KernelInputQueue = null;
 
+var _LoadedProgram = -1;
+
+
+var _MemoryManager = null; //memory manager
+
+//Memory
+var _MemoryOutput;
+
+var _CPUOutput;
+
+var _pidCount;
+var _pcbArray = new Array();
 // Standard input and output
 var _StdIn  = null;
 var _StdOut = null;
 
 //UserCode
 var _UserCode;
+
 
 // UI
 var _Console: TSOS.Console;

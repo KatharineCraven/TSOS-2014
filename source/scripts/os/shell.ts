@@ -18,8 +18,7 @@ module TSOS {
         public curses = "[fuvg],[cvff],[shpx],[phag],[pbpxfhpxre],[zbgureshpxre],[gvgf]";
         public apologies = "[sorry]";
 
-        constructor() {
-
+        constructor() {;
         }
 
         public init() {
@@ -100,6 +99,8 @@ module TSOS {
             sc = new ShellCommand(this.shellBSOD, "bsod", "- Kernel Trap Test");
             this.commandList[this.commandList.length] = sc;
 
+            sc = new ShellCommand(this.shellRun, "run", "<pid> - Run program corresponding to <pid>");
+            this.commandList[this.commandList.length] = sc;
             // processes - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
@@ -376,7 +377,7 @@ module TSOS {
         //loads user input
         public shellLoad(){
             var s = _UserCode.value;
-            var v = "valid";
+            var v = true;
             var c = '';
             var cList = ['\n', ' ', 'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'F', 'f', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
             var notSpace = 0;
@@ -391,27 +392,59 @@ module TSOS {
                 for(var j = 0; j < cList.length; j++){
 
                     if( c ==  cList[j]){
-                        v = "valid";
+                        v = true;
                         break;
                     }
 
-                    v = "invalid";
+                    v = false;
                 }
 
-                if (v == "invalid"){
+                if (v == false){
                     break;
                 }
             }
 
             if(notSpace%2 != 0){
-                v = "invalid";
+                v = false;
             }
 
-            _StdOut.putText(v);        
+            if(notSpace == 0){
+                v = false;
+            }
+
+            if(v == false){
+               _StdOut.putText("Invalid Input");   
+            }else{
+
+                if(_LoadedProgram == -1){
+                    _MemoryManager.clearAllMem();
+                    _CPUOutput.value = _CPU.displayCPU();
+                    _MemoryManager.addToMem(s.replace(/\s/g,'').toUpperCase());
+                    _pcbArray[_pidCount] = new PCB();
+                    _StdOut.putText("pid: "+_pidCount); 
+                    _pidCount++; 
+                }else{
+                    _StdOut.putText("Please wait until program finishes running");
+                }
+            }       
         }
 
         public shellBSOD(){
             _Kernel.krnTrapError("Testing Trap");
+        }
+
+        public shellRun(args){
+            _CPUOutput.value = _CPU.displayCPU();
+            if(args >= _pidCount){
+                _StdOut.putText("Invalid pid");
+            }else if(_LoadedProgram != -1){
+                 _StdOut.putText("Please wait for program to finish");
+            }else if(args < (_pidCount-1)){ //temporary: this program has been deleted from memory in proj 2
+                _StdOut.putText("Program has been wiped from memory");
+            }else{
+                _LoadedProgram = args;
+                _pcbArray[args].setState("READY");
+            }
         }
 
     }

@@ -17,15 +17,18 @@ module TSOS {
         //
         public krnBootstrap() {      // Page 8. {
             Control.hostLog("bootstrap", "host");  // Use hostLog because we ALWAYS want this, even if _Trace is off.
-
             // Initialize our global queues.
             _KernelInterruptQueue = new Queue();  // A (currently) non-priority queue for interrupt requests (IRQs).
             _KernelBuffers = new Array();         // Buffers... for the kernel.
             _KernelInputQueue = new Queue();      // Where device input lands before being processed out somewhere.
             _Console = new Console();          // The command line interface / console I/O device.
+            _MemoryManager = new MemoryManager(); //memory manager
+            _CPUOutput.value = _CPU.displayCPU();
+            
 
             // Initialize the console.
             _Console.init();
+
 
             // Initialize standard input and output to the _Console.
             _StdIn  = _Console;
@@ -40,6 +43,7 @@ module TSOS {
             //
             // ... more?
             //
+
 
             // Enable the OS Interrupts.  (Not the CPU clock interrupt, as that is done in the hardware sim.)
             this.krnTrace("Enabling the interrupts.");
@@ -77,6 +81,7 @@ module TSOS {
                This is NOT the same as a TIMER, which causes an interrupt and is handled like other interrupts.
                This, on the other hand, is the clock pulse from the hardware (or host) that tells the kernel
                that it has to look for interrupts and process them if it finds any.                           */
+               //memory output
 
                //status message
                _DrawingContextTwo.clearRect(0, 0, 500, 100);
@@ -84,14 +89,36 @@ module TSOS {
 
             // Check for an interrupt, are any. Page 560
             if (_KernelInterruptQueue.getSize() > 0) {
+                if(_LoadedProgram != -1){
+
+                    if(_pcbArray[_LoadedProgram].getState() === "RUNNING"){
+                        _pcbArray[_LoadedProgram].setState("WAITING");
+                    }
+                }
+
                 // Process the first interrupt on the interrupt queue.
                 // TODO: Implement a priority queue based on the IRQ number/id to enforce interrupt priority.
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
+                
             } else if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed. {
                 _CPU.cycle();
-            } else {                      // If there are no interrupts and there is nothing being executed then just be idle. {
+            } else if(_LoadedProgram != -1){ //if there is a program waiting to run - this will be changed later for multiple programs
+                
+                if((_pcbArray[_LoadedProgram].getState() === "READY")||(_pcbArray[_LoadedProgram].getState() === "WAITING")){
+                    _CPU.isExecuting = true;
+                    _pcbArray[_LoadedProgram].setState("RUNNING");
+                }
+
+            }else {                      // If there are no interrupts and there is nothing being executed then just be idle. {
                 this.krnTrace("Idle");
+            }
+
+            _MemoryOutput.value = _MemoryManager.displayMem();
+
+            if(_LoadedProgram != -1){
+                _CPUOutput.value = _CPU.displayCPU();
+                //whut
             }
 
         }

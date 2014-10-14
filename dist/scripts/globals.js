@@ -19,6 +19,8 @@ var TIMER_IRQ = 0;
 // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
 var KEYBOARD_IRQ = 1;
 
+var _TEST = "";
+
 //
 // Global Variables
 //
@@ -50,6 +52,18 @@ var _Kernel;
 var _KernelInterruptQueue = null;
 var _KernelBuffers = null;
 var _KernelInputQueue = null;
+
+var _LoadedProgram = -1;
+
+var _MemoryManager = null;
+
+//Memory
+var _MemoryOutput;
+
+var _CPUOutput;
+
+var _pidCount;
+var _pcbArray = new Array();
 
 // Standard input and output
 var _StdIn = null;

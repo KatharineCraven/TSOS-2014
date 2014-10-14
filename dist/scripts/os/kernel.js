@@ -21,6 +21,8 @@ var TSOS;
             _KernelBuffers = new Array(); // Buffers... for the kernel.
             _KernelInputQueue = new TSOS.Queue(); // Where device input lands before being processed out somewhere.
             _Console = new TSOS.Console(); // The command line interface / console I/O device.
+            _MemoryManager = new TSOS.MemoryManager(); //memory manager
+            _CPUOutput.value = _CPU.displayCPU();
 
             // Initialize the console.
             _Console.init();
@@ -73,20 +75,39 @@ var TSOS;
             This is NOT the same as a TIMER, which causes an interrupt and is handled like other interrupts.
             This, on the other hand, is the clock pulse from the hardware (or host) that tells the kernel
             that it has to look for interrupts and process them if it finds any.                           */
+            //memory output
             //status message
             _DrawingContextTwo.clearRect(0, 0, 500, 100);
             _DrawingContextTwo.fillText(new Date().toLocaleString() + ",  Status: " + _StatusMessage, 8, 30);
 
             // Check for an interrupt, are any. Page 560
             if (_KernelInterruptQueue.getSize() > 0) {
+                if (_LoadedProgram != -1) {
+                    if (_pcbArray[_LoadedProgram].getState() === "RUNNING") {
+                        _pcbArray[_LoadedProgram].setState("WAITING");
+                    }
+                }
+
                 // Process the first interrupt on the interrupt queue.
                 // TODO: Implement a priority queue based on the IRQ number/id to enforce interrupt priority.
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             } else if (_CPU.isExecuting) {
                 _CPU.cycle();
+            } else if (_LoadedProgram != -1) {
+                if ((_pcbArray[_LoadedProgram].getState() === "READY") || (_pcbArray[_LoadedProgram].getState() === "WAITING")) {
+                    _CPU.isExecuting = true;
+                    _pcbArray[_LoadedProgram].setState("RUNNING");
+                }
             } else {
                 this.krnTrace("Idle");
+            }
+
+            _MemoryOutput.value = _MemoryManager.displayMem();
+
+            if (_LoadedProgram != -1) {
+                _CPUOutput.value = _CPU.displayCPU();
+                //whut
             }
         };
 
