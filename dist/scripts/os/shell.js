@@ -82,6 +82,9 @@ var TSOS;
 
             // processes - list the running processes and their IDs
             // kill <id> - kills the specified process id.
+            sc = new TSOS.ShellCommand(this.shellClearMem, "clearmem", "c- Clears all memory partitions");
+            this.commandList[this.commandList.length] = sc;
+
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -413,6 +416,12 @@ var TSOS;
 
         Shell.prototype.shellBSOD = function () {
             _Kernel.krnTrapError("Testing Trap");
+        };
+
+        Shell.prototype.shellClearMem = function () {
+            _MemoryManager.clearAllMem();
+            _MemoryManagerTwo.clearAllMem();
+            _MemoryManagerThree.clearAllMem();
         };
 
         //run command

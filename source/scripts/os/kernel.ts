@@ -23,6 +23,8 @@ module TSOS {
             _KernelInputQueue = new Queue();      // Where device input lands before being processed out somewhere.
             _Console = new Console();          // The command line interface / console I/O device.
             _MemoryManager = new MemoryManager(); //memory manager
+            _MemoryManagerTwo = new MemoryManager(); //memory manager
+            _MemoryManagerThree = new MemoryManager(); //memory manager
             _CPUOutput.value = _CPU.displayCPU();
             
 

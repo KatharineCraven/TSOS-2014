@@ -104,6 +104,9 @@ module TSOS {
             // processes - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
+            sc = new ShellCommand(this.shellClearMem, "clearmem", "c- Clears all memory partitions");
+            this.commandList[this.commandList.length] = sc;
+
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -432,6 +435,13 @@ module TSOS {
         public shellBSOD(){
             _Kernel.krnTrapError("Testing Trap");
         }
+
+        public shellClearMem(){
+            _MemoryManager.clearAllMem();
+            _MemoryManagerTwo.clearAllMem();
+            _MemoryManagerThree.clearAllMem();
+        }
+
 //run command
         public shellRun(args){
             _CPUOutput.value = _CPU.displayCPU();

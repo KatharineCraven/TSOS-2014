@@ -56,6 +56,8 @@ var _KernelInputQueue = null;
 var _LoadedProgram = -1;
 
 var _MemoryManager = null;
+var _MemoryManagerTwo = null;
+var _MemoryManagerThree = null;
 
 //Memory
 var _MemoryOutput;

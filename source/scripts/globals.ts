@@ -58,6 +58,8 @@ var _LoadedProgram = -1;
 
 
 var _MemoryManager = null; //memory manager
+var _MemoryManagerTwo = null; //memory manager
+var _MemoryManagerThree = null; //memory manager
 
 //Memory
 var _MemoryOutput;
