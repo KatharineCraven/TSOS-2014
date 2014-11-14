@@ -26,6 +26,7 @@ var TSOS;
             _MemoryManagerThree = new TSOS.MemoryManager(); //memory manager
             _CPUOutput.value = _CPU.displayCPU();
 
+            //minor change
             // Initialize the console.
             _Console.init();
 
