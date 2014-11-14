@@ -24,6 +24,9 @@ var TSOS;
             _MemoryManager = new TSOS.MemoryManager(); //memory manager
             _MemoryManagerTwo = new TSOS.MemoryManager(); //memory manager
             _MemoryManagerThree = new TSOS.MemoryManager(); //memory manager
+            _MemoryManagerAvail = false; //memory manager
+            _MemoryManagerTwoAvail = false; //memory manager
+            _MemoryManagerThreeAvail = false; //memory manager
             _CPUOutput.value = _CPU.displayCPU();
 
             //minor change

@@ -25,8 +25,12 @@ module TSOS {
             _MemoryManager = new MemoryManager(); //memory manager
             _MemoryManagerTwo = new MemoryManager(); //memory manager
             _MemoryManagerThree = new MemoryManager(); //memory manager
+            _MemoryManagerAvail = false; //memory manager
+            _MemoryManagerTwoAvail = false; //memory manager
+            _MemoryManagerThreeAvail = false; //memory manager
             _CPUOutput.value = _CPU.displayCPU();
             //minor change
+
 
             // Initialize the console.
             _Console.init();

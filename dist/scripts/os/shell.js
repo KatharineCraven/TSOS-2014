@@ -86,6 +86,9 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellClearMem, "clearmem", "c- Clears all memory partitions");
             this.commandList[this.commandList.length] = sc;
 
+            sc = new TSOS.ShellCommand(this.shellQuantum, "quantum", "<int> - Sets quantum for Round Robin clock schedule.");
+            this.commandList[this.commandList.length] = sc;
+
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -423,6 +426,10 @@ var TSOS;
             _MemoryManager.clearAllMem();
             _MemoryManagerTwo.clearAllMem();
             _MemoryManagerThree.clearAllMem();
+        };
+
+        Shell.prototype.shellQuantum = function (args) {
+            _Quantum = args;
         };
 
         //run command

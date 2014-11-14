@@ -60,6 +60,12 @@ var _MemoryManager = null;
 var _MemoryManagerTwo = null;
 var _MemoryManagerThree = null;
 
+var _MemoryManagerAvail;
+var _MemoryManagerTwoAvail;
+var _MemoryManagerThreeAvail;
+
+var _Quantum = 2;
+
 //Memory
 var _MemoryOutput;
 

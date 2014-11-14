@@ -6,7 +6,6 @@ module TSOS{
 	export class MemoryManager{
 
 		constructor(public mry = new Memory(), public xc = 0){
-
 		}
 
 		public addToMem(input){
