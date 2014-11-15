@@ -19,15 +19,16 @@ module TSOS {
             Control.hostLog("bootstrap", "host");  // Use hostLog because we ALWAYS want this, even if _Trace is off.
             // Initialize our global queues.
             _KernelInterruptQueue = new Queue();  // A (currently) non-priority queue for interrupt requests (IRQs).
+
+            _ReadyQueue = new Queue();
+            _ResidentQueue = new Queue();
+
             _KernelBuffers = new Array();         // Buffers... for the kernel.
             _KernelInputQueue = new Queue();      // Where device input lands before being processed out somewhere.
             _Console = new Console();          // The command line interface / console I/O device.
             _MemoryManager = new MemoryManager(); //memory manager
-            _MemoryManagerTwo = new MemoryManager(); //memory manager
-            _MemoryManagerThree = new MemoryManager(); //memory manager
-            _MemoryManagerAvail = false; //memory manager
-            _MemoryManagerTwoAvail = false; //memory manager
-            _MemoryManagerThreeAvail = false; //memory manager
+
+
             _CPUOutput.value = _CPU.displayCPU();
             //minor change
 

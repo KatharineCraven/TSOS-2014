@@ -5,7 +5,7 @@ module TSOS{
 
 	export class PCB{
 
-		constructor(private pid = _pidCount, private processState= "NEW", private pc = 0, private xReg = 0, private yReg = 0, private accumulator = 0, private zFlag =0){
+		constructor(private pid = _pidCount, private processState= "NEW", private pc = 0, private xReg = 0, private yReg = 0, private accumulator = 0, private zFlag =0, private baseReg = 0, private limitReg = 255, private partitionNum = 1){
 
 		}
 		
@@ -59,6 +59,28 @@ module TSOS{
 
 		public getZFlag(){
 			return this.zFlag;
+		}
+
+		public setBaseReg(br){
+			this.baseReg = br;
+		}
+
+		public getBaseReg(){
+			return this.baseReg;
+		}
+
+		public setLimitReg(lr){
+			this.limitReg = lr;
+		}
+
+		public getLimitReg(){
+			return this.limitReg;
+		}
+
+		public setPartition(part){
+			this.partitionNum = part;
+			this.setBaseReg((256*part) -256);
+			this.setLimitReg((256*part) -1);
 		}
 
 	}

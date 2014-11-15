@@ -18,15 +18,15 @@ var TSOS;
 
             // Initialize our global queues.
             _KernelInterruptQueue = new TSOS.Queue(); // A (currently) non-priority queue for interrupt requests (IRQs).
+
+            _ReadyQueue = new TSOS.Queue();
+            _ResidentQueue = new TSOS.Queue();
+
             _KernelBuffers = new Array(); // Buffers... for the kernel.
             _KernelInputQueue = new TSOS.Queue(); // Where device input lands before being processed out somewhere.
             _Console = new TSOS.Console(); // The command line interface / console I/O device.
             _MemoryManager = new TSOS.MemoryManager(); //memory manager
-            _MemoryManagerTwo = new TSOS.MemoryManager(); //memory manager
-            _MemoryManagerThree = new TSOS.MemoryManager(); //memory manager
-            _MemoryManagerAvail = false; //memory manager
-            _MemoryManagerTwoAvail = false; //memory manager
-            _MemoryManagerThreeAvail = false; //memory manager
+
             _CPUOutput.value = _CPU.displayCPU();
 
             //minor change

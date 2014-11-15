@@ -54,15 +54,13 @@ var _KernelInterruptQueue = null;
 var _KernelBuffers = null;
 var _KernelInputQueue = null;
 
+//Memory program partitions of 256 size each
+var _NumProgForMem = 3;
 var _LoadedProgram = -1;
+var _ResidentQueue;
+var _ReadyQueue;
 
 var _MemoryManager = null;
-var _MemoryManagerTwo = null;
-var _MemoryManagerThree = null;
-
-var _MemoryManagerAvail;
-var _MemoryManagerTwoAvail;
-var _MemoryManagerThreeAvail;
 
 var _Quantum = 2;
 

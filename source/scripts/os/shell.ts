@@ -423,10 +423,13 @@ module TSOS {
             }else{
 
                 if(_LoadedProgram == -1){
-                    _MemoryManager.clearAllMem();
+                    //_MemoryManager.clearAllMem();
                     _CPUOutput.value = _CPU.displayCPU();
-                    _MemoryManager.addToMem(s.replace(/\s/g,'').toUpperCase());
+                    var avail = _MemoryManager.findNextAvailPart();
+                    _MemoryManager.addToMem(s.replace(/\s/g,'').toUpperCase(), avail);
+                    _MemoryManager.setPartitionAsUsed(avail);
                     _pcbArray[_pidCount] = new PCB();
+                    _pcbArray[_pidCount].setPartition(avail);
                     _StdOut.putText("pid: "+_pidCount); 
                     _pidCount++; 
                 }else{
@@ -441,8 +444,8 @@ module TSOS {
 
         public shellClearMem(){
             _MemoryManager.clearAllMem();
-            _MemoryManagerTwo.clearAllMem();
-            _MemoryManagerThree.clearAllMem();
+            //_MemoryManagerTwo.clearAllMem();
+            //_MemoryManagerThree.clearAllMem();
         }
 
         public shellQuantum(args){
