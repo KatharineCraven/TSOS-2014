@@ -422,19 +422,23 @@ module TSOS {
                _StdOut.putText("Invalid Input");   
             }else{
 
-                if(_LoadedProgram == -1){
+                //if(_LoadedProgram == -1){
                     //_MemoryManager.clearAllMem();
                     _CPUOutput.value = _CPU.displayCPU();
                     var avail = _MemoryManager.findNextAvailPart();
-                    _MemoryManager.addToMem(s.replace(/\s/g,'').toUpperCase(), avail);
-                    _MemoryManager.setPartitionAsUsed(avail);
-                    _pcbArray[_pidCount] = new PCB();
-                    _pcbArray[_pidCount].setPartition(avail);
-                    _StdOut.putText("pid: "+_pidCount); 
-                    _pidCount++; 
-                }else{
-                    _StdOut.putText("Please wait until program finishes running");
-                }
+                    if(avail == 0){
+                        _StdOut.putText("Please wait until program finishes running");
+                    }else{
+                        _MemoryManager.addToMem(s.replace(/\s/g,'').toUpperCase(), avail);
+                        _MemoryManager.setPartitionAsUsed(avail);
+                        _ResidentList[_pidCount] = new PCB();
+                        _ResidentList[_pidCount].setPartition(avail);
+                        _StdOut.putText("pid: "+_pidCount); 
+                        _pidCount++; 
+                    }
+                //}else{
+                //    _StdOut.putText("Please wait until program finishes running");
+                //}
             }       
         }
 
@@ -444,8 +448,9 @@ module TSOS {
 
         public shellClearMem(){
             _MemoryManager.clearAllMem();
-            //_MemoryManagerTwo.clearAllMem();
-            //_MemoryManagerThree.clearAllMem();
+            _ResidentList = new Array();
+            _pidCount = 0;
+            //needs to clear queues and whatnot
         }
 
         public shellQuantum(args){
@@ -456,13 +461,16 @@ module TSOS {
             _CPUOutput.value = _CPU.displayCPU();
             if(args >= _pidCount){
                 _StdOut.putText("Invalid pid");
-            }else if(_LoadedProgram != -1){
-                 _StdOut.putText("Please wait for program to finish");
+            //}else if(_LoadedProgram != -1){
+             //    _StdOut.putText("Please wait for program to finish");
             }else if(args < (_pidCount-1)){ //temporary: this program has been deleted from memory in proj 2
                 _StdOut.putText("Program has been wiped from memory");
             }else{
                 _LoadedProgram = args;
-                _pcbArray[args].setState("READY");
+                _ResidentList[args].setState("READY");
+                //above needs to be fixed
+
+                _ReadyQueue.enqueue(_ResidentList[args]);
             }
         }
 

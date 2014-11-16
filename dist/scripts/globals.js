@@ -20,6 +20,10 @@ var TIMER_IRQ = 0;
 // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
 var KEYBOARD_IRQ = 1;
 
+var SYSOUT_IRQ = 2;
+
+var SYSERR_IRQ = 3;
+
 var _TEST = "";
 
 //
@@ -70,7 +74,7 @@ var _MemoryOutput;
 var _CPUOutput;
 
 var _pidCount;
-var _pcbArray = new Array();
+var _ResidentList;
 
 // Standard input and output
 var _StdIn = null;

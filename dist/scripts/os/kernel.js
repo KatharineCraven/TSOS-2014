@@ -20,7 +20,7 @@ var TSOS;
             _KernelInterruptQueue = new TSOS.Queue(); // A (currently) non-priority queue for interrupt requests (IRQs).
 
             _ReadyQueue = new TSOS.Queue();
-            _ResidentQueue = new TSOS.Queue();
+            _ResidentList = new Array();
 
             _KernelBuffers = new Array(); // Buffers... for the kernel.
             _KernelInputQueue = new TSOS.Queue(); // Where device input lands before being processed out somewhere.
@@ -89,8 +89,8 @@ var TSOS;
             // Check for an interrupt, are any. Page 560
             if (_KernelInterruptQueue.getSize() > 0) {
                 if (_LoadedProgram != -1) {
-                    if (_pcbArray[_LoadedProgram].getState() === "RUNNING") {
-                        _pcbArray[_LoadedProgram].setState("WAITING");
+                    if (_ResidentList[_LoadedProgram].getState() === "RUNNING") {
+                        _ResidentList[_LoadedProgram].setState("WAITING");
                     }
                 }
 
@@ -101,9 +101,9 @@ var TSOS;
             } else if (_CPU.isExecuting) {
                 _CPU.cycle();
             } else if (_LoadedProgram != -1) {
-                if ((_pcbArray[_LoadedProgram].getState() === "READY") || (_pcbArray[_LoadedProgram].getState() === "WAITING")) {
+                if ((_ResidentList[_LoadedProgram].getState() === "READY") || (_ResidentList[_LoadedProgram].getState() === "WAITING")) {
                     _CPU.isExecuting = true;
-                    _pcbArray[_LoadedProgram].setState("RUNNING");
+                    _ResidentList[_LoadedProgram].setState("RUNNING");
                 }
             } else {
                 this.krnTrace("Idle");
@@ -145,9 +145,27 @@ var TSOS;
                     _krnKeyboardDriver.isr(params); // Kernel mode device driver
                     _StdIn.handleInput();
                     break;
+                case SYSOUT_IRQ:
+                    this.krnOutputISR(params);
+                    break;
+                case SYSERR_IRQ:
+                    this.krnSYSErr(params);
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
+        };
+
+        Kernel.prototype.krnOutputISR = function (params) {
+            //Control.hostLog("Handling Output", "OS");
+            _StdOut.advanceLine();
+            _StdOut.putText(params);
+            //_StdOut.advanceLine();
+        };
+
+        Kernel.prototype.krnSYSErr = function (params) {
+            //Control.hostLog("Handling Error", "OS");
+            _StdOut.putText("Input Error");
+            _StdOut.advanceLine();
         };
 
         Kernel.prototype.krnTimerISR = function () {

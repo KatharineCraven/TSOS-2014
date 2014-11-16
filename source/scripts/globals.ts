@@ -21,6 +21,10 @@ var TIMER_IRQ: number = 0;  // Pages 23 (timer), 9 (interrupts), and 561 (interr
                             // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
 var KEYBOARD_IRQ: number = 1;
 
+var SYSOUT_IRQ: number = 2;
+
+var SYSERR_IRQ: number = 3;
+
 var _TEST = "";
 //
 // Global Variables
@@ -70,7 +74,7 @@ var _MemoryOutput;
 var _CPUOutput;
 
 var _pidCount;
-var _pcbArray = new Array();
+var _ResidentList;
 // Standard input and output
 var _StdIn  = null;
 var _StdOut = null;

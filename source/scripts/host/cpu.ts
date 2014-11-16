@@ -45,7 +45,7 @@ module TSOS {
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
 
-            this.getFromPCB(_pcbArray[_LoadedProgram]);
+            this.getFromPCB(_ResidentList[_LoadedProgram]);
             this.getMethod();
         }
 
@@ -73,12 +73,12 @@ module TSOS {
         }
 
         public updatePCB(){
-            //_pcbArray[_LoadedProgram].setPC(this.PC);
-            _pcbArray[_LoadedProgram].setPC(this.PC);
-            _pcbArray[_LoadedProgram].setAccum(this.Acc);
-            _pcbArray[_LoadedProgram].setXReg(this.Xreg);
-            _pcbArray[_LoadedProgram].setYReg(this.Yreg);
-            _pcbArray[_LoadedProgram].setZFlag(this.Zflag);
+            //_ResidentList[_LoadedProgram].setPC(this.PC);
+            _ResidentList[_LoadedProgram].setPC(this.PC);
+            _ResidentList[_LoadedProgram].setAccum(this.Acc);
+            _ResidentList[_LoadedProgram].setXReg(this.Xreg);
+            _ResidentList[_LoadedProgram].setYReg(this.Yreg);
+            _ResidentList[_LoadedProgram].setZFlag(this.Zflag);
         }
 
         //load accumulartor with constant
@@ -171,10 +171,12 @@ module TSOS {
         public BRK(){
             this.init();
             this.updatePCB();
-            _pcbArray[_LoadedProgram].setState("TERMINATED");
+            _ResidentList[_LoadedProgram].setState("TERMINATED");
             _LoadedProgram = -1;
-            _StdOut.advanceLine();
-            _OsShell.putPrompt();
+            //_StdOut.advanceLine();
+            _KernelInterruptQueue.enqueue(new Interrupt(SYSOUT_IRQ, ""));
+            _KernelInterruptQueue.enqueue(new Interrupt(SYSOUT_IRQ, ">"));
+            //_OsShell.putPrompt();
         }
 
         public ecCPX(){
@@ -230,9 +232,10 @@ module TSOS {
         }
 
         public ffSYS(){
-            _StdOut.advanceLine();
+            //_StdOut.advanceLine();
             if(this.Xreg == 1){
-                _StdOut.putText(this.Yreg.toString());
+                //_StdOut.putText(this.Yreg.toString());
+                _KernelInterruptQueue.enqueue(new Interrupt(SYSOUT_IRQ, this.Yreg.toString()));
             }else if(this.Xreg == 2){
                 debugger;
                 var i = this.Yreg;
@@ -246,8 +249,8 @@ module TSOS {
                     temp = String.fromCharCode(parseInt(_MemoryManager.getMemValue(i), 16));
 
                 }
-
-                _StdOut.putText(n);
+                _KernelInterruptQueue.enqueue(new Interrupt(SYSOUT_IRQ, n));
+                //_StdOut.putText(n);
             }
 
             this.PC += 1;
@@ -325,11 +328,11 @@ module TSOS {
                     break;
                 default:
                     //ERROR
-                    _StdOut.putText("Input Error D");
-                    _StdOut.advanceLine();
+                    //_StdOut.putText("Input Error D");
+                    //_StdOut.advanceLine();
                     this.init();
                     this.updatePCB();
-                    _pcbArray[_LoadedProgram].setState("TERMINATED");
+                    _ResidentList[_LoadedProgram].setState("TERMINATED");
                     _LoadedProgram = -1;
                     break;
             }
