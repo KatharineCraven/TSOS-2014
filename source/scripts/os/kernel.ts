@@ -28,6 +28,7 @@ module TSOS {
             _Console = new Console();          // The command line interface / console I/O device.
             _MemoryManager = new MemoryManager(); //memory manager
             _MemoryManager.initMemory();
+            _CpuExecutionCount = 1;
 
 
             _CPUOutput.value = _CPU.displayCPU();
@@ -97,12 +98,7 @@ module TSOS {
 
             // Check for an interrupt, are any. Page 560
             if (_KernelInterruptQueue.getSize() > 0) {
-                if(_LoadedProgram != -1){
 
-                    if(_ResidentList[_LoadedProgram].getState() === "RUNNING"){
-                        _ResidentList[_LoadedProgram].setState("WAITING");
-                    }
-                }
 
                 // Process the first interrupt on the interrupt queue.
                 // TODO: Implement a priority queue based on the IRQ number/id to enforce interrupt priority.
@@ -110,24 +106,44 @@ module TSOS {
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
                 
             } else if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed. {
-                _CPU.cycle();
-            } else if(_LoadedProgram != -1){ //if there is a program waiting to run - this will be changed later for multiple programs
-                
-                if((_ResidentList[_LoadedProgram].getState() === "READY")||(_ResidentList[_LoadedProgram].getState() === "WAITING")){
-                    _CPU.isExecuting = true;
-                    _ResidentList[_LoadedProgram].setState("RUNNING");
+                //_CPU.cycle();
+                //debugger;
+                if(_Quantum < _CpuExecutionCount){
+                    /*var tempPCB = _CurrentPCB;
+                    _ReadyQueue.enqueue(tempPCB);
+                    _CurrentPCB = _ReadyQueue.dequeue();*/
+                    _KernelInterruptQueue.enqueue(new Interrupt(SWITCHRUNNING_IRQ, ""));
+                    //_CpuExecutionCount = 1;
+                }else{
+                    _CPU.cycle();
+                    _CpuExecutionCount++;
                 }
+                //if Quantumn < Count then context switch, count = 1
+                //else cycle, incremement Count
+                _CPUOutput.value = _CPU.displayCPU();
+            } else if(_ReadyQueue.getSize() >= 1){ //if there is a program waiting to run - this will be changed later for multiple programs
+                //else if ready queue ! empty
+                //context switch 
 
+                //_CurrentPCB = _ReadyQueue.dequeue();
+                //_CpuExecutionCount = 1;
+                //context switch current PCB
+                //debugger;
+                _KernelInterruptQueue.enqueue(new Interrupt(MAKERUNNING_IRQ, ""));
+
+                //_CPU.isExecuting = true;
+
+                _CPUOutput.value = _CPU.displayCPU();
             }else {                      // If there are no interrupts and there is nothing being executed then just be idle. {
                 this.krnTrace("Idle");
             }
 
             _MemoryOutput.value = _MemoryManager.displayMem();
 
-            if(_LoadedProgram != -1){
+           /* if(_LoadedProgram != -1){
                 _CPUOutput.value = _CPU.displayCPU();
                 //whut
-            }
+            }*/
 
         }
 
@@ -169,9 +185,59 @@ module TSOS {
                     break;
                 case SYSERR_IRQ:
                     this.krnSYSErr(params);
+                    break;
+                case TERMINATE_IRQ:
+                    this.terminateProcess();
+                    break;
+                case MAKERUNNING_IRQ:
+                    this.makeProccessRun();
+                    break;
+                case SWITCHRUNNING_IRQ:
+                    this.switchProcesses();
+                    break;
+                case MAKEREADY_IRQ:
+                    this.makeProcessReady(params);
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
+        }
+
+        public makeProcessReady(params){
+            _ResidentList[params].setState("READY");
+            _ReadyQueue.enqueue(_ResidentList[params]);
+        }
+
+        public switchProcesses(){
+            var tempPCB = _CurrentPCB;
+            tempPCB.setState("WAITING");
+            _ReadyQueue.enqueue(tempPCB);
+
+            _CurrentPCB = _ReadyQueue.dequeue();
+            _CurrentPCB.setState("RUNNING");
+
+            _CpuExecutionCount = 1;
+        }
+
+        public makeProccessRun(){
+            _CurrentPCB = _ReadyQueue.dequeue();
+            _CurrentPCB.setState("RUNNING");
+            _CpuExecutionCount = 1;
+            _CPU.isExecuting = true;
+
+        }
+
+        public terminateProcess(){
+            _CurrentPCB.setState("TERMINATED");
+            _CPU.isExecuting = false;
+            var v  = _CurrentPCB.getPid();
+            var pp = _CurrentPCB.getPartiton();
+            _MemoryManager.clearMemoryPartition(pp);
+            _MemoryManager.setPartitionAsUnused(pp);
+            _ResidentList[v] = null;
+            //handle deleting
+            //handle clearing memory
+            //handle handle available partition
         }
 
         public krnOutputISR(params){

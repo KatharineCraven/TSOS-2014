@@ -99,6 +99,10 @@ var TSOS;
             this.setLimitReg((256 * part) - 1);
             this.setPC(this.getBaseReg());
         };
+
+        PCB.prototype.getPartiton = function () {
+            return this.partitionNum;
+        };
         return PCB;
     })();
     TSOS.PCB = PCB;

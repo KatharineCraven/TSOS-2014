@@ -427,12 +427,12 @@ module TSOS {
                     _CPUOutput.value = _CPU.displayCPU();
                     var avail = _MemoryManager.findNextAvailPart();
                     if(avail == 0){
-                        _StdOut.putText("Please wait until program finishes running");
+                        _StdOut.putText("No room in memory");
                     }else{
                         _MemoryManager.addToMem(s.replace(/\s/g,'').toUpperCase(), avail);
                         _MemoryManager.setPartitionAsUsed(avail);
                         //_StdOut.putText(avail.toString());
-                        _ResidentList[_pidCount] = new PCB();
+                        _ResidentList.push(new PCB());
                         _ResidentList[_pidCount].setPartition(avail);
                         // _ResidentList[_pidCount].setPC((256*_NumProgForMem)-256);
                         _StdOut.putText("pid: "+_pidCount); 
@@ -465,14 +465,14 @@ module TSOS {
                 _StdOut.putText("Invalid pid");
             //}else if(_LoadedProgram != -1){
              //    _StdOut.putText("Please wait for program to finish");
-            //}else if(args < (_pidCount-1)){ //temporary: this program has been deleted from memory in proj 2
-            //    _StdOut.putText("Program has been wiped from memory");
+            }else if(_ResidentList[args] == null){ //this program has been deleted from memory
+                _StdOut.putText("Program has been wiped from memory");
             }else{
                 _LoadedProgram = args;
-                _ResidentList[args].setState("READY");
+                //_ResidentList[args].setState("READY");
                 //above needs to be fixed
-
-                _ReadyQueue.enqueue(_ResidentList[args]);
+                _KernelInterruptQueue.enqueue(new Interrupt(MAKEREADY_IRQ, args));
+                //_ReadyQueue.enqueue(_ResidentList[args]);
             }
         }
 

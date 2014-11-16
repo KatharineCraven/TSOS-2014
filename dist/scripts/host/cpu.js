@@ -61,7 +61,7 @@ var TSOS;
 
             // TODO: Accumulate CPU usage and profiling statistics here.
             // Do the real work here. Be sure to set this.isExecuting appropriately.
-            this.getFromPCB(_ResidentList[_LoadedProgram]);
+            this.getFromPCB(_CurrentPCB);
             this.getMethod();
         };
 
@@ -223,7 +223,7 @@ var TSOS;
         };
 
         Cpu.prototype.acLDY = function () {
-            debugger;
+            //debugger;
             var location = "";
             this.incrementPC();
             location += _MemoryManager.getMemValue(this.PC);
@@ -250,7 +250,9 @@ var TSOS;
         Cpu.prototype.BRK = function () {
             this.init();
             this.updatePCB();
-            _ResidentList[_LoadedProgram].setState("TERMINATED");
+
+            //_CurrentPCB.setState("TERMINATED");
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(TERMINATE_IRQ, ""));
             _LoadedProgram = -1;
 
             //_StdOut.advanceLine();
@@ -343,7 +345,7 @@ var TSOS;
                 //_StdOut.putText(this.Yreg.toString());
                 _KernelInterruptQueue.enqueue(new TSOS.Interrupt(SYSOUT_IRQ, this.Yreg.toString()));
             } else if (this.Xreg == 2) {
-                debugger;
+                //debugger;
                 var i = this.Yreg;
 
                 while (i < this.baseRegister) {
@@ -374,7 +376,7 @@ var TSOS;
         //pc on current hex number - will need to check CPU is not over 255 after function
         Cpu.prototype.getMethod = function () {
             var iR = this.instructionReg.toString(16).toUpperCase();
-            debugger;
+
             switch (iR) {
                 case "A9":
                     //load acc. with constant
@@ -447,7 +449,9 @@ var TSOS;
                     //_StdOut.advanceLine();
                     this.init();
                     this.updatePCB();
-                    _ResidentList[_LoadedProgram].setState("TERMINATED");
+
+                    //_CurrentPCB.setState("TERMINATED");
+                    _KernelInterruptQueue.enqueue(new TSOS.Interrupt(TERMINATE_IRQ, ""));
                     _LoadedProgram = -1;
                     break;
             }

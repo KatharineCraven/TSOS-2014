@@ -20,9 +20,28 @@ var TIMER_IRQ = 0;
 // NOTE: The timer is different from hardware/host clock pulses. Don't confuse these.
 var KEYBOARD_IRQ = 1;
 
+//Handles output
 var SYSOUT_IRQ = 2;
 
+//Error for hex input
 var SYSERR_IRQ = 3;
+
+//makes one process active and one process put into waiting
+var SWITCHRUNNING_IRQ = 4;
+
+//makes a single process active
+var MAKERUNNING_IRQ = 5;
+
+//makes a single process waiting
+var MAKEWAITING_IRQ = 6;
+
+//makes a single process ready
+var MAKEREADY_IRQ = 7;
+
+//terminate a process
+var TERMINATE_IRQ = 8;
+
+var _CpuExecutionCount;
 
 var _TEST = "";
 
@@ -67,6 +86,8 @@ var _ReadyQueue;
 var _MemoryManager = null;
 
 var _Quantum = 2;
+
+var _CurrentPCB;
 
 //Memory
 var _MemoryOutput;
