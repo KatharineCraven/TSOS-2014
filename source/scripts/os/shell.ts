@@ -431,9 +431,10 @@ module TSOS {
                     }else{
                         _MemoryManager.addToMem(s.replace(/\s/g,'').toUpperCase(), avail);
                         _MemoryManager.setPartitionAsUsed(avail);
-                        _StdOut.putText(avail.toString());
+                        //_StdOut.putText(avail.toString());
                         _ResidentList[_pidCount] = new PCB();
                         _ResidentList[_pidCount].setPartition(avail);
+                        // _ResidentList[_pidCount].setPC((256*_NumProgForMem)-256);
                         _StdOut.putText("pid: "+_pidCount); 
                         _pidCount++; 
                     }
@@ -464,8 +465,8 @@ module TSOS {
                 _StdOut.putText("Invalid pid");
             //}else if(_LoadedProgram != -1){
              //    _StdOut.putText("Please wait for program to finish");
-            }else if(args < (_pidCount-1)){ //temporary: this program has been deleted from memory in proj 2
-                _StdOut.putText("Program has been wiped from memory");
+            //}else if(args < (_pidCount-1)){ //temporary: this program has been deleted from memory in proj 2
+            //    _StdOut.putText("Program has been wiped from memory");
             }else{
                 _LoadedProgram = args;
                 _ResidentList[args].setState("READY");

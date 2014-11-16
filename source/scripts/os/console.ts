@@ -116,7 +116,7 @@ module TSOS {
                 // Draw the text at the current X and Y coordinates.
                 var word = "";
                 var remaining = "";
-                debugger;
+                //debugger;
                 //in progress attempt to linewrap by breaking into words
                 for(var i = 0; i< text.length; i++){
                     word += text.charAt(i);

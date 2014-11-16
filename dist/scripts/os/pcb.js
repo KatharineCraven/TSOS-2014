@@ -97,6 +97,7 @@ var TSOS;
             this.partitionNum = part;
             this.setBaseReg((256 * part) - 256);
             this.setLimitReg((256 * part) - 1);
+            this.setPC(this.getBaseReg());
         };
         return PCB;
     })();

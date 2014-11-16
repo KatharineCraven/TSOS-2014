@@ -13,7 +13,7 @@ Operating System Concepts 8th edition by Silberschatz, Galvin, and Gagne.  ISBN 
 var TSOS;
 (function (TSOS) {
     var Cpu = (function () {
-        function Cpu(PC, Acc, Xreg, Yreg, Zflag, instructionReg, isExecuting) {
+        function Cpu(PC, Acc, Xreg, Yreg, Zflag, instructionReg, isExecuting, baseRegister, limitRegister) {
             if (typeof PC === "undefined") { PC = 0; }
             if (typeof Acc === "undefined") { Acc = 0; }
             if (typeof Xreg === "undefined") { Xreg = 0; }
@@ -21,6 +21,8 @@ var TSOS;
             if (typeof Zflag === "undefined") { Zflag = 0; }
             if (typeof instructionReg === "undefined") { instructionReg = 0; }
             if (typeof isExecuting === "undefined") { isExecuting = false; }
+            if (typeof baseRegister === "undefined") { baseRegister = 0; }
+            if (typeof limitRegister === "undefined") { limitRegister = 255; }
             this.PC = PC;
             this.Acc = Acc;
             this.Xreg = Xreg;
@@ -28,6 +30,8 @@ var TSOS;
             this.Zflag = Zflag;
             this.instructionReg = instructionReg;
             this.isExecuting = isExecuting;
+            this.baseRegister = baseRegister;
+            this.limitRegister = limitRegister;
         }
         Cpu.prototype.init = function () {
             this.PC = 0;
@@ -37,6 +41,19 @@ var TSOS;
             this.Zflag = 0;
             this.instructionReg = 0;
             this.isExecuting = false;
+            this.baseRegister = 0;
+            this.limitRegister = 255;
+        };
+
+        Cpu.prototype.incrementPC = function () {
+            this.PC += 1;
+
+            while (this.PC > this.limitRegister) {
+                this.PC -= 256;
+            }
+            /*   while(this.PC < this.baseRegister){
+            this.PC += 256;
+            }*/
         };
 
         Cpu.prototype.cycle = function () {
@@ -67,6 +84,8 @@ var TSOS;
             this.Yreg = prCoBl.getYReg();
             this.Zflag = prCoBl.getZFlag();
             this.instructionReg = parseInt(_MemoryManager.getMemValue(prCoBl.getPC()), 16);
+            this.baseRegister = prCoBl.getBaseReg();
+            this.limitRegister = prCoBl.getLimitReg();
         };
 
         Cpu.prototype.updatePCB = function () {
@@ -80,96 +99,151 @@ var TSOS;
 
         //load accumulartor with constant
         Cpu.prototype.a9LDA = function () {
-            this.PC += 1;
+            this.incrementPC();
             this.Acc = parseInt(_MemoryManager.getMemValue(this.PC), 16);
 
             //increment to next command
-            this.PC += 1;
+            this.incrementPC();
             this.updatePCB();
         };
 
         //load accumulator from memory
         Cpu.prototype.adLDA = function () {
             var hexVal = "";
-            this.PC += 1;
+            this.incrementPC();
             hexVal += _MemoryManager.getMemValue(this.PC);
-            this.PC += 1;
+            this.incrementPC();
             hexVal = _MemoryManager.getMemValue(this.PC) + hexVal;
-            this.Acc = parseInt(_MemoryManager.getMemValue(parseInt(hexVal, 16)), 16);
+
+            var hexi = parseInt(hexVal, 16);
+
+            while (hexi > this.limitRegister) {
+                hexi = hexi - 256;
+            }
+
+            while (hexi < this.baseRegister) {
+                hexi = hexi + 256;
+            }
+
+            this.Acc = parseInt(_MemoryManager.getMemValue(hexi), 16);
 
             //increment to next command
-            this.PC += 1;
+            this.incrementPC();
             this.updatePCB();
         };
 
         Cpu.prototype.STA = function () {
             var location = "";
-            this.PC += 1;
+            this.incrementPC();
             location += _MemoryManager.getMemValue(this.PC);
-            this.PC += 1;
+            this.incrementPC();
             location = _MemoryManager.getMemValue(this.PC) + location;
-            _MemoryManager.addAt(parseInt(location, 16), this.Acc.toString(16));
+
+            var loc = parseInt(location, 16);
+
+            while (loc > this.limitRegister) {
+                loc = loc - 256;
+            }
+
+            while (loc < this.baseRegister) {
+                loc = loc + 256;
+            }
+
+            _MemoryManager.addAt(loc, this.Acc.toString(16));
 
             //increment to next command
-            this.PC += 1;
+            this.incrementPC();
             this.updatePCB();
         };
 
         Cpu.prototype.ADC = function () {
             var location = "";
-            this.PC += 1;
+            this.incrementPC();
             location += _MemoryManager.getMemValue(this.PC);
-            this.PC += 1;
+            this.incrementPC();
             location = _MemoryManager.getMemValue(this.PC) + location;
-            this.Acc += parseInt(_MemoryManager.getMemValue(parseInt(location, 16)), 16);
+
+            var loc = parseInt(location, 16);
+
+            while (loc > this.limitRegister) {
+                loc = loc - 256;
+            }
+
+            while (loc < this.baseRegister) {
+                loc = loc + 256;
+            }
+
+            this.Acc += parseInt(_MemoryManager.getMemValue(loc), 16);
 
             //increment to next command
-            this.PC += 1;
+            this.incrementPC();
             this.updatePCB();
         };
 
         Cpu.prototype.a2LDX = function () {
-            this.PC += 1;
+            this.incrementPC();
             this.Xreg = parseInt(_MemoryManager.getMemValue(this.PC), 16);
 
             //increment to next command
-            this.PC += 1;
+            this.incrementPC();
             this.updatePCB();
         };
 
         Cpu.prototype.aeLDX = function () {
             var location = "";
-            this.PC += 1;
+            this.incrementPC();
             location += _MemoryManager.getMemValue(this.PC);
-            this.PC += 1;
+            this.incrementPC();
             location = _MemoryManager.getMemValue(this.PC) + location;
-            this.Xreg = parseInt(_MemoryManager.getMemValue(parseInt(location, 16)), 16);
+
+            var loc = parseInt(location, 16);
+
+            while (loc > this.limitRegister) {
+                loc = loc - 256;
+            }
+
+            while (loc < this.baseRegister) {
+                loc = loc + 256;
+            }
+
+            this.Xreg = parseInt(_MemoryManager.getMemValue(loc), 16);
 
             //increment to next command
-            this.PC += 1;
+            this.incrementPC();
             this.updatePCB();
         };
 
         Cpu.prototype.a0LDY = function () {
-            this.PC += 1;
+            this.incrementPC();
             this.Yreg = parseInt(_MemoryManager.getMemValue(this.PC), 16);
 
             //increment to next command
-            this.PC += 1;
+            this.incrementPC();
             this.updatePCB();
         };
 
         Cpu.prototype.acLDY = function () {
             debugger;
             var location = "";
-            this.PC += 1;
+            this.incrementPC();
             location += _MemoryManager.getMemValue(this.PC);
-            this.PC += 1;
+            this.incrementPC();
             location = _MemoryManager.getMemValue(this.PC) + location;
-            this.Yreg = parseInt(_MemoryManager.getMemValue(parseInt(location, 16)), 16);
+
+            var loc = parseInt(location, 16);
+
+            while (loc > this.limitRegister) {
+                loc = loc - 256;
+            }
+
+            while (loc < this.baseRegister) {
+                loc = loc + 256;
+            }
+
+            this.Yreg = parseInt(_MemoryManager.getMemValue(loc), 16);
 
             //increment to next command
-            this.PC += 1;
+            this.incrementPC();
             this.updatePCB();
         };
 
@@ -187,11 +261,21 @@ var TSOS;
 
         Cpu.prototype.ecCPX = function () {
             var location = "";
-            this.PC += 1;
+            this.incrementPC();
             location += _MemoryManager.getMemValue(this.PC);
-            this.PC += 1;
+            this.incrementPC();
             location = _MemoryManager.getMemValue(this.PC) + location;
-            var cmpr = parseInt(_MemoryManager.getMemValue(parseInt(location, 16)), 16);
+            var loc = parseInt(location, 16);
+
+            while (loc > this.limitRegister) {
+                loc = loc - 256;
+            }
+
+            while (loc < this.baseRegister) {
+                loc = loc + 256;
+            }
+
+            var cmpr = parseInt(_MemoryManager.getMemValue(loc), 16);
             if (cmpr == this.Xreg) {
                 this.Zflag = 1;
             } else {
@@ -199,23 +283,30 @@ var TSOS;
             }
 
             //increment to next command
-            this.PC += 1;
+            this.incrementPC();
             this.updatePCB();
         };
 
         Cpu.prototype.d0BNE = function () {
             if (this.Zflag == 0) {
-                this.PC += 1;
+                this.incrementPC();
                 var location = this.PC;
                 location += parseInt(_MemoryManager.getMemValue(this.PC), 16);
 
-                while (location > 255) {
+                while (location > this.limitRegister) {
                     location -= 256;
                 }
 
-                this.PC = location + 1;
+                while (location < this.baseRegister) {
+                    location += 256;
+                }
+
+                this.PC = location;
+                this.incrementPC();
             } else {
-                this.PC += 2;
+                //this.PC += 2;
+                this.incrementPC();
+                this.incrementPC();
             }
 
             this.updatePCB();
@@ -223,16 +314,26 @@ var TSOS;
 
         Cpu.prototype.eeINC = function () {
             var location = "";
-            this.PC += 1;
+            this.incrementPC();
             location += _MemoryManager.getMemValue(this.PC);
-            this.PC += 1;
+            this.incrementPC();
             location = _MemoryManager.getMemValue(this.PC) + location;
 
-            var i = parseInt(_MemoryManager.getMemValue(parseInt(location, 16)), 16);
+            var loc = parseInt(location, 16);
+
+            while (loc > this.limitRegister) {
+                loc = loc - 256;
+            }
+
+            while (loc < this.baseRegister) {
+                loc = loc + 256;
+            }
+
+            var i = parseInt(_MemoryManager.getMemValue(loc), 16);
             i++;
 
-            this.PC += 1;
-            _MemoryManager.addAt(parseInt(location, 16), i);
+            this.incrementPC();
+            _MemoryManager.addAt(loc, i);
             this.updatePCB();
         };
 
@@ -244,6 +345,15 @@ var TSOS;
             } else if (this.Xreg == 2) {
                 debugger;
                 var i = this.Yreg;
+
+                while (i < this.baseRegister) {
+                    i += 256;
+                }
+
+                while (i > this.limitRegister) {
+                    i -= 256;
+                }
+
                 var n = "";
                 var temp = "";
 
@@ -257,14 +367,14 @@ var TSOS;
                 //_StdOut.putText(n);
             }
 
-            this.PC += 1;
+            this.incrementPC();
             this.updatePCB();
         };
 
         //pc on current hex number - will need to check CPU is not over 255 after function
         Cpu.prototype.getMethod = function () {
             var iR = this.instructionReg.toString(16).toUpperCase();
-
+            debugger;
             switch (iR) {
                 case "A9":
                     //load acc. with constant
@@ -301,7 +411,8 @@ var TSOS;
                 case "EA":
                     //no operation
                     //no params
-                    this.PC + 1;
+                    // this.PC+1;
+                    this.incrementPC();
                     break;
                 case "0":
                     //break
