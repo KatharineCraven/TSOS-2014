@@ -235,6 +235,11 @@ module TSOS {
             _MemoryManager.clearMemoryPartition(pp);
             _MemoryManager.setPartitionAsUnused(pp);
             _ResidentList[v] = null;
+
+            if(_ReadyQueue.getSize() < 1){
+                _StdOut.advanceLine();
+                _OsShell.putPrompt();
+            }
             //handle deleting
             //handle clearing memory
             //handle handle available partition

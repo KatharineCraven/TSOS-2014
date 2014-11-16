@@ -79,7 +79,7 @@ var _KernelInputQueue = null;
 
 //Memory program partitions of 256 size each
 var _NumProgForMem = 3;
-var _LoadedProgram = -1;
+//var _LoadedProgram = -1;
 var _ResidentQueue;
 var _ReadyQueue;
 

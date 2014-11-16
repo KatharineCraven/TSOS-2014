@@ -110,6 +110,9 @@ module TSOS {
             sc = new ShellCommand(this.shellQuantum, "quantum", "<int> - Sets quantum for Round Robin clock schedule.");
             this.commandList[this.commandList.length] = sc;
 
+            sc = new ShellCommand(this.shellRunAll, "runall", "- Runs all programs loaded in memory according to scheduler.");
+            this.commandList[this.commandList.length] = sc;
+
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -468,12 +471,28 @@ module TSOS {
             }else if(_ResidentList[args] == null){ //this program has been deleted from memory
                 _StdOut.putText("Program has been wiped from memory");
             }else{
-                _LoadedProgram = args;
+                //_LoadedProgram = args;
                 //_ResidentList[args].setState("READY");
                 //above needs to be fixed
                 _KernelInterruptQueue.enqueue(new Interrupt(MAKEREADY_IRQ, args));
                 //_ReadyQueue.enqueue(_ResidentList[args]);
             }
+        }
+
+        public shellRunAll(){
+            _CPUOutput.value = _CPU.displayCPU();
+            var i;
+            if((_ResidentList.length < 1) || (_ResidentList == null)){
+                _StdOut.putText("No programs are loaded in memory.");
+            }else{
+                for(i = 0; i< _ResidentList.length; i++){
+                    if(_ResidentList[i] != null){
+                        _KernelInterruptQueue.enqueue(new Interrupt(MAKEREADY_IRQ, i));
+                    }
+                }
+
+            }
+
         }
 
     }

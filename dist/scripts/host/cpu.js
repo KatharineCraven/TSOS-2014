@@ -90,11 +90,11 @@ var TSOS;
 
         Cpu.prototype.updatePCB = function () {
             //_ResidentList[_LoadedProgram].setPC(this.PC);
-            _ResidentList[_LoadedProgram].setPC(this.PC);
-            _ResidentList[_LoadedProgram].setAccum(this.Acc);
-            _ResidentList[_LoadedProgram].setXReg(this.Xreg);
-            _ResidentList[_LoadedProgram].setYReg(this.Yreg);
-            _ResidentList[_LoadedProgram].setZFlag(this.Zflag);
+            _CurrentPCB.setPC(this.PC);
+            _CurrentPCB.setAccum(this.Acc);
+            _CurrentPCB.setXReg(this.Xreg);
+            _CurrentPCB.setYReg(this.Yreg);
+            _CurrentPCB.setZFlag(this.Zflag);
         };
 
         //load accumulartor with constant
@@ -253,11 +253,10 @@ var TSOS;
 
             //_CurrentPCB.setState("TERMINATED");
             _KernelInterruptQueue.enqueue(new TSOS.Interrupt(TERMINATE_IRQ, ""));
-            _LoadedProgram = -1;
-
+            //_LoadedProgram = -1;
             //_StdOut.advanceLine();
             //_KernelInterruptQueue.enqueue(new Interrupt(SYSOUT_IRQ, ""));
-            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(SYSOUT_IRQ, ">"));
+            //_KernelInterruptQueue.enqueue(new Interrupt(SYSOUT_IRQ, ">"));
             //_OsShell.putPrompt();
         };
 
@@ -452,7 +451,7 @@ var TSOS;
 
                     //_CurrentPCB.setState("TERMINATED");
                     _KernelInterruptQueue.enqueue(new TSOS.Interrupt(TERMINATE_IRQ, ""));
-                    _LoadedProgram = -1;
+
                     break;
             }
         };
