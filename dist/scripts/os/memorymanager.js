@@ -15,6 +15,13 @@ var TSOS;
             this.secondPart = secondPart;
             this.thirdPart = thirdPart;
         }
+        MemoryManager.prototype.initMemory = function () {
+            var i;
+            for (i = 0; i < (256 * _NumProgForMem); i++) {
+                this.mry.write(i, "00");
+            }
+        };
+
         MemoryManager.prototype.setPartitionAsUsed = function (parti) {
             if (parti == 1) {
                 this.firstPart = true;
@@ -51,6 +58,8 @@ var TSOS;
             if (input.length < 2) {
                 input = "0" + input;
             }
+
+            this.xc = (256 * partition) - 256;
 
             for (var l = 0; l < input.length; l = l + 2) {
                 this.putHex("" + input.charAt(l) + input.charAt(l + 1), partition);
@@ -102,63 +111,81 @@ var TSOS;
         };
 
         MemoryManager.prototype.displayMem = function () {
-            var j = this.xc;
+            //var j = this.xc;
             var counter = 0;
             var s = "0x0: ";
 
-            //if empty
-            if (j == 0) {
-                for (var i = 0; i < (256 * _NumProgForMem); i++) {
-                    if ((i % 8 == 0) && (i != 0)) {
-                        s += "\n0x" + i.toString(16) + ": ";
-                    }
-
-                    s += "00 ";
-                }
-                //otherwise
-            } else {
-                if (j > ((256 * _NumProgForMem) - 1)) {
-                    //we are out of memory!!! Not sure what to do, so I'll wrap memory for now
-                    this.xc = 0;
+            for (counter = 0; counter < (256 * _NumProgForMem); counter++) {
+                if ((counter % 8 == 0) && (counter != 0)) {
+                    s += "\n0x" + counter.toString(16) + ": ";
                 }
 
-                for (var i = 0; i < j; i++) {
-                    if ((i % 8 == 0) && (i != 0)) {
-                        s += "\n0x" + i.toString(16) + ": ";
-                    }
-
-                    s += this.mry.read(i) + " ";
-                }
-
-                //if theres still spots to fill (due to wrapping or cleared memory)
-                if (this.mry.filledTo() > j) {
-                    for (var k = j; k < (256 * _NumProgForMem); k++) {
-                        if ((k % 8 == 0) && (k != 0)) {
-                            s += "\n0x" + k.toString(16) + ": ";
-                        }
-
-                        s += "00 ";
-                    }
-                    //otherwise continue filling
-                } else {
-                    for (var k = j; k < this.mry.filledTo(); k++) {
-                        if ((k % 8 == 0) && (k != 0)) {
-                            s += "\n0x" + k.toString(16) + ": ";
-                        }
-
-                        s += this.mry.read(k) + " ";
-                    }
-
-                    for (var m = this.mry.filledTo(); m < (256 * _NumProgForMem); m++) {
-                        if ((m % 8 == 0) && (m != 0)) {
-                            s += "\n0x" + m.toString(16) + ": ";
-                        }
-
-                        s += "00 ";
-                    }
-                }
+                s += this.mry.read(counter) + " ";
             }
 
+            //if empty
+            /*if(j == 0){
+            for(var i = 0; i< (256*_NumProgForMem); i++){
+            if ((i%8 ==0) && (i != 0)){
+            s+="\n0x"+ i.toString(16)+": ";
+            }
+            
+            s += "00 ";
+            
+            //initialize Array I suppose? :0
+            
+            }
+            
+            //otherwise
+            }else{
+            
+            if(j > ((256*_NumProgForMem) -1)){
+            //we are out of memory!!! Not sure what to do, so I'll wrap memory for now
+            this.xc = 0;
+            }
+            
+            //output whats there
+            for(var i = 0; i< j; i++){
+            
+            if ((i%8 ==0) && (i != 0)){
+            s+="\n0x"+ i.toString(16)+": ";
+            }
+            
+            s += this.mry.read(i) +" ";
+            }
+            
+            //if theres still spots to fill (due to wrapping or cleared memory)
+            if(this.mry.filledTo() > j){
+            for(var k = j; k< (256*_NumProgForMem); k++){
+            
+            if ((k%8 ==0) && (k != 0)){
+            s+="\n0x"+ k.toString(16)+": ";
+            }
+            
+            s+= "00 "
+            }
+            
+            //otherwise continue filling
+            }else{
+            for(var k = j; k< this.mry.filledTo(); k++){
+            
+            if ((k%8 ==0) && (k != 0)){
+            s+="\n0x"+ k.toString(16)+": ";
+            }
+            
+            s += this.mry.read(k) +" ";
+            }
+            
+            for(var m = this.mry.filledTo(); m< (256*_NumProgForMem); m++){
+            
+            if ((m%8 ==0) && (m != 0)){
+            s+="\n0x"+ m.toString(16)+": ";
+            }
+            
+            s += "00 ";
+            }
+            }
+            }*/
             return s;
         };
         return MemoryManager;

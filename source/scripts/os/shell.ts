@@ -431,6 +431,7 @@ module TSOS {
                     }else{
                         _MemoryManager.addToMem(s.replace(/\s/g,'').toUpperCase(), avail);
                         _MemoryManager.setPartitionAsUsed(avail);
+                        _StdOut.putText(avail.toString());
                         _ResidentList[_pidCount] = new PCB();
                         _ResidentList[_pidCount].setPartition(avail);
                         _StdOut.putText("pid: "+_pidCount); 

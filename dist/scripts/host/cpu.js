@@ -180,7 +180,7 @@ var TSOS;
             _LoadedProgram = -1;
 
             //_StdOut.advanceLine();
-            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(SYSOUT_IRQ, ""));
+            //_KernelInterruptQueue.enqueue(new Interrupt(SYSOUT_IRQ, ""));
             _KernelInterruptQueue.enqueue(new TSOS.Interrupt(SYSOUT_IRQ, ">"));
             //_OsShell.putPrompt();
         };

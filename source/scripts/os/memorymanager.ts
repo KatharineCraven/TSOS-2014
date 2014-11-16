@@ -8,6 +8,13 @@ module TSOS{
 		constructor(public mry = new Memory(), public xc = 0, public firstPart = false, public secondPart = false, public thirdPart =false ){
 		}
 
+		public initMemory(){
+			var i;
+			for(i =0; i<(256*_NumProgForMem); i++ ){
+				this.mry.write(i, "00");
+			}
+		}
+
 		public setPartitionAsUsed(parti){
 			if(parti == 1){
 				this.firstPart = true;
@@ -44,6 +51,8 @@ module TSOS{
 			if(input.length< 2){
 				input = "0"+input;
 			}
+
+			this.xc = (256*partition) - 256;
 
 			for(var l = 0; l< input.length; l = l+2){
 				this.putHex(""+input.charAt(l)+input.charAt(l+1), partition);
@@ -96,18 +105,30 @@ module TSOS{
 		}
 
 		public displayMem(){
-			var j = this.xc;
+			//var j = this.xc;
 			var counter = 0;
 			var s = "0x0: ";
 
+			//Initialize Memory as Zeros
+			for(counter =0; counter < (256*_NumProgForMem); counter++){
+				if ((counter%8 ==0) && (counter != 0)){
+						s+="\n0x"+ counter.toString(16)+": ";
+					}
+
+					s += this.mry.read(counter) +" ";
+			}
+
 			//if empty
-			if(j == 0){
+			/*if(j == 0){
 				for(var i = 0; i< (256*_NumProgForMem); i++){
 					if ((i%8 ==0) && (i != 0)){
 						s+="\n0x"+ i.toString(16)+": ";
 					}
 
 					s += "00 ";
+
+					//initialize Array I suppose? :0
+			
 			}
 
 			//otherwise
@@ -159,7 +180,7 @@ module TSOS{
 						s += "00 ";
 					}
 				}
-			}
+			}*/
 
 			return s;
 		}
