@@ -212,6 +212,8 @@ var TSOS;
             _CpuExecutionCount = 1;
             _CPU.isExecuting = true;
         };
+
+        //for the kill command
         Kernel.prototype.terminateViaPID = function (params) {
             var pp = -1;
 

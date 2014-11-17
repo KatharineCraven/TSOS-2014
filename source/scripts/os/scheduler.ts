@@ -28,9 +28,7 @@ module TSOS{
 
                 //debugger;
                 if(_Quantum < _CpuExecutionCount){
-                    /*var tempPCB = _CurrentPCB;
-                    _ReadyQueue.enqueue(tempPCB);
-                    _CurrentPCB = _ReadyQueue.dequeue();*/
+
                     _KernelInterruptQueue.enqueue(new Interrupt(SWITCHRUNNING_IRQ, ""));
                     Control.hostLog("Interrupt planned for quantum switch.", "Scheduler - OS");
                     //_CpuExecutionCount = 1;
@@ -45,10 +43,6 @@ module TSOS{
                 //else if ready queue ! empty
                 //context switch 
 
-                //_CurrentPCB = _ReadyQueue.dequeue();
-                //_CpuExecutionCount = 1;
-                //context switch current PCB
-                //debugger;
                 _KernelInterruptQueue.enqueue(new Interrupt(MAKERUNNING_IRQ, ""));
                 Control.hostLog("Interrupt planned for getting next process off ready queue.", "Scheduler - OS");
 

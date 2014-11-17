@@ -496,8 +496,11 @@ module TSOS {
 
         public shellPS(){
             
-            _StdOut.putText(_CurrentPCB.getPid().toString());
-            _StdOut.advanceLine();
+            if(_CurrentPCB != null){
+                _StdOut.putText(_CurrentPCB.getPid().toString());
+                _StdOut.advanceLine();
+            }
+
             var temp;
             for(var i = 0; i<_ReadyQueue.getSize(); i++){
                 temp = _ReadyQueue.dequeue();
@@ -505,6 +508,8 @@ module TSOS {
                 _StdOut.advanceLine();
                 _ReadyQueue.enqueue(temp);
             }
+
+            //_OsShell.putPrompt();
         }
 
         public shellRunAll(){

@@ -26,9 +26,6 @@ var TSOS;
                 //_ReadyQueueOutput.value = _ReadyQueue.toString();
                 //debugger;
                 if (_Quantum < _CpuExecutionCount) {
-                    /*var tempPCB = _CurrentPCB;
-                    _ReadyQueue.enqueue(tempPCB);
-                    _CurrentPCB = _ReadyQueue.dequeue();*/
                     _KernelInterruptQueue.enqueue(new TSOS.Interrupt(SWITCHRUNNING_IRQ, ""));
                     TSOS.Control.hostLog("Interrupt planned for quantum switch.", "Scheduler - OS");
                     //_CpuExecutionCount = 1;
@@ -42,10 +39,6 @@ var TSOS;
             } else if (_ReadyQueue.getSize() >= 1) {
                 //else if ready queue ! empty
                 //context switch
-                //_CurrentPCB = _ReadyQueue.dequeue();
-                //_CpuExecutionCount = 1;
-                //context switch current PCB
-                //debugger;
                 _KernelInterruptQueue.enqueue(new TSOS.Interrupt(MAKERUNNING_IRQ, ""));
                 TSOS.Control.hostLog("Interrupt planned for getting next process off ready queue.", "Scheduler - OS");
                 //_CPU.isExecuting = true;

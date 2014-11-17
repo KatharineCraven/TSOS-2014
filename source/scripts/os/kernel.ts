@@ -231,6 +231,8 @@ module TSOS {
             _CPU.isExecuting = true;
 
         }
+
+        //for the kill command
         public terminateViaPID(params){
             var pp = -1;
 
