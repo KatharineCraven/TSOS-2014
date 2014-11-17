@@ -109,7 +109,7 @@ module TSOS {
                 
             } else if ((_CPU.isExecuting)|| (_ReadyQueue.getSize() >= 1)){ // If there are no interrupts then run one CPU cycle if there is anything being processed. {
                 
-                _TScheduler.handleScheduling();
+                _TScheduler.handleSchedulng();
 
                 _CPUOutput.value = _CPU.displayCPU();
 

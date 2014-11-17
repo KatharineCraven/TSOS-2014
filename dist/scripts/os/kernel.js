@@ -99,7 +99,7 @@ var TSOS;
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             } else if ((_CPU.isExecuting) || (_ReadyQueue.getSize() >= 1)) {
-                _TScheduler.handleScheduling();
+                _TScheduler.handleSchedulng();
 
                 _CPUOutput.value = _CPU.displayCPU();
             } else {
