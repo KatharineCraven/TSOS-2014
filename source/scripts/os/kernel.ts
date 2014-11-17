@@ -271,6 +271,8 @@ module TSOS {
                         pp = temp.getPartition();
                         break;
                     }
+
+                    _ReadyQueue.enqueue(temp);
                 }
             }
 

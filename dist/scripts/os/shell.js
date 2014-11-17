@@ -95,6 +95,9 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellKill, "kill", "<pid> - Kills the process with the pid.");
             this.commandList[this.commandList.length] = sc;
 
+            sc = new TSOS.ShellCommand(this.shellPS, "ps", "- Displays PIDs of all active processes.");
+            this.commandList[this.commandList.length] = sc;
+
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -473,6 +476,18 @@ var TSOS;
 
         Shell.prototype.shellKill = function (args) {
             _KernelInterruptQueue.enqueue(new TSOS.Interrupt(KILL_IRQ, args));
+        };
+
+        Shell.prototype.shellPS = function () {
+            _StdOut.putText(_CurrentPCB.getPid().toString());
+            _StdOut.advanceLine();
+            var temp;
+            for (var i = 0; i < _ReadyQueue.getSize(); i++) {
+                temp = _ReadyQueue.dequeue();
+                _StdOut.putText(temp.getPid().toString());
+                _StdOut.advanceLine();
+                _ReadyQueue.enqueue(temp);
+            }
         };
 
         Shell.prototype.shellRunAll = function () {

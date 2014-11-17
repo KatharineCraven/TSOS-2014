@@ -88,8 +88,10 @@ var _ReadyQueue;
 
 var _MemoryManager = null; //memory manager
 
+//quantum
 var _Quantum = 6;
 
+//current process running
 var _CurrentPCB;
 
 //Memory

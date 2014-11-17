@@ -115,7 +115,13 @@ module TSOS {
 
             sc = new ShellCommand(this.shellKill, "kill", "<pid> - Kills the process with the pid.");
             this.commandList[this.commandList.length] = sc;
+            
+            sc = new ShellCommand(this.shellPS, "ps", "- Displays PIDs of all active processes.");
+            this.commandList[this.commandList.length] = sc;
+
+
             //
+
             // Display the initial prompt.
             this.putPrompt();
         }
@@ -486,6 +492,19 @@ module TSOS {
 
         public shellKill(args){
             _KernelInterruptQueue.enqueue(new Interrupt(KILL_IRQ, args));
+        }
+
+        public shellPS(){
+            
+            _StdOut.putText(_CurrentPCB.getPid().toString());
+            _StdOut.advanceLine();
+            var temp;
+            for(var i = 0; i<_ReadyQueue.getSize(); i++){
+                temp = _ReadyQueue.dequeue();
+                _StdOut.putText(temp.getPid().toString());
+                _StdOut.advanceLine();
+                _ReadyQueue.enqueue(temp);
+            }
         }
 
         public shellRunAll(){
