@@ -100,7 +100,7 @@ var TSOS;
             this.setPC(this.getBaseReg());
         };
 
-        PCB.prototype.getPartiton = function () {
+        PCB.prototype.getPartition = function () {
             return this.partitionNum;
         };
         return PCB;

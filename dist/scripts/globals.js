@@ -95,6 +95,8 @@ var _MemoryOutput;
 
 var _CPUOutput;
 
+var _ReadyQueueOutput = null;
+
 var _pidCount;
 var _ResidentList;
 

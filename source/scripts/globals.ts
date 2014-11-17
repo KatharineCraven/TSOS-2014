@@ -69,6 +69,7 @@ var _TempCan: HTMLCanvasElement = null; //used for canvas editing
 var _TempContext = null; //used for canvas editing
 var _ConsoleDiv = null; //DIV element.
 
+
 var _Trace: boolean = true;  // Default the OS trace to be on.
 
 // The OS Kernel and its queues.
@@ -93,6 +94,8 @@ var _CurrentPCB;
 var _MemoryOutput;
 
 var _CPUOutput;
+
+var _ReadyQueueOutput = null; //ready queue di
 
 var _pidCount;
 var _ResidentList;

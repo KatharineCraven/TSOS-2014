@@ -28,6 +28,7 @@ var TSOS;
             _MemoryManager = new TSOS.MemoryManager(); //memory manager
             _MemoryManager.initMemory();
             _CpuExecutionCount = 1;
+            _CurrentPCB = null;
 
             _CPUOutput.value = _CPU.displayCPU();
 
@@ -87,6 +88,7 @@ var TSOS;
             //status message
             _DrawingContextTwo.clearRect(0, 0, 500, 100);
             _DrawingContextTwo.fillText(new Date().toLocaleString() + ",  Status: " + _StatusMessage, 8, 30);
+            _ReadyQueueOutput.value = this.displayReadyQueue();
 
             // Check for an interrupt, are any. Page 560
             if (_KernelInterruptQueue.getSize() > 0) {
@@ -96,6 +98,8 @@ var TSOS;
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
             } else if (_CPU.isExecuting) {
                 //_CPU.cycle();
+                //debugger;
+                //_ReadyQueueOutput.value = _ReadyQueue.toString();
                 //debugger;
                 if (_Quantum < _CpuExecutionCount) {
                     /*var tempPCB = _CurrentPCB;
@@ -131,6 +135,28 @@ var TSOS;
             _CPUOutput.value = _CPU.displayCPU();
             //whut
             }*/
+        };
+
+        Kernel.prototype.displayReadyQueue = function () {
+            var s = _ReadyQueue.getSize();
+            var outputReady = "";
+
+            if (_CurrentPCB != null) {
+                outputReady = outputReady + "PID: " + _CurrentPCB.getPid() + ", State: " + _CurrentPCB.getState() + ", PC: " + _CurrentPCB.getPC();
+                outputReady = outputReady + " , xReg: " + _CurrentPCB.getXReg() + ", yReg: " + _CurrentPCB.getYReg();
+                outputReady = outputReady + " , Acc: " + _CurrentPCB.getAccum() + ", zFlag: " + _CurrentPCB.getZFlag() + ", Partition: " + _CurrentPCB.getPartition() + "\n";
+            }
+
+            for (var i = 0; i < s; i++) {
+                var temp = _ReadyQueue.dequeue();
+                outputReady = outputReady + "PID: " + temp.getPid() + ", State: " + temp.getState() + ", PC: " + temp.getPC() + " , xReg: ";
+                outputReady = outputReady + temp.getXReg() + ", yReg: " + temp.getYReg() + " , Acc: " + temp.getAccum();
+                outputReady = outputReady + ", zFlag: " + temp.getZFlag() + ", Partition: " + temp.getPartition() + "\n";
+
+                _ReadyQueue.enqueue(temp);
+            }
+
+            return outputReady;
         };
 
         //
@@ -211,7 +237,7 @@ var TSOS;
             _CurrentPCB.setState("TERMINATED");
             _CPU.isExecuting = false;
             var v = _CurrentPCB.getPid();
-            var pp = _CurrentPCB.getPartiton();
+            var pp = _CurrentPCB.getPartition();
             _MemoryManager.clearMemoryPartition(pp);
             _MemoryManager.setPartitionAsUnused(pp);
             _ResidentList[v] = null;

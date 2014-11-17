@@ -84,7 +84,7 @@ module TSOS{
 			this.setPC(this.getBaseReg());
 		}
 
-		public getPartiton(){
+		public getPartition(){
 			return this.partitionNum;
 		}
 

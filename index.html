@@ -40,7 +40,6 @@
 <body onload="onDocumentLoad();">
 
 <div id="divMain" style="width:100%;">
-
    <div id="divButtonBar" style="margin:4px;">
       <input type="button"
              id = "btnStartOS"
@@ -68,17 +67,6 @@
              tabindex="2"
              onclick="TSOS.Control.hostBtnReset_click(this);">
    </div>
-      <div id="divMemoryScreen" style= "float: right; margin-right:250px; margin-top 15px; width:300px">
-   		<label>Memory
-   			<br>
-   			<textarea name="taMemoryInput"
-   					  id = "taMemoryInput"
-   					  rows= "8"
-   					  cols= "32">
-   			</textarea>
-   		</label>
-
-   </div>
 
 
    <div id="divConsole" style="margin:4px; width:520px; height:520px; float:left;">
@@ -91,35 +79,19 @@
 
    </div>
 
-    <div id="divCPUSCreen" style= "float:right; margin-right:250px; margin-top 800px; width:300px">
-      <label>CPU
+           <div id="divReadyQueue" style= "float:left; margin-right:250px; margin-top 800px; width:300px">
+      <label>Ready Queue
         <br>
-        <textarea name="taCPUStatus"
-              id = "taCPUStatus"
-              rows= "8"
-              cols= "32">
+        <textarea name="taReadyQueue"
+              id = "taReadyQueue"
+              rows= "10"
+              cols= "60">
         </textarea>
       </label>
    </div>
 
-       <div id="taskBar" style=" width:500px; height:51px;">
-      <canvas id="taskBarDisplay" width="500px" height="50px">
-      </canvas>
-    </div>
 
-   <div id="divLog" style="margin-left:520px; margin-top: -50px;">
-      <label>
-         Host Log
-         <br>
-         <textarea name="taHostLog"
-                   id  ="taHostLog"
-                   rows="26"
-                   cols="48"
-         ></textarea>
-      </label>
-   </div>
-
-   <div id="divUserProgramInput" style="margin-left:520px; margin-top:15px;">
+      <div id="divUserProgramInput" style="margin-left:520px; margin-top:15px;">
       <label>
          User Program Input
          <br>
@@ -131,9 +103,49 @@
       </label>
    </div>
 
+          <div id="taskBar" style=" width:500px; height:51px;">
+      <canvas id="taskBarDisplay" width="500px" height="50px">
+      </canvas>
+    </div>
+         <div id="divMemoryScreen" style= "float: right; margin-right:250px; margin-top 15px; width:300px">
+      <label>Memory
+        <br>
+        <textarea name="taMemoryInput"
+              id = "taMemoryInput"
+              rows= "8"
+              cols= "32">
+        </textarea>
+      </label>
+
+   </div>
+
+
+    <div id="divCPUSCreen" style= "float:right; margin-right:250px; margin-top 800px; width:300px">
+      <label>CPU
+        <br>
+        <textarea name="taCPUStatus"
+              id = "taCPUStatus"
+              rows= "8"
+              cols= "32">
+        </textarea>
+      </label>
+   </div>
 </div>
 <div style="height:50px;">
 </div>
+
+      <div id="divLog" style="margin-left:520px; margin-top: -50px;">
+      <label>
+         Host Log
+         <br>
+         <textarea name="taHostLog"
+                   id  ="taHostLog"
+                   rows="24"
+                   cols="48"
+         ></textarea>
+      </label>
+   </div>
+
 <p class="footerText" style="clear:both;">
    <br>
    Copyright &copy; 2008 - 2014 No Rights Reserved.

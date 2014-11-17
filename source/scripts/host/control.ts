@@ -60,6 +60,8 @@ module TSOS {
 
             _ConsoleDiv = document.getElementById('divConsole');
 
+            _ReadyQueueOutput = document.getElementById("taReadyQueue");
+
             // Check for our testing and enrichment core.
             if (typeof Glados === "function") {
                 _GLaDOS = new Glados();
