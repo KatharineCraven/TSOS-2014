@@ -144,14 +144,14 @@ var TSOS;
             if (_CurrentPCB != null) {
                 outputReady = outputReady + "PID: " + _CurrentPCB.getPid() + ", State: " + _CurrentPCB.getState() + ", PC: " + _CurrentPCB.getPC();
                 outputReady = outputReady + " , xReg: " + _CurrentPCB.getXReg() + ", yReg: " + _CurrentPCB.getYReg();
-                outputReady = outputReady + " , Acc: " + _CurrentPCB.getAccum() + ", zFlag: " + _CurrentPCB.getZFlag() + ", Partition: " + _CurrentPCB.getPartition() + "\n";
+                outputReady = outputReady + " , Acc: " + _CurrentPCB.getAccum() + ", zFlag: " + _CurrentPCB.getZFlag() + ", Partition: " + _CurrentPCB.getPartition() + "\n" + "\n";
             }
 
             for (var i = 0; i < s; i++) {
                 var temp = _ReadyQueue.dequeue();
                 outputReady = outputReady + "PID: " + temp.getPid() + ", State: " + temp.getState() + ", PC: " + temp.getPC() + " , xReg: ";
                 outputReady = outputReady + temp.getXReg() + ", yReg: " + temp.getYReg() + " , Acc: " + temp.getAccum();
-                outputReady = outputReady + ", zFlag: " + temp.getZFlag() + ", Partition: " + temp.getPartition() + "\n";
+                outputReady = outputReady + ", zFlag: " + temp.getZFlag() + ", Partition: " + temp.getPartition() + "\n" + "\n";
 
                 _ReadyQueue.enqueue(temp);
             }
@@ -246,6 +246,8 @@ var TSOS;
                 _StdOut.advanceLine();
                 _OsShell.putPrompt();
             }
+
+            _CurrentPCB = null;
             //handle deleting
             //handle clearing memory
             //handle handle available partition
