@@ -92,6 +92,9 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellRunAll, "runall", "- Runs all programs loaded in memory according to scheduler.");
             this.commandList[this.commandList.length] = sc;
 
+            sc = new TSOS.ShellCommand(this.shellKill, "kill", "<pid> - Kills the process with the pid.");
+            this.commandList[this.commandList.length] = sc;
+
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -438,9 +441,12 @@ var TSOS;
 
         Shell.prototype.shellClearMem = function () {
             _MemoryManager.clearAllMem();
+            _MemoryManager.setPartitionAsUnused(1);
+            _MemoryManager.setPartitionAsUnused(2);
+            _MemoryManager.setPartitionAsUnused(3);
             _ResidentList = new Array();
             _pidCount = 0;
-            //needs to clear queues and whatnot
+            //needs to clear queues
         };
 
         Shell.prototype.shellQuantum = function (args) {
@@ -463,6 +469,10 @@ var TSOS;
                 _KernelInterruptQueue.enqueue(new TSOS.Interrupt(MAKEREADY_IRQ, args));
                 //_ReadyQueue.enqueue(_ResidentList[args]);
             }
+        };
+
+        Shell.prototype.shellKill = function (args) {
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(KILL_IRQ, args));
         };
 
         Shell.prototype.shellRunAll = function () {

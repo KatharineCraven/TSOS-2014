@@ -42,6 +42,8 @@ var MAKEREADY_IRQ: number= 7;
 //terminate a process
 var TERMINATE_IRQ: number= 8;
 
+var KILL_IRQ: number = 9;
+
 var _CpuExecutionCount;
 
 var _TEST = "";
@@ -86,7 +88,7 @@ var _ReadyQueue;
 
 var _MemoryManager = null; //memory manager
 
-var _Quantum = 2;
+var _Quantum = 6;
 
 var _CurrentPCB;
 

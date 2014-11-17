@@ -113,6 +113,8 @@ module TSOS {
             sc = new ShellCommand(this.shellRunAll, "runall", "- Runs all programs loaded in memory according to scheduler.");
             this.commandList[this.commandList.length] = sc;
 
+            sc = new ShellCommand(this.shellKill, "kill", "<pid> - Kills the process with the pid.");
+            this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -453,9 +455,12 @@ module TSOS {
 
         public shellClearMem(){
             _MemoryManager.clearAllMem();
+            _MemoryManager.setPartitionAsUnused(1);
+            _MemoryManager.setPartitionAsUnused(2);
+            _MemoryManager.setPartitionAsUnused(3);
             _ResidentList = new Array();
             _pidCount = 0;
-            //needs to clear queues and whatnot
+            //needs to clear queues
         }
 
         public shellQuantum(args){
@@ -477,6 +482,10 @@ module TSOS {
                 _KernelInterruptQueue.enqueue(new Interrupt(MAKEREADY_IRQ, args));
                 //_ReadyQueue.enqueue(_ResidentList[args]);
             }
+        }
+
+        public shellKill(args){
+            _KernelInterruptQueue.enqueue(new Interrupt(KILL_IRQ, args));
         }
 
         public shellRunAll(){

@@ -223,6 +223,9 @@ module TSOS {
                 case MAKEREADY_IRQ:
                     this.makeProcessReady(params);
                     break;
+                case KILL_IRQ:
+                    this.terminateViaPID(params);
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
@@ -249,6 +252,37 @@ module TSOS {
             _CurrentPCB.setState("RUNNING");
             _CpuExecutionCount = 1;
             _CPU.isExecuting = true;
+
+        }
+        public terminateViaPID(params){
+            var pp = -1;
+
+            if(_CurrentPCB.getPid() == params){
+                _CurrentPCB.setState("TERMINATED");
+                _CPU.isExecuting = false;
+                pp = _CurrentPCB.getPartition();
+            }else{
+                var temp;
+                for(var i = 0; i<_ReadyQueue.getSize(); i++){
+                    temp = _ReadyQueue.dequeue();
+
+                    if(temp.getPid() == params){
+                        temp.setState("TERMINATED");
+                        pp = temp.getPartition();
+                        break;
+                    }
+                }
+            }
+
+            if(pp != -1){
+                _MemoryManager.clearMemoryPartition(pp);
+                _MemoryManager.setPartitionAsUnused(pp);
+                _ResidentList[params] = null;
+            }else{
+                _StdOut.putText("Proccess with PID could not be found");
+                _StdOut.advanceLine();
+                _OsShell.putPrompt();
+            }
 
         }
 
