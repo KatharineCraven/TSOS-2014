@@ -94,6 +94,9 @@ var _Quantum = 6;
 //current process running
 var _CurrentPCB;
 
+//Scheduler
+var _TScheduler;
+
 //Memory
 var _MemoryOutput;
 

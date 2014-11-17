@@ -22,6 +22,8 @@ var TSOS;
             _ReadyQueue = new TSOS.Queue();
             _ResidentList = new Array();
 
+            _TScheduler = new TSOS.Scheduler();
+
             _KernelBuffers = new Array(); // Buffers... for the kernel.
             _KernelInputQueue = new TSOS.Queue(); // Where device input lands before being processed out somewhere.
             _Console = new TSOS.Console(); // The command line interface / console I/O device.
@@ -88,49 +90,24 @@ var TSOS;
             //status message
             _DrawingContextTwo.clearRect(0, 0, 500, 100);
             _DrawingContextTwo.fillText(new Date().toLocaleString() + ",  Status: " + _StatusMessage, 8, 30);
-            _ReadyQueueOutput.value = this.displayReadyQueue();
 
+            //_ReadyQueueOutput.value = this.displayReadyQueue();
             // Check for an interrupt, are any. Page 560
             if (_KernelInterruptQueue.getSize() > 0) {
                 // Process the first interrupt on the interrupt queue.
                 // TODO: Implement a priority queue based on the IRQ number/id to enforce interrupt priority.
                 var interrupt = _KernelInterruptQueue.dequeue();
                 this.krnInterruptHandler(interrupt.irq, interrupt.params);
-            } else if (_CPU.isExecuting) {
-                //_CPU.cycle();
-                //debugger;
-                //_ReadyQueueOutput.value = _ReadyQueue.toString();
-                //debugger;
-                if (_Quantum < _CpuExecutionCount) {
-                    /*var tempPCB = _CurrentPCB;
-                    _ReadyQueue.enqueue(tempPCB);
-                    _CurrentPCB = _ReadyQueue.dequeue();*/
-                    _KernelInterruptQueue.enqueue(new TSOS.Interrupt(SWITCHRUNNING_IRQ, ""));
-                    //_CpuExecutionCount = 1;
-                } else {
-                    _CPU.cycle();
-                    _CpuExecutionCount++;
-                }
+            } else if ((_CPU.isExecuting) || (_ReadyQueue.getSize() >= 1)) {
+                _TScheduler.handleScheduling();
 
-                //if Quantumn < Count then context switch, count = 1
-                //else cycle, incremement Count
-                _CPUOutput.value = _CPU.displayCPU();
-            } else if (_ReadyQueue.getSize() >= 1) {
-                //else if ready queue ! empty
-                //context switch
-                //_CurrentPCB = _ReadyQueue.dequeue();
-                //_CpuExecutionCount = 1;
-                //context switch current PCB
-                //debugger;
-                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(MAKERUNNING_IRQ, ""));
-
-                //_CPU.isExecuting = true;
                 _CPUOutput.value = _CPU.displayCPU();
             } else {
                 this.krnTrace("Idle");
             }
 
             _MemoryOutput.value = _MemoryManager.displayMem();
+            _ReadyQueueOutput.value = this.displayReadyQueue();
             /* if(_LoadedProgram != -1){
             _CPUOutput.value = _CPU.displayCPU();
             //whut
