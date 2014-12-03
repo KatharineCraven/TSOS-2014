@@ -185,9 +185,16 @@ var TSOS;
                 case KILL_IRQ:
                     this.terminateViaPID(params);
                     break;
+                case MEM_OUT_OF_BOUNDS:
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
+        };
+
+        Kernel.prototype.memoryBounds = function (params) {
+            //_MemoryManager.clearMemoryPartition(params);
+            //_MemoryManager.setPartitionAsUnused(params);
         };
 
         Kernel.prototype.makeProcessReady = function (params) {

@@ -16,6 +16,31 @@ var TSOS;
         Scheduler.prototype.handleSchedulng = function () {
             if (this.scheduleType == "ROUNDROBIN") {
                 this.roundRobin();
+            } else if (this.scheduleType == "FCFS") {
+                this.firstComeFirstServe();
+            } else if (this.scheduleType == "nPP") {
+                this.nonPrePriority();
+            }
+        };
+
+        //for now, we assume that everything is organized in the queue for priority
+        Scheduler.prototype.nonPrePriority = function () {
+            if (_CPU.isExecuting) {
+                _CPU.cycle();
+                TSOS.Control.hostLog("CPU Executing", "Scheduler - OS");
+            } else if (_ReadyQueue.getSize() >= 1) {
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(MAKERUNNING_IRQ, ""));
+                TSOS.Control.hostLog("Interrupt planned for getting next process off ready queue.", "Scheduler - OS");
+            }
+        };
+
+        Scheduler.prototype.firstComeFirstServe = function () {
+            if (_CPU.isExecuting) {
+                _CPU.cycle();
+                TSOS.Control.hostLog("CPU Executing", "Scheduler - OS");
+            } else if (_ReadyQueue.getSize() >= 1) {
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(MAKERUNNING_IRQ, ""));
+                TSOS.Control.hostLog("Interrupt planned for getting next process off ready queue.", "Scheduler - OS");
             }
         };
 

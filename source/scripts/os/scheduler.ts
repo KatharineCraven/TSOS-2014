@@ -17,8 +17,35 @@ module TSOS{
 		public handleSchedulng(){
 			if(this.scheduleType == "ROUNDROBIN"){
 				this.roundRobin();
-			}
+
+			}else if(this.scheduleType == "FCFS"){
+                this.firstComeFirstServe();
+
+            }else if(this.scheduleType == "nPP"){
+                this.nonPrePriority();
+            }
 		}
+
+        //for now, we assume that everything is organized in the queue for priority
+        public nonPrePriority(){
+            if(_CPU.isExecuting){
+                _CPU.cycle();
+                Control.hostLog("CPU Executing", "Scheduler - OS");
+            }else if(_ReadyQueue.getSize() >= 1){
+                _KernelInterruptQueue.enqueue(new Interrupt(MAKERUNNING_IRQ, ""));
+                Control.hostLog("Interrupt planned for getting next process off ready queue.", "Scheduler - OS");
+            }
+        }
+
+        public firstComeFirstServe(){
+            if(_CPU.isExecuting){
+                _CPU.cycle();
+                Control.hostLog("CPU Executing", "Scheduler - OS");
+            }else if(_ReadyQueue.getSize() >= 1){
+                _KernelInterruptQueue.enqueue(new Interrupt(MAKERUNNING_IRQ, ""));
+                Control.hostLog("Interrupt planned for getting next process off ready queue.", "Scheduler - OS");
+            }
+        }
 
 		public roundRobin(){
 			if (_CPU.isExecuting) { // If there are no interrupts then run one CPU cycle if there is anything being processed. {

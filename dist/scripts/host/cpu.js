@@ -117,14 +117,13 @@ var TSOS;
 
             var hexi = parseInt(hexVal, 16);
 
-            while (hexi > this.limitRegister) {
-                hexi = hexi - 256;
+            /*while(hexi > this.limitRegister){
+            hexi = hexi- 256;
             }
-
-            while (hexi < this.baseRegister) {
-                hexi = hexi + 256;
-            }
-
+            
+            while (hexi < this.baseRegister){
+            hexi = hexi +256;
+            }*/
             this.Acc = parseInt(_MemoryManager.getMemValue(hexi), 16);
 
             //increment to next command
@@ -141,14 +140,13 @@ var TSOS;
 
             var loc = parseInt(location, 16);
 
-            while (loc > this.limitRegister) {
-                loc = loc - 256;
+            /*while(loc > this.limitRegister){
+            loc = loc- 256;
             }
-
-            while (loc < this.baseRegister) {
-                loc = loc + 256;
-            }
-
+            
+            while (loc < this.baseRegister){
+            loc = loc +256;
+            }*/
             _MemoryManager.addAt(loc, this.Acc.toString(16));
 
             //increment to next command
@@ -165,14 +163,13 @@ var TSOS;
 
             var loc = parseInt(location, 16);
 
-            while (loc > this.limitRegister) {
-                loc = loc - 256;
+            /*while(loc > this.limitRegister){
+            loc = loc- 256;
             }
-
-            while (loc < this.baseRegister) {
-                loc = loc + 256;
-            }
-
+            
+            while (loc < this.baseRegister){
+            loc = loc +256;
+            }*/
             this.Acc += parseInt(_MemoryManager.getMemValue(loc), 16);
 
             //increment to next command
@@ -198,14 +195,13 @@ var TSOS;
 
             var loc = parseInt(location, 16);
 
-            while (loc > this.limitRegister) {
-                loc = loc - 256;
+            /*while(loc > this.limitRegister){
+            loc = loc- 256;
             }
-
-            while (loc < this.baseRegister) {
-                loc = loc + 256;
-            }
-
+            
+            while (loc < this.baseRegister){
+            loc = loc +256;
+            }*/
             this.Xreg = parseInt(_MemoryManager.getMemValue(loc), 16);
 
             //increment to next command
@@ -232,14 +228,13 @@ var TSOS;
 
             var loc = parseInt(location, 16);
 
-            while (loc > this.limitRegister) {
-                loc = loc - 256;
+            /*while(loc > this.limitRegister){
+            loc = loc- 256;
             }
-
-            while (loc < this.baseRegister) {
-                loc = loc + 256;
-            }
-
+            
+            while (loc < this.baseRegister){
+            loc = loc +256;
+            }*/
             this.Yreg = parseInt(_MemoryManager.getMemValue(loc), 16);
 
             //increment to next command
@@ -268,14 +263,13 @@ var TSOS;
             location = _MemoryManager.getMemValue(this.PC) + location;
             var loc = parseInt(location, 16);
 
-            while (loc > this.limitRegister) {
-                loc = loc - 256;
+            /*while(loc > this.limitRegister){
+            loc = loc- 256;
             }
-
-            while (loc < this.baseRegister) {
-                loc = loc + 256;
-            }
-
+            
+            while (loc < this.baseRegister){
+            loc = loc +256;
+            }*/
             var cmpr = parseInt(_MemoryManager.getMemValue(loc), 16);
             if (cmpr == this.Xreg) {
                 this.Zflag = 1;
@@ -294,14 +288,14 @@ var TSOS;
                 var location = this.PC;
                 location += parseInt(_MemoryManager.getMemValue(this.PC), 16);
 
-                while (location > this.limitRegister) {
-                    location -= 256;
+                //location += 1;
+                /*while (location > this.limitRegister){
+                location -= 256;
                 }
-
-                while (location < this.baseRegister) {
-                    location += 256;
-                }
-
+                
+                while (location < this.baseRegister){
+                location += 256;
+                }*/
                 this.PC = location;
                 this.incrementPC();
             } else {
@@ -322,14 +316,13 @@ var TSOS;
 
             var loc = parseInt(location, 16);
 
-            while (loc > this.limitRegister) {
-                loc = loc - 256;
+            /*while(loc > this.limitRegister){
+            loc = loc- 256;
             }
-
-            while (loc < this.baseRegister) {
-                loc = loc + 256;
-            }
-
+            
+            while (loc < this.baseRegister){
+            loc = loc +256;
+            }*/
             var i = parseInt(_MemoryManager.getMemValue(loc), 16);
             i++;
 
@@ -347,14 +340,13 @@ var TSOS;
                 //debugger;
                 var i = this.Yreg;
 
-                while (i < this.baseRegister) {
-                    i += 256;
+                /*while (i< this.baseRegister){
+                i += 256;
                 }
-
-                while (i > this.limitRegister) {
-                    i -= 256;
-                }
-
+                
+                while (i> this.limitRegister){
+                i -= 256;
+                }*/
                 var n = "";
                 var temp = "";
 

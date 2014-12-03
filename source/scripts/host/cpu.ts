@@ -117,13 +117,13 @@ module TSOS {
 
             var hexi = parseInt(hexVal, 16);
 
-            while(hexi > this.limitRegister){
+            /*while(hexi > this.limitRegister){
                 hexi = hexi- 256;
             }
 
             while (hexi < this.baseRegister){
                 hexi = hexi +256;
-            }
+            }*/
 
             this.Acc = parseInt(_MemoryManager.getMemValue(hexi), 16);
             //increment to next command
@@ -140,13 +140,13 @@ module TSOS {
 
             var loc = parseInt(location, 16);
 
-            while(loc > this.limitRegister){
+            /*while(loc > this.limitRegister){
                 loc = loc- 256;
             }
 
             while (loc < this.baseRegister){
                 loc = loc +256;
-            }
+            }*/
 
             _MemoryManager.addAt(loc, this.Acc.toString(16));
             //increment to next command
@@ -163,13 +163,13 @@ module TSOS {
 
             var loc = parseInt(location, 16);
 
-            while(loc > this.limitRegister){
+            /*while(loc > this.limitRegister){
                 loc = loc- 256;
             }
 
             while (loc < this.baseRegister){
                 loc = loc +256;
-            }
+            }*/
 
             this.Acc +=  parseInt(_MemoryManager.getMemValue(loc), 16);
             //increment to next command
@@ -194,13 +194,13 @@ module TSOS {
 
             var loc = parseInt(location, 16);
 
-            while(loc > this.limitRegister){
+            /*while(loc > this.limitRegister){
                 loc = loc- 256;
             }
 
             while (loc < this.baseRegister){
                 loc = loc +256;
-            }
+            }*/
 
             this.Xreg = parseInt(_MemoryManager.getMemValue(loc), 16);
             //increment to next command
@@ -226,13 +226,13 @@ module TSOS {
 
             var loc = parseInt(location, 16);
 
-            while(loc > this.limitRegister){
+            /*while(loc > this.limitRegister){
                 loc = loc- 256;
             }
 
             while (loc < this.baseRegister){
                 loc = loc +256;
-            }
+            }*/
 
             this.Yreg = parseInt(_MemoryManager.getMemValue(loc), 16);
             //increment to next command
@@ -260,13 +260,13 @@ module TSOS {
             location = _MemoryManager.getMemValue(this.PC) + location;
             var loc = parseInt(location, 16);
 
-            while(loc > this.limitRegister){
+            /*while(loc > this.limitRegister){
                 loc = loc- 256;
             }
 
             while (loc < this.baseRegister){
                 loc = loc +256;
-            }
+            }*/
 
             var cmpr = parseInt(_MemoryManager.getMemValue(loc), 16);
             if(cmpr == this.Xreg){
@@ -288,13 +288,13 @@ module TSOS {
                 location += parseInt(_MemoryManager.getMemValue(this.PC), 16);
                 //location += 1;
 
-                while (location > this.limitRegister){
+                /*while (location > this.limitRegister){
                     location -= 256;
                 }
 
                 while (location < this.baseRegister){
                     location += 256;
-                }
+                }*/
 
 
                 this.PC = location;
@@ -317,13 +317,13 @@ module TSOS {
 
             var loc = parseInt(location, 16);
 
-            while(loc > this.limitRegister){
+            /*while(loc > this.limitRegister){
                 loc = loc- 256;
             }
 
             while (loc < this.baseRegister){
                 loc = loc +256;
-            }
+            }*/
 
             var i = parseInt(_MemoryManager.getMemValue(loc), 16);
             i++;
@@ -342,13 +342,13 @@ module TSOS {
                 //debugger;
                 var i = this.Yreg;
 
-                while (i< this.baseRegister){
+                /*while (i< this.baseRegister){
                     i += 256;
                 }
 
                 while (i> this.limitRegister){
                     i -= 256;
-                }
+                }*/
 
                 var n = "";
                 var temp = "";

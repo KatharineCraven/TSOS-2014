@@ -55,7 +55,17 @@ module TSOS{
 			this.xc = (256*partition) - 256;
 
 			for(var l = 0; l< input.length; l = l+2){
-				this.putHex(""+input.charAt(l)+input.charAt(l+1), partition);
+
+				if(l > 255){
+					//ERROR
+					_KernelInterruptQueue.enqueue(new Interrupt(MEM_OUT_OF_BOUNDS, partition));
+					this.xc = 0;
+					break;
+
+				}else{
+					this.putHex(""+input.charAt(l)+input.charAt(l+1), partition);
+				}
+
 			}
 		}
 
@@ -65,28 +75,53 @@ module TSOS{
 				input = "0"+input;
 			}
 
-			while(i> ((256*partition)-1)){
-				i -= 256*partition;
+			if((i > 255) || (i < 0)){
+				//ERROR
+					_KernelInterruptQueue.enqueue(new Interrupt(MEM_OUT_OF_BOUNDS, partition));
+					this.xc = 0;
+
+			}else{
+				i = ((partition*256)-256)+i;
+				this.mry.write(i, input);
 			}
 
-			this.mry.write(i, input);
+			/*while(i> ((256*partition)-1)){
+				i -= 256*partition;
+			}*/
+
+			//this.mry.write(i, input);
 		}
 
 		public getMemValue(i, partition){
-			while(i> ((256*partition)-1)){
-				i -= 256*partition;
+
+			if((i > 255) || (i < 0)){
+				//ERROR
+				_KernelInterruptQueue.enqueue(new Interrupt(MEM_OUT_OF_BOUNDS, partition));
+				this.xc = 0;
+				//RETURN SOMETHING?
+
+			}else{
+				i = ((partition*256)-256)+i;
+				return this.mry.read(i);
 			}
-			return this.mry.read(i);
+
 		}
 
 		public putHex(hex, partition){
-			if(this.xc > ((256*partition)-1)){
-				this.xc = 256*partition -256; //wrap memory for now
+			if((this.xc > ((256*partition)-1))|| (this.xc <256*partition -256)){
+				//this.xc = 256*partition -256; //wrap memory for now
+
+				_KernelInterruptQueue.enqueue(new Interrupt(MEM_OUT_OF_BOUNDS, partition));
+				this.xc = 0;
+			}else{
+				this.mry.write(this.xc, hex);
+
+				this.xc += 1;
 			}
 
-			this.mry.write(this.xc, hex);
+			//this.mry.write(this.xc, hex);
 
-			this.xc += 1;
+			//this.xc += 1;
 		}
 
 		public clearAllMem(){
@@ -117,70 +152,6 @@ module TSOS{
 
 					s += this.mry.read(counter) +" ";
 			}
-
-			//if empty
-			/*if(j == 0){
-				for(var i = 0; i< (256*_NumProgForMem); i++){
-					if ((i%8 ==0) && (i != 0)){
-						s+="\n0x"+ i.toString(16)+": ";
-					}
-
-					s += "00 ";
-
-					//initialize Array I suppose? :0
-			
-			}
-
-			//otherwise
-			}else{
-				
-				if(j > ((256*_NumProgForMem) -1)){
-					//we are out of memory!!! Not sure what to do, so I'll wrap memory for now
-					this.xc = 0;
-				}
-
-				//output whats there
-				for(var i = 0; i< j; i++){
-
-					if ((i%8 ==0) && (i != 0)){
-						s+="\n0x"+ i.toString(16)+": ";
-					}
-
-					s += this.mry.read(i) +" ";
-				}
-
-				//if theres still spots to fill (due to wrapping or cleared memory)
-				if(this.mry.filledTo() > j){
-					for(var k = j; k< (256*_NumProgForMem); k++){
-						
-						if ((k%8 ==0) && (k != 0)){
-							s+="\n0x"+ k.toString(16)+": ";
-						}
-
-						s+= "00 "
-					}
-
-				//otherwise continue filling
-				}else{
-					for(var k = j; k< this.mry.filledTo(); k++){
-						
-						if ((k%8 ==0) && (k != 0)){
-							s+="\n0x"+ k.toString(16)+": ";
-						}
-
-						s += this.mry.read(k) +" ";
-					}
-
-					for(var m = this.mry.filledTo(); m< (256*_NumProgForMem); m++){
-						
-						if ((m%8 ==0) && (m != 0)){
-							s+="\n0x"+ m.toString(16)+": ";
-						}
-
-						s += "00 ";
-					}
-				}
-			}*/
 
 			return s;
 		}

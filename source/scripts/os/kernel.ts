@@ -203,9 +203,16 @@ module TSOS {
                 case KILL_IRQ:
                     this.terminateViaPID(params);
                     break;
+                case MEM_OUT_OF_BOUNDS:
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
+        }
+
+        public memoryBounds(params){
+            //_MemoryManager.clearMemoryPartition(params);
+            //_MemoryManager.setPartitionAsUnused(params);
         }
 
         public makeProcessReady(params){

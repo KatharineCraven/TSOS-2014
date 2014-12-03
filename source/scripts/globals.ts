@@ -44,6 +44,8 @@ var TERMINATE_IRQ: number= 8;
 
 var KILL_IRQ: number = 9;
 
+var MEM_OUT_OF_BOUNDS: number = 10;
+
 var _CpuExecutionCount;
 
 var _TEST = "";
