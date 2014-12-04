@@ -2,7 +2,7 @@ var TSOS;
 (function (TSOS) {
     var Scheduler = (function () {
         function Scheduler(scheduleType) {
-            if (typeof scheduleType === "undefined") { scheduleType = "ROUNDROBIN"; }
+            if (typeof scheduleType === "undefined") { scheduleType = "rr"; }
             this.scheduleType = scheduleType;
         }
         Scheduler.prototype.setScheduleType = function (sType) {
@@ -14,11 +14,11 @@ var TSOS;
         };
 
         Scheduler.prototype.handleSchedulng = function () {
-            if (this.scheduleType == "ROUNDROBIN") {
+            if (this.scheduleType == "rr") {
                 this.roundRobin();
-            } else if (this.scheduleType == "FCFS") {
+            } else if (this.scheduleType == "fcfs") {
                 this.firstComeFirstServe();
-            } else if (this.scheduleType == "nPP") {
+            } else if (this.scheduleType == "priority") {
                 this.nonPrePriority();
             }
         };

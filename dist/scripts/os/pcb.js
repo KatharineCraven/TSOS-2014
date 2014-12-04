@@ -3,8 +3,8 @@
 var TSOS;
 (function (TSOS) {
     var PCB = (function () {
-        function PCB(pid, processState, pc, xReg, yReg, accumulator, zFlag, baseReg, limitReg, partitionNum) {
-            if (typeof pid === "undefined") { pid = _pidCount; }
+        function PCB(pid, processState, pc, xReg, yReg, accumulator, zFlag, baseReg, limitReg, partitionNum, priority) {
+            if (typeof pid === "undefined") { pid = 0; }
             if (typeof processState === "undefined") { processState = "NEW"; }
             if (typeof pc === "undefined") { pc = 0; }
             if (typeof xReg === "undefined") { xReg = 0; }
@@ -14,6 +14,7 @@ var TSOS;
             if (typeof baseReg === "undefined") { baseReg = 0; }
             if (typeof limitReg === "undefined") { limitReg = 255; }
             if (typeof partitionNum === "undefined") { partitionNum = 1; }
+            if (typeof priority === "undefined") { priority = 5; }
             this.pid = pid;
             this.processState = processState;
             this.pc = pc;
@@ -24,6 +25,7 @@ var TSOS;
             this.baseReg = baseReg;
             this.limitReg = limitReg;
             this.partitionNum = partitionNum;
+            this.priority = priority;
         }
         PCB.prototype.setState = function (status) {
             this.processState = status;
@@ -39,6 +41,10 @@ var TSOS;
 
         PCB.prototype.getPC = function () {
             return this.pc;
+        };
+
+        PCB.prototype.setPid = function (piid) {
+            this.pid = piid;
         };
 
         PCB.prototype.getPid = function () {
@@ -102,6 +108,14 @@ var TSOS;
 
         PCB.prototype.getPartition = function () {
             return this.partitionNum;
+        };
+
+        PCB.prototype.getPriority = function () {
+            return this.priority;
+        };
+
+        PCB.prototype.setPriority = function (pri) {
+            this.priority = pri;
         };
         return PCB;
     })();

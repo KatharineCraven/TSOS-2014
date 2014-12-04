@@ -205,6 +205,35 @@ var TSOS;
         Kernel.prototype.makeProcessReady = function (params) {
             _ResidentList[params].setState("READY");
             _ReadyQueue.enqueue(_ResidentList[params]);
+
+            //debugger;
+            if ((_TScheduler.getScheduleType() == "priority") && (_ReadyQueue.getSize() > 1)) {
+                var tempQueue = [];
+
+                while (_ReadyQueue.isEmpty() != true) {
+                    //debugger;
+                    tempQueue.push(_ReadyQueue.dequeue());
+                }
+
+                var v = tempQueue.length;
+                while (v > 0) {
+                    var tX = tempQueue[0];
+                    var tI = 0;
+
+                    for (var i = 0; i < tempQueue.length; i++) {
+                        if (tempQueue[i].getPriority() < tX.getPriority()) {
+                            tX = tempQueue[i];
+                            tI = i;
+                        }
+                    }
+
+                    //debugger;
+                    _ReadyQueue.enqueue(tX);
+                    tempQueue.splice(tI, 1);
+                    tempQueue = tempQueue;
+                    v = tempQueue.length;
+                }
+            }
         };
 
         Kernel.prototype.switchProcesses = function () {

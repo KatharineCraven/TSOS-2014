@@ -104,7 +104,7 @@ module TSOS {
             // processes - list the running processes and their IDs
             // kill <id> - kills the specified process id.
 
-            sc = new ShellCommand(this.shellClearMem, "clearmem", "c- Clears all memory partitions");
+            sc = new ShellCommand(this.shellClearMem, "clearmem", "- Clears all memory partitions");
             this.commandList[this.commandList.length] = sc;
 
             sc = new ShellCommand(this.shellQuantum, "quantum", "<int> - Sets quantum for Round Robin clock schedule.");
@@ -119,6 +119,8 @@ module TSOS {
             sc = new ShellCommand(this.shellPS, "ps", "- Displays PIDs of all active processes.");
             this.commandList[this.commandList.length] = sc;
 
+            sc = new ShellCommand(this.shellSetSchedule, "setschedule", "<schedule> - Sets schedule type (rr, fcfc, priority).");
+            this.commandList[this.commandList.length] = sc;
 
             //
 
@@ -392,7 +394,7 @@ module TSOS {
         }
 
         //loads user input
-        public shellLoad(){
+        public shellLoad(args){
             var s = _UserCode.value;
             var v = true;
             var c = '';
@@ -443,8 +445,17 @@ module TSOS {
                         _MemoryManager.addToMem(s.replace(/\s/g,'').toUpperCase(), avail);
                         _MemoryManager.setPartitionAsUsed(avail);
                         //_StdOut.putText(avail.toString());
+                        //debugger;
                         _ResidentList.push(new PCB());
+                        _ResidentList[_pidCount].setPid(_pidCount);
                         _ResidentList[_pidCount].setPartition(avail);
+
+                        if((Number(args) == NaN) ||(Number(args)< 0)){
+                            _ResidentList[_pidCount].setPriority(5);
+                        }else{
+                            _ResidentList[_pidCount].setPriority(Number(args));
+                        }
+
                         // _ResidentList[_pidCount].setPC((256*_NumProgForMem)-256);
                         _StdOut.putText("pid: "+_pidCount); 
                         _pidCount++; 
@@ -510,6 +521,85 @@ module TSOS {
             }
 
             //_OsShell.putPrompt();
+        }
+
+        public shellSetSchedule(args){
+            debugger;
+            if(((args == "rr") || (args == "fcfs") || (args == "priority")) &&(args != _TScheduler.getScheduleType())){
+               if(_CPU.isExecuting == true){
+                    _StdOut.putText("Please wait until CPU is finished");
+                    _StdOut.advanceLine(); 
+               }else{
+                    _TScheduler.setScheduleType(args);
+                    var tempQueue = []
+
+                    if(_ReadyQueue.isEmpty() == false){
+
+                        while(_ReadyQueue.isEmpty() != true){
+                            tempQueue.push(_ReadyQueue.dequeue());
+                        }
+
+                        switch(_TScheduler.getScheduleType()){
+                            
+                            case "rr":
+                                while(tempQueue.length > 0){
+                                    var tX = tempQueue[0];
+                                    var tI = 0;
+
+                                    for(var i = 0; i< tempQueue.length; i++){
+                                        if(tempQueue[i].getPid() < tX.getPid()){
+                                            tX = tempQueue[i];
+                                        }
+                                    }
+
+                                    _ReadyQueue.enqueue(tX);
+                                    tempQueue.splice(tI, 1);
+                                }
+                                break;
+
+                            case "fcfs":
+                                while(tempQueue.length > 0){
+                                    var tX = tempQueue[0];
+                                    var tI = 0;
+
+                                    for(var i = 0; i< tempQueue.length; i++){
+                                        if(tempQueue[i].getPid() < tX.getPid()){
+                                            tX = tempQueue[i];
+                                        }
+                                    }
+
+                                    _ReadyQueue.enqueue(tX);
+                                    tempQueue.splice(tI, 1);
+                                }
+                                break;
+
+                            case "priority":
+                                while(tempQueue.length > 0){
+                                    var tX = tempQueue[0];
+                                    var tI = 0;
+
+                                    for(var i = 0; i< tempQueue.length; i++){
+                                        if(tempQueue[i].getPriority() < tX.getPriority()){
+                                            tX = tempQueue[i];
+                                        }
+                                    }
+
+                                    _ReadyQueue.enqueue(tX);
+                                    tempQueue.splice(tI, 1);
+                                }
+                                break;
+
+                        }
+                    }
+
+
+               }
+
+            }else{
+                _StdOut.putText("Invalid Schedule");
+                _StdOut.advanceLine(); 
+            }
+
         }
 
         public shellRunAll(){

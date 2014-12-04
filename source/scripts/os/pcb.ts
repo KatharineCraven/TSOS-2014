@@ -5,7 +5,7 @@ module TSOS{
 
 	export class PCB{
 
-		constructor(private pid = _pidCount, private processState= "NEW", private pc = 0, private xReg = 0, private yReg = 0, private accumulator = 0, private zFlag =0, private baseReg = 0, private limitReg = 255, private partitionNum = 1){
+		constructor(private pid = 0, private processState= "NEW", private pc = 0, private xReg = 0, private yReg = 0, private accumulator = 0, private zFlag =0, private baseReg = 0, private limitReg = 255, private partitionNum = 1, private priority = 5){
 
 		}
 		
@@ -23,6 +23,10 @@ module TSOS{
 
 		public getPC(){
 			return this.pc;
+		}
+
+		public setPid(piid){
+			this.pid = piid;
 		}
 
 		public getPid(){
@@ -86,6 +90,14 @@ module TSOS{
 
 		public getPartition(){
 			return this.partitionNum;
+		}
+
+		public getPriority(){
+			return this.priority;
+		}
+
+		public setPriority(pri){
+			this.priority = pri;
 		}
 
 	}
