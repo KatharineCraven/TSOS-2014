@@ -204,6 +204,7 @@ module TSOS {
                     this.terminateViaPID(params);
                     break;
                 case MEM_OUT_OF_BOUNDS:
+                    this.memoryBounds(params);
                     break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
@@ -211,8 +212,12 @@ module TSOS {
         }
 
         public memoryBounds(params){
-            //_MemoryManager.clearMemoryPartition(params);
-            //_MemoryManager.setPartitionAsUnused(params);
+            _MemoryManager.clearMemoryPartition(params);
+            _MemoryManager.setPartitionAsUnused(params);
+            this.krnTrace("Memory out of bounds, will terminate program");
+            _StdOut.putText("Memory access error");
+            _StdOut.advanceLine();
+            _KernelInterruptQueue.enqueue(new Interrupt(TERMINATE_IRQ, ""));
         }
 
         public makeProcessReady(params){

@@ -186,6 +186,7 @@ var TSOS;
                     this.terminateViaPID(params);
                     break;
                 case MEM_OUT_OF_BOUNDS:
+                    this.memoryBounds(params);
                     break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
@@ -193,8 +194,12 @@ var TSOS;
         };
 
         Kernel.prototype.memoryBounds = function (params) {
-            //_MemoryManager.clearMemoryPartition(params);
-            //_MemoryManager.setPartitionAsUnused(params);
+            _MemoryManager.clearMemoryPartition(params);
+            _MemoryManager.setPartitionAsUnused(params);
+            this.krnTrace("Memory out of bounds, will terminate program");
+            _StdOut.putText("Memory access error");
+            _StdOut.advanceLine();
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(TERMINATE_IRQ, ""));
         };
 
         Kernel.prototype.makeProcessReady = function (params) {

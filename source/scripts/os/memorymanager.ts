@@ -99,7 +99,7 @@ module TSOS{
 				_KernelInterruptQueue.enqueue(new Interrupt(MEM_OUT_OF_BOUNDS, partition));
 				this.xc = 0;
 				//RETURN SOMETHING?
-
+				return "00";
 			}else{
 				i = ((partition*256)-256)+i;
 				return this.mry.read(i);

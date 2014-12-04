@@ -27,7 +27,8 @@ module TSOS {
                     public instructionReg: number = 0,
                     public isExecuting: boolean = false,
                     public baseRegister: number = 0,
-                    public limitRegister: number = 255) {
+                    public limitRegister: number = 255,
+                    public part: number = 1) {
 
         }
 
@@ -41,6 +42,8 @@ module TSOS {
             this.isExecuting = false;
             this.baseRegister = 0;
             this.limitRegister = 255;
+            this.part = 1;
+
         }
 
         public incrementPC(){
@@ -79,12 +82,13 @@ module TSOS {
 
         public getFromPCB(prCoBl){
             //debugger;
+            this.part = prCoBl.getPartition();
             this.PC = prCoBl.getPC();
             this.Acc = prCoBl.getAccum();
             this.Xreg = prCoBl.getXReg();
             this.Yreg = prCoBl.getYReg();
             this.Zflag = prCoBl.getZFlag();
-            this.instructionReg = parseInt(_MemoryManager.getMemValue(prCoBl.getPC()), 16);
+            this.instructionReg = parseInt(_MemoryManager.getMemValue((prCoBl.getPC()-(this.part-1)*256), this.part), 16);
             this.baseRegister = prCoBl.getBaseReg();
             this.limitRegister = prCoBl.getLimitReg();
         }
@@ -101,7 +105,7 @@ module TSOS {
         //load accumulartor with constant
         public a9LDA(){
             this.incrementPC();
-            this.Acc = parseInt(_MemoryManager.getMemValue(this.PC), 16);
+            this.Acc = parseInt(_MemoryManager.getMemValue((this.PC-(this.part-1)*256), this.part), 16);
             //increment to next command
             this.incrementPC();
             this.updatePCB();
@@ -111,9 +115,9 @@ module TSOS {
         public adLDA(){
             var hexVal = "";
             this.incrementPC();
-            hexVal += _MemoryManager.getMemValue(this.PC);
+            hexVal += _MemoryManager.getMemValue((this.PC-(this.part-1)*256), this.part);
             this.incrementPC();
-            hexVal = _MemoryManager.getMemValue(this.PC) + hexVal;
+            hexVal = _MemoryManager.getMemValue((this.PC-(this.part-1)*256), this.part) + hexVal;
 
             var hexi = parseInt(hexVal, 16);
 
@@ -125,7 +129,7 @@ module TSOS {
                 hexi = hexi +256;
             }*/
 
-            this.Acc = parseInt(_MemoryManager.getMemValue(hexi), 16);
+            this.Acc = parseInt(_MemoryManager.getMemValue(hexi, this.part), 16);
             //increment to next command
             this.incrementPC();
             this.updatePCB();
@@ -134,9 +138,9 @@ module TSOS {
         public STA(){
             var location = "";
             this.incrementPC();
-            location += _MemoryManager.getMemValue(this.PC);
+            location += _MemoryManager.getMemValue((this.PC-(this.part-1)*256), this.part);
             this.incrementPC();
-            location = _MemoryManager.getMemValue(this.PC) + location;
+            location = _MemoryManager.getMemValue((this.PC-(this.part-1)*256), this.part) + location;
 
             var loc = parseInt(location, 16);
 
@@ -148,7 +152,7 @@ module TSOS {
                 loc = loc +256;
             }*/
 
-            _MemoryManager.addAt(loc, this.Acc.toString(16));
+            _MemoryManager.addAt(loc, this.Acc.toString(16), this.part);
             //increment to next command
             this.incrementPC();
             this.updatePCB();
@@ -157,9 +161,9 @@ module TSOS {
         public ADC(){
             var location = "";
             this.incrementPC();
-            location += _MemoryManager.getMemValue(this.PC);
+            location += _MemoryManager.getMemValue((this.PC-(this.part-1)*256), this.part);
             this.incrementPC();
-            location = _MemoryManager.getMemValue(this.PC) + location;
+            location = _MemoryManager.getMemValue((this.PC-(this.part-1)*256), this.part) + location;
 
             var loc = parseInt(location, 16);
 
@@ -171,7 +175,7 @@ module TSOS {
                 loc = loc +256;
             }*/
 
-            this.Acc +=  parseInt(_MemoryManager.getMemValue(loc), 16);
+            this.Acc +=  parseInt(_MemoryManager.getMemValue(loc, this.part), 16);
             //increment to next command
             this.incrementPC();
             this.updatePCB();
@@ -179,7 +183,7 @@ module TSOS {
 
         public a2LDX(){
             this.incrementPC();
-            this.Xreg = parseInt(_MemoryManager.getMemValue(this.PC), 16);
+            this.Xreg = parseInt(_MemoryManager.getMemValue((this.PC-(this.part-1)*256), this.part), 16);
             //increment to next command
             this.incrementPC();
             this.updatePCB();
@@ -188,9 +192,9 @@ module TSOS {
         public aeLDX(){
             var location = "";
             this.incrementPC();
-            location += _MemoryManager.getMemValue(this.PC);
+            location += _MemoryManager.getMemValue((this.PC-(this.part-1)*256), this.part);
             this.incrementPC();
-            location = _MemoryManager.getMemValue(this.PC) + location;
+            location = _MemoryManager.getMemValue((this.PC-(this.part-1)*256), this.part) + location;
 
             var loc = parseInt(location, 16);
 
@@ -202,7 +206,7 @@ module TSOS {
                 loc = loc +256;
             }*/
 
-            this.Xreg = parseInt(_MemoryManager.getMemValue(loc), 16);
+            this.Xreg = parseInt(_MemoryManager.getMemValue(loc, this.part), 16);
             //increment to next command
             this.incrementPC();
             this.updatePCB();
@@ -210,7 +214,7 @@ module TSOS {
 
         public a0LDY(){
             this.incrementPC();
-            this.Yreg = parseInt(_MemoryManager.getMemValue(this.PC), 16);
+            this.Yreg = parseInt(_MemoryManager.getMemValue((this.PC-(this.part-1)*256), this.part), 16);
             //increment to next command
             this.incrementPC();
             this.updatePCB();
@@ -220,9 +224,9 @@ module TSOS {
             //debugger;
             var location = "";
             this.incrementPC();
-            location += _MemoryManager.getMemValue(this.PC);
+            location += _MemoryManager.getMemValue((this.PC-(this.part-1)*256), this.part);
             this.incrementPC();
-            location = _MemoryManager.getMemValue(this.PC) + location;
+            location = _MemoryManager.getMemValue((this.PC-(this.part-1)*256), this.part) + location;
 
             var loc = parseInt(location, 16);
 
@@ -234,7 +238,7 @@ module TSOS {
                 loc = loc +256;
             }*/
 
-            this.Yreg = parseInt(_MemoryManager.getMemValue(loc), 16);
+            this.Yreg = parseInt(_MemoryManager.getMemValue(loc, this.part), 16);
             //increment to next command
             this.incrementPC();
             this.updatePCB();
@@ -255,9 +259,9 @@ module TSOS {
         public ecCPX(){
             var location = "";
             this.incrementPC();
-            location += _MemoryManager.getMemValue(this.PC);
+            location += _MemoryManager.getMemValue((this.PC-(this.part-1)*256), this.part);
             this.incrementPC();
-            location = _MemoryManager.getMemValue(this.PC) + location;
+            location = _MemoryManager.getMemValue((this.PC-(this.part-1)*256), this.part) + location;
             var loc = parseInt(location, 16);
 
             /*while(loc > this.limitRegister){
@@ -268,7 +272,7 @@ module TSOS {
                 loc = loc +256;
             }*/
 
-            var cmpr = parseInt(_MemoryManager.getMemValue(loc), 16);
+            var cmpr = parseInt(_MemoryManager.getMemValue(loc, this.part), 16);
             if(cmpr == this.Xreg){
                 this.Zflag = 1;
             }else{
@@ -285,7 +289,7 @@ module TSOS {
             if(this.Zflag == 0){
                 this.incrementPC();
                 var location = this.PC;
-                location += parseInt(_MemoryManager.getMemValue(this.PC), 16);
+                location += parseInt(_MemoryManager.getMemValue((this.PC-(this.part-1)*256), this.part), 16);
                 //location += 1;
 
                 /*while (location > this.limitRegister){
@@ -311,9 +315,9 @@ module TSOS {
         public eeINC(){
             var location = "";
             this.incrementPC();
-            location += _MemoryManager.getMemValue(this.PC);
+            location += _MemoryManager.getMemValue((this.PC-(this.part-1)*256), this.part);
             this.incrementPC();
-            location = _MemoryManager.getMemValue(this.PC) + location;
+            location = _MemoryManager.getMemValue((this.PC-(this.part-1)*256), this.part) + location;
 
             var loc = parseInt(location, 16);
 
@@ -325,11 +329,11 @@ module TSOS {
                 loc = loc +256;
             }*/
 
-            var i = parseInt(_MemoryManager.getMemValue(loc), 16);
+            var i = parseInt(_MemoryManager.getMemValue(loc, this.part), 16);
             i++;
 
             this.incrementPC();
-            _MemoryManager.addAt(loc, i);
+            _MemoryManager.addAt(loc, i, this.part);
             this.updatePCB();
         }
 
@@ -353,11 +357,11 @@ module TSOS {
                 var n = "";
                 var temp = "";
 
-                temp = String.fromCharCode(parseInt(_MemoryManager.getMemValue(i), 16));
-                while(_MemoryManager.getMemValue(i) != "00"){
+                temp = String.fromCharCode(parseInt(_MemoryManager.getMemValue(i, this.part), 16));
+                while(_MemoryManager.getMemValue(i, this.part) != "00"){
                     n = n+temp;
                     i++;
-                    temp = String.fromCharCode(parseInt(_MemoryManager.getMemValue(i), 16));
+                    temp = String.fromCharCode(parseInt(_MemoryManager.getMemValue(i, this.part), 16));
 
                 }
                 _KernelInterruptQueue.enqueue(new Interrupt(SYSOUT_IRQ, n));
