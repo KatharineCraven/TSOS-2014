@@ -28,6 +28,9 @@ var TSOS;
             _KernelInputQueue = new TSOS.Queue(); // Where device input lands before being processed out somewhere.
             _Console = new TSOS.Console(); // The command line interface / console I/O device.
             _MemoryManager = new TSOS.MemoryManager(); //memory manager
+
+            //debugger;
+            _HardDrive = new TSOS.FileSystemDeviceDriver();
             _MemoryManager.initMemory();
             _CpuExecutionCount = 1;
             _CurrentPCB = null;
@@ -37,6 +40,7 @@ var TSOS;
             //minor change
             // Initialize the console.
             _Console.init();
+            _HardDrive.init();
 
             // Initialize standard input and output to the _Console.
             _StdIn = _Console;
@@ -106,8 +110,10 @@ var TSOS;
                 this.krnTrace("Idle");
             }
 
+            //debugger;
             _MemoryOutput.value = _MemoryManager.displayMem();
             _ReadyQueueOutput.value = this.displayReadyQueue();
+            _HardDriveOutput.value = _HardDrive.displayDrive();
             /* if(_LoadedProgram != -1){
             _CPUOutput.value = _CPU.displayCPU();
             //whut

@@ -56,6 +56,7 @@ module TSOS {
 
             _MemoryOutput = document.getElementById("taMemoryInput");
             _CPUOutput = document.getElementById("taCPUStatus");
+            _HardDriveOutput = document.getElementById("taFSDDInput");
             _pidCount = 0;
 
             _ConsoleDiv = document.getElementById('divConsole');

@@ -433,7 +433,7 @@ var TSOS;
                     _ResidentList[_pidCount].setPid(_pidCount);
                     _ResidentList[_pidCount].setPartition(avail);
 
-                    if ((Number(args) == NaN) || (Number(args) < 0)) {
+                    if ((isNaN(Number(args))) || (Number(args) < 0)) {
                         _ResidentList[_pidCount].setPriority(5);
                     } else {
                         _ResidentList[_pidCount].setPriority(Number(args));

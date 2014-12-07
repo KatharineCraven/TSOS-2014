@@ -105,6 +105,9 @@ var _MemoryOutput;
 
 var _CPUOutput;
 
+var _HardDrive;
+var _HardDriveOutput;
+
 var _ReadyQueueOutput = null; //ready queue di
 
 var _pidCount;

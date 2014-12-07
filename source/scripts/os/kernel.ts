@@ -29,6 +29,8 @@ module TSOS {
             _KernelInputQueue = new Queue();      // Where device input lands before being processed out somewhere.
             _Console = new Console();          // The command line interface / console I/O device.
             _MemoryManager = new MemoryManager(); //memory manager
+            //debugger;
+            _HardDrive = new FileSystemDeviceDriver();
             _MemoryManager.initMemory();
             _CpuExecutionCount = 1;
             _CurrentPCB = null;
@@ -39,6 +41,7 @@ module TSOS {
 
             // Initialize the console.
             _Console.init();
+            _HardDrive.init();
 
 
             // Initialize standard input and output to the _Console.
@@ -117,8 +120,10 @@ module TSOS {
                 this.krnTrace("Idle");
             }
 
+            //debugger;
             _MemoryOutput.value = _MemoryManager.displayMem();
             _ReadyQueueOutput.value = this.displayReadyQueue();
+            _HardDriveOutput.value = _HardDrive.displayDrive();
 
            /* if(_LoadedProgram != -1){
                 _CPUOutput.value = _CPU.displayCPU();
