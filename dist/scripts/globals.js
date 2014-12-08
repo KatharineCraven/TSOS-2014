@@ -45,6 +45,14 @@ var KILL_IRQ = 9;
 
 var MEM_OUT_OF_BOUNDS = 10;
 
+var FILENAME_FAILURE_IRQ = 11;
+
+var FILENAME_SUCCESS_IRQ = 12;
+
+var TRACK1_MEM_FULL = 13;
+
+var CREATE_FILENAME_IRQ = 14;
+
 var _CpuExecutionCount;
 
 var _TEST = "";

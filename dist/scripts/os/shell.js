@@ -101,6 +101,9 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellSetSchedule, "setschedule", "<schedule> - Sets schedule type (rr, fcfc, priority).");
             this.commandList[this.commandList.length] = sc;
 
+            sc = new TSOS.ShellCommand(this.shellCreate, "create", "<filename> - Creates filename.");
+            this.commandList[this.commandList.length] = sc;
+
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -506,7 +509,7 @@ var TSOS;
         };
 
         Shell.prototype.shellSetSchedule = function (args) {
-            debugger;
+            //debugger;
             if (((args == "rr") || (args == "fcfs") || (args == "priority")) && (args != _TScheduler.getScheduleType())) {
                 if (_CPU.isExecuting == true) {
                     _StdOut.putText("Please wait until CPU is finished");
@@ -589,6 +592,11 @@ var TSOS;
                     }
                 }
             }
+        };
+
+        Shell.prototype.shellCreate = function (args) {
+            //debugger;
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CREATE_FILENAME_IRQ, args[0]));
         };
         return Shell;
     })();

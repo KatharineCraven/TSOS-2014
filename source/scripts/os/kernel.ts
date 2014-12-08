@@ -211,9 +211,36 @@ module TSOS {
                 case MEM_OUT_OF_BOUNDS:
                     this.memoryBounds(params);
                     break;
+                case FILENAME_SUCCESS_IRQ:
+                    this.filenameSuccess(params);
+                    break;
+                case FILENAME_FAILURE_IRQ:
+                    this.filenameFailure(params);
+                    break;
+                case CREATE_FILENAME_IRQ:
+                    this.createFilename(params);
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
+        }
+
+        public createFilename(params){
+            _HardDrive.createFileName(params);
+        }
+
+        public filenameSuccess(params){
+            this.krnTrace("Filename "+params+" successfully created");
+            _StdOut.putText("Filename "+params+" created successfully");
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
+        }
+
+        public filenameFailure(params){
+            this.krnTrace(params);
+            _StdOut.putText(params);
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
         }
 
         public memoryBounds(params){

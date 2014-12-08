@@ -122,6 +122,9 @@ module TSOS {
             sc = new ShellCommand(this.shellSetSchedule, "setschedule", "<schedule> - Sets schedule type (rr, fcfc, priority).");
             this.commandList[this.commandList.length] = sc;
 
+
+            sc = new ShellCommand(this.shellCreate, "create", "<filename> - Creates filename.");
+            this.commandList[this.commandList.length] = sc;
             //
 
             // Display the initial prompt.
@@ -524,7 +527,7 @@ module TSOS {
         }
 
         public shellSetSchedule(args){
-            debugger;
+            //debugger;
             if(((args == "rr") || (args == "fcfs") || (args == "priority")) &&(args != _TScheduler.getScheduleType())){
                if(_CPU.isExecuting == true){
                     _StdOut.putText("Please wait until CPU is finished");
@@ -616,6 +619,11 @@ module TSOS {
 
             }
 
+        }
+
+        public shellCreate(args){
+            //debugger;
+            _KernelInterruptQueue.enqueue(new Interrupt(CREATE_FILENAME_IRQ, args[0]));
         }
 
     }
