@@ -220,9 +220,26 @@ module TSOS {
                 case CREATE_FILENAME_IRQ:
                     this.createFilename(params);
                     break;
+                case WRITE_FILE_IRQ:
+                    this.writeFile(params);
+                    break;
+                case WRITE_FAIL_SUCCEED_IRQ:
+                    this.writeSuccessOrFail(params);
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
+        }
+
+        public writeSuccessOrFail(params){
+            this.krnTrace(params);
+            _StdOut.putText(params);
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
+        }
+
+        public writeFile(params){
+            _HardDrive.writeFile(params[0], params[1]);
         }
 
         public createFilename(params){

@@ -54,6 +54,11 @@ var TRACK1_MEM_FULL: number = 13;
 
 var CREATE_FILENAME_IRQ: number = 14;
 
+var WRITE_FILE_IRQ: number =15;
+
+var WRITE_FAIL_SUCCEED_IRQ: number = 16;
+
+
 var _CpuExecutionCount;
 
 var _TEST = "";

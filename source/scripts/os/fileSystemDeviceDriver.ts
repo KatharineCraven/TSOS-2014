@@ -105,7 +105,7 @@ module TSOS {
         			for(var b = 0; b<8; b++){
         				st= sessionStorage.getItem(""+t+s+b);
         				st = st.replace(/@/g, "0");
-        				str = str+ t+s+b+ "| "+  st.substring(0, 1)+ " " + st.substring(1, 4) + " " + st.substring(4, 120) +"\n";
+        				str = str+ t+s+b+ "| "+  st.substring(0, 1)+ " " + st.substring(1, 4) + " " + st.substring(4, 124) +"\n";
         				//output
         			}
         		}
@@ -119,15 +119,15 @@ module TSOS {
         	//find available spot for filename
         	var trSeBl = "@@@";
 
-        	for(var i = 1; i< 78; i++){
-        		if(i < 10){
-        			trSeBl = "00"+i;
-        		}else{
-        			trSeBl = "0"+i;
-        		}
+        	for(var i = 0; i<8; i++){
+        		for(var j = 0; j<8; j++){
+        			if((i+j) != 0){
+        				trSeBl = "0"+i+j;
 
-        		if(sessionStorage.getItem(trSeBl).substring(0,1) === "0"){
-        			return trSeBl;
+        				if(sessionStorage.getItem(trSeBl).substring(0,1) === "0"){
+        					return trSeBl;
+        				}
+        			}
         		}
         	}
 
@@ -153,7 +153,7 @@ module TSOS {
 
         public testFilenameSuccess(nameInString, tkSrBk){
 
-        	var test = sessionStorage.getItem(tkSrBk).substring(4, 120);
+        	var test = sessionStorage.getItem(tkSrBk).substring(4, 124);
         	test = this.hexToString(test);
 
         	if(test === nameInString){
@@ -164,7 +164,7 @@ module TSOS {
         }
 
         public createFileName(nameInString){
-
+        	//debugger;
         	var nameInHex = this.stringToHex(nameInString);
         	var nameSpace = this.findNameSpace();
 
@@ -173,12 +173,15 @@ module TSOS {
         		//make interrupt
         		_KernelInterruptQueue.enqueue(new Interrupt(FILENAME_FAILURE_IRQ, "Out of memory for file."));
 
+        	}else if(this.findFileName(nameInString) != "@@@"){
+        		_KernelInterruptQueue.enqueue(new Interrupt(FILENAME_FAILURE_IRQ, "Filename already exists"));
+
         	}else{
 
         		if(nameInHex.length > 120){
-        			//Error- filename too big
+        			_KernelInterruptQueue.enqueue(new Interrupt(FILENAME_FAILURE_IRQ, "Filename too large."));
         		}else if(nameInHex.length <120){
-        			var ss = sessionStorage.getItem(nameSpace).substring(nameInHex.length, 120);
+        			var ss = sessionStorage.getItem(nameSpace).substring((nameInHex.length+4), 124);
         			var stsb = sessionStorage.getItem(nameSpace).substring(1, 4);
         			sessionStorage.setItem(nameSpace, "1"+stsb+nameInHex+ss);
         		}else{
@@ -190,7 +193,182 @@ module TSOS {
         	}
         }
 
+        //assume its already stripped of quotations --- need to write success/failure
+        public writeFile(filename, fileData){
+        	var dataHex = this.stringToHex(fileData);
+        	var fileTSB = this.findFileName(filename);
+        	var fileNextUp = this.findNextLink(fileTSB);
 
+        	if(fileTSB === "@@@"){
+        		//Filename does not exist
+        		_KernelInterruptQueue.enqueue(new Interrupt(WRITE_FAIL_SUCCEED_IRQ, "Write failure- File does not exist."));
+        	}else if(fileNextUp === "000"){
+        		//debugger;
+	        	var datSpace = this.getDataSpace(dataHex);
+
+	        	if(datSpace === "@@@"){
+	        		//not enough file room
+
+	        	}else{
+	        		//datSpace will have a string of shit that I need to fill up, things will be stored in dataspace already
+	        		//now we have to hook up each spot
+	        		this.connectTSBs(fileTSB, datSpace.substring(0,3));
+
+	        		if(datSpace.length > 3){
+	        			this.linkDataTSBs(datSpace);
+	        		}
+
+	        	}	
+        	}else{
+        		//overwrites data
+
+        		this.clearData(fileNextUp);
+
+        		var datSpace = this.getDataSpace(dataHex);
+        		
+        		if(datSpace === "@@@"){
+	        		//not enough file room
+
+	        	}else{
+	        		//datSpace will have a string of shit that I need to fill up, things will be stored in dataspace already
+	        		//now we have to hook up each spot
+	        		this.connectTSBs(fileTSB, datSpace.substring(0,3));
+
+	        		if(datSpace.length > 3){
+	        			this.linkDataTSBs(datSpace);
+	        		}
+	        	}
+        	}
+        }
+
+        public findNextLink(aTSB){
+        	return sessionStorage.getItem(aTSB).substring(1,4);
+
+        }
+
+        public linkDataTSBs(tsbs){
+        	for(var i = 0; i< (tsbs.length-3); i= i+3){
+        		this.connectTSBs(tsbs.substring(i, i+3), tsbs.substring(i+3, i+6));
+        	}
+        }
+
+        public connectTSBs(parent, child){
+        	var original = sessionStorage.getItem(parent);
+
+        	sessionStorage.setItem(parent, "1"+child+original.substring(4, 124));
+        }
+
+        public findFileName(filename){
+        	var searchTSB = "@@@";
+        	var inUse = "0";
+        	var aFile = "";
+
+        	for(var i = 0; i<8; i++){
+        		for(var j = 0; j<8; j++){
+        			if((i+j) != 0){
+
+
+		        		searchTSB = "0"+i+j;
+
+
+		        		inUse= sessionStorage.getItem(searchTSB).substring(0,1);
+
+		        		if(inUse === "1"){
+		        			aFile = sessionStorage.getItem(searchTSB).substring(4,124);
+
+		        			if(this.hexToString(aFile) === filename){
+		        				return searchTSB;
+		        			}
+		        		}
+		        	}
+	        	}
+        	}
+
+        	return "@@@";
+        }
+
+
+        public storeData(aTSB, dHex){
+        	var mrk = sessionStorage.getItem(aTSB);
+
+
+        	sessionStorage.setItem(aTSB, "1"+"000"+ dHex+ mrk.substring((4+dHex.length), 124));
+        }
+
+        public markAsUnused(aTSB){
+        	var mb = sessionStorage.getItem(aTSB).substring(1,4);
+
+        	var initI = "";
+
+        	for(var i = 0; i<60; i++){
+        		//** will be displayed as 0, it is used as a character to inform that there is nothing stored here
+        		initI = initI+"@@";
+        	}
+
+        	//clears data within
+        	sessionStorage.setItem(aTSB, "0"+"000"+initI);
+
+        	//returns the connected sector that must also be deleted 
+        	return mb;
+
+        } 
+
+        public clearData(aTSB){
+
+        	if(aTSB.length > 3){
+        		
+        		var clr = aTSB.substring(0, 3);
+        		
+        		if(clr != "@@@"){
+        			this.markAsUnused(clr);
+        		}
+
+        		this.clearData(aTSB.substring(3, aTSB.length));
+        	}else{
+
+        		var next = "000";
+
+	        	if(aTSB != "@@@"){
+	        		next = this.markAsUnused(aTSB);
+	        	}
+
+	        	//clears the next connected bit of data
+	        	if(next != "000"){
+	        		this.clearData(next);
+	        	}
+
+	        }
+        	
+        }
+
+
+        //stores data and returns a string with all locations
+        public getDataSpace(dHex){
+        	var xs = "";
+        	var tsb = "";
+
+        	if(dHex.length > 120){
+        		xs = xs+ this.getDataSpace(dHex.substring(0, 120));
+        		xs = xs + this.getDataSpace(dHex.substring(120, dHex.length));
+        	}
+
+        	var fds = this.findDataSpace();
+
+        	if(fds === "@@@"){
+        		return "@@@";
+        	}
+
+        	this.storeData(fds, dHex);
+
+        	xs = xs+fds;
+
+        	if(xs.indexOf("@@@") != -1){
+        		this.clearData(xs);
+        		return "@@@";
+        	}
+
+        	return xs;
+        }
 
     }
 }

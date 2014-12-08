@@ -203,9 +203,26 @@ var TSOS;
                 case CREATE_FILENAME_IRQ:
                     this.createFilename(params);
                     break;
+                case WRITE_FILE_IRQ:
+                    this.writeFile(params);
+                    break;
+                case WRITE_FAIL_SUCCEED_IRQ:
+                    this.writeSuccessOrFail(params);
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
+        };
+
+        Kernel.prototype.writeSuccessOrFail = function (params) {
+            this.krnTrace(params);
+            _StdOut.putText(params);
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
+        };
+
+        Kernel.prototype.writeFile = function (params) {
+            _HardDrive.writeFile(params[0], params[1]);
         };
 
         Kernel.prototype.createFilename = function (params) {

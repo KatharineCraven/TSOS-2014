@@ -127,6 +127,9 @@ module TSOS {
             this.commandList[this.commandList.length] = sc;
             //
 
+            sc = new ShellCommand(this.shellWrite, "write", "<filename> \"data\" - Writes data to a file.");
+            this.commandList[this.commandList.length] = sc;
+
             // Display the initial prompt.
             this.putPrompt();
         }
@@ -624,6 +627,22 @@ module TSOS {
         public shellCreate(args){
             //debugger;
             _KernelInterruptQueue.enqueue(new Interrupt(CREATE_FILENAME_IRQ, args[0]));
+        }
+
+        public shellWrite(args){
+            var fileName = args[0];
+            var data = args.slice(1).join(" ");
+            var x = 0;
+
+            if( (data.charAt(0) === "\"") && (data.charAt(data.length-1) === "\"")){
+                //write file
+                _KernelInterruptQueue.enqueue(new Interrupt(WRITE_FILE_IRQ, [fileName, data]));
+            }else{
+                _StdOut.putText("Invalid Arguements");
+                _StdOut.advanceLine(); 
+            }
+
+            //_KernelInterruptQueue.
         }
 
     }
