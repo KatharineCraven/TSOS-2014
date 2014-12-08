@@ -209,9 +209,28 @@ var TSOS;
                 case WRITE_FAIL_SUCCEED_IRQ:
                     this.writeSuccessOrFail(params);
                     break;
+                case READ_FILE_IRQ:
+                    this.readTheFile(params);
+                    break;
+                case READ_ERROR_IRQ:
+                    this.readError(params);
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
+        };
+
+        Kernel.prototype.readTheFile = function (params) {
+            _StdOut.putText(_HardDrive.readFile(params));
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
+        };
+
+        Kernel.prototype.readError = function (params) {
+            this.krnTrace(params);
+            _StdOut.putText(params);
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
         };
 
         Kernel.prototype.writeSuccessOrFail = function (params) {

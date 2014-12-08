@@ -193,6 +193,35 @@ module TSOS {
         	}
         }
 
+        public readFile(filename){
+        	//debugger;
+        	var fileTSB = this.findFileName(filename);
+        	var fileNextUp = this.findNextLink(fileTSB);
+
+        	if(fileTSB === "@@@"){
+        		//error: filename does not exist
+        		_KernelInterruptQueue.enqueue(new Interrupt(READ_ERROR_IRQ, "Filename does not exist."));
+        	}else if (fileNextUp === "000"){
+        		return "";
+        	}else{
+        		//return string of stuffs
+        		return this.readTheData(fileNextUp);
+        	}
+        }
+
+        public readTheData(aTSB){
+        	var theRawData = sessionStorage.getItem(aTSB).substring(4, 124);
+        	var nextTSB = sessionStorage.getItem(aTSB).substring(1, 4);
+        	var theData = this.hexToString(theRawData);
+
+        	if(nextTSB != "000"){
+        		var theTotalData = theData + this.readTheData(nextTSB);
+        		return theTotalData;
+        	}
+
+        	return theData;
+        }
+
         //assume its already stripped of quotations --- need to write success/failure
         public writeFile(filename, fileData){
         	var dataHex = this.stringToHex(fileData);
@@ -218,7 +247,9 @@ module TSOS {
 	        			this.linkDataTSBs(datSpace);
 	        		}
 
-	        	}	
+	        	}
+
+	        	this.checkCorrectWrite(filename, fileData);	
         	}else{
         		//overwrites data
 
@@ -238,10 +269,28 @@ module TSOS {
 	        			this.linkDataTSBs(datSpace);
 	        		}
 	        	}
+
+	        	this.checkCorrectWrite(filename, fileData);	
+        	}
+        }
+
+        public checkCorrectWrite(fName, fData){
+        	var testName = this.readFile(fName);
+
+        	if(testName === fData){
+        		//success
+        		_KernelInterruptQueue.enqueue(new Interrupt(WRITE_FAIL_SUCCEED_IRQ, "Successfully written to "+fName));
+        	}else{
+        		//failure
+        		_KernelInterruptQueue.enqueue(new Interrupt(WRITE_FAIL_SUCCEED_IRQ, "Write failure."));
         	}
         }
 
         public findNextLink(aTSB){
+
+        	if(aTSB === "@@@"){
+        		return "@@@";
+        	}
         	return sessionStorage.getItem(aTSB).substring(1,4);
 
         }
@@ -348,8 +397,7 @@ module TSOS {
         	var tsb = "";
 
         	if(dHex.length > 120){
-        		xs = xs+ this.getDataSpace(dHex.substring(0, 120));
-        		xs = xs + this.getDataSpace(dHex.substring(120, dHex.length));
+        		return this.getDataSpace(dHex.substring(0, 120)) + this.getDataSpace(dHex.substring(120, dHex.length));
         	}
 
         	var fds = this.findDataSpace();

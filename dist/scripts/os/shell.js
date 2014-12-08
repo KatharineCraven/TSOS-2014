@@ -108,6 +108,9 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellWrite, "write", "<filename> \"data\" - Writes data to a file.");
             this.commandList[this.commandList.length] = sc;
 
+            sc = new TSOS.ShellCommand(this.shellRead, "read", "<filename> - Reads data from a file.");
+            this.commandList[this.commandList.length] = sc;
+
             // Display the initial prompt.
             this.putPrompt();
         };
@@ -608,13 +611,18 @@ var TSOS;
             var x = 0;
 
             if ((data.charAt(0) === "\"") && (data.charAt(data.length - 1) === "\"")) {
+                data = data.substring(1, data.length - 1);
+
                 //write file
                 _KernelInterruptQueue.enqueue(new TSOS.Interrupt(WRITE_FILE_IRQ, [fileName, data]));
             } else {
                 _StdOut.putText("Invalid Arguements");
                 _StdOut.advanceLine();
             }
-            //_KernelInterruptQueue.
+        };
+
+        Shell.prototype.shellRead = function (args) {
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(READ_FILE_IRQ, args[0]));
         };
         return Shell;
     })();

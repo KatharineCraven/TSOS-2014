@@ -57,6 +57,10 @@ var WRITE_FILE_IRQ = 15;
 
 var WRITE_FAIL_SUCCEED_IRQ = 16;
 
+var READ_FILE_IRQ = 17;
+
+var READ_ERROR_IRQ = 18;
+
 var _CpuExecutionCount;
 
 var _TEST = "";
