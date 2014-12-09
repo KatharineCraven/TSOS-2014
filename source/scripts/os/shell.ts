@@ -455,7 +455,24 @@ module TSOS {
                     _CPUOutput.value = _CPU.displayCPU();
                     var avail = _MemoryManager.findNextAvailPart();
                     if(avail == 0){
-                        _StdOut.putText("No room in memory");
+
+                        _KernelInterruptQueue.enqueue(new Interrupt(CREATE_FILENAME_IRQ, "."+_pidCount));
+                        _KernelInterruptQueue.enqueue(new Interrupt(WRITE_FILE_IRQ, ["."+_pidCount, s.replace(/\s/g,'').toUpperCase()]));
+
+                        _ResidentList.push(new PCB());
+                        _ResidentList[_pidCount].setPid(_pidCount);
+                        _ResidentList[_pidCount].setLocation("disk");
+
+                        if( (isNaN( Number(args) ) ) ||(Number(args)< 0)){
+                            _ResidentList[_pidCount].setPriority(5);
+                        }else{
+                            _ResidentList[_pidCount].setPriority(Number(args));
+                        }
+
+                        _StdOut.putText("pid: "+_pidCount); 
+                        _pidCount++;
+                       //_StdOut.putText("No room in memory");
+
                     }else{
                         _MemoryManager.addToMem(s.replace(/\s/g,'').toUpperCase(), avail);
                         _MemoryManager.setPartitionAsUsed(avail);
@@ -643,7 +660,12 @@ module TSOS {
             var data = args.slice(1).join(" ");
             var x = 0;
 
-            if( (data.charAt(0) === "\"") && (data.charAt(data.length-1) === "\"")){
+
+            if(fileName.substring(0,1) === "."){
+                _StdOut.putText("Cannot read this kind of file.");
+                _StdOut.advanceLine(); 
+
+            }else if( (data.charAt(0) === "\"") && (data.charAt(data.length-1) === "\"")){
                 data = data.substring(1, data.length -1);
                 //write file
                 _KernelInterruptQueue.enqueue(new Interrupt(WRITE_FILE_IRQ, [fileName, data]));
@@ -656,11 +678,24 @@ module TSOS {
 
         public shellRead(args){
 
-            _KernelInterruptQueue.enqueue(new Interrupt(READ_FILE_IRQ, args[0]));
+            if(args[0].substring(0,1) === "."){
+                _StdOut.putText("Cannot read this kind of file.");
+                _StdOut.advanceLine(); 
+            }else{
+                _KernelInterruptQueue.enqueue(new Interrupt(READ_FILE_IRQ, args[0]));
+            }
+
+            
         }
 
         public shellDelete(args){
-            _KernelInterruptQueue.enqueue(new Interrupt(DELETE_IRQ, args[0]));
+            if(args[0].substring(0,1) === "."){
+                _StdOut.putText("Cannot delete this kind of file.");
+                _StdOut.advanceLine(); 
+            }else{
+                _KernelInterruptQueue.enqueue(new Interrupt(DELETE_IRQ, args[0]));
+            }
+            
         }
 
         public shellListFiles(){

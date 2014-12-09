@@ -375,7 +375,7 @@ module TSOS {
         //pc on current hex number - will need to check CPU is not over 255 after function
         public getMethod(){
             var iR = this.instructionReg.toString(16).toUpperCase();
-            //debugger;
+            debugger;
             switch(iR){
                 case "A9":
                     //load acc. with constant

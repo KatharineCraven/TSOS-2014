@@ -5,7 +5,7 @@ module TSOS{
 
 	export class PCB{
 
-		constructor(private pid = 0, private processState= "NEW", private pc = 0, private xReg = 0, private yReg = 0, private accumulator = 0, private zFlag =0, private baseReg = 0, private limitReg = 255, private partitionNum = 1, private priority = 5){
+		constructor(private pid = 0, private processState= "NEW", private pc = 0, private xReg = 0, private yReg = 0, private accumulator = 0, private zFlag =0, private baseReg = 0, private limitReg = 255, private partitionNum = 1, private priority = 5, private location = "memory"){
 
 		}
 		
@@ -98,6 +98,14 @@ module TSOS{
 
 		public setPriority(pri){
 			this.priority = pri;
+		}
+
+		public setLocation(loc){
+			this.location = loc;
+		}
+
+		public getLocation(){
+			return this.location;
 		}
 
 	}

@@ -59,7 +59,7 @@ module TSOS {
         		hexVal = hexVal + hex;
         	}
 
-        	return hexVal;
+        	return hexVal.toUpperCase();
 
         }
 
@@ -114,6 +114,76 @@ module TSOS {
         	return str; 	
         }
 
+        public swapFiles(pcbOnDisk){
+        	//debugger;
+        	var diskTSB = this.findFileName("."+pcbOnDisk.getPid());
+	        var hexOnDisk = sessionStorage.getItem(diskTSB);
+
+        	if(_MemoryManager.findNextAvailPart() == 0){
+        		var pcbForSwap;
+
+        		if(_ReadyQueue.getSize >= 0){
+        			for(var i = 0; i< _ReadyQueue.getSize(); i++){
+		        		pcbForSwap = _ReadyQueue.dequeue();
+		        		_ReadyQueue.enqueue(pcbForSwap);
+	        		}
+        		}else{
+        			for(var i = 0; i< _ResidentList.length; i++){
+        				if(_ResidentList[i] != null){
+        					pcbForSwap = _ResidentList[i];
+        					break;
+        				}
+        			}
+        		}
+
+	        	
+
+	        	//memory partition
+	        	var memPart = pcbForSwap.getPartition();
+	        	//hex from memory
+	        	var hexFromMem = "";
+
+	        	//gets all hex from memory
+	        	for(var j = 0; j< 256; j++){
+	        		hexFromMem = hexFromMem+ _MemoryManager.getMemValue(j, memPart);
+	        	}
+
+	        	//clears memory partition
+	        	_MemoryManager.clearMemoryPartition(memPart);
+	        	_MemoryManager.setPartitionAsUnused(memPart);
+
+	        	//gets base and limit registers and partition
+	        	pcbOnDisk.setPartition(memPart);
+	        	
+
+	        	//adds data to memory
+	        	_MemoryManager.addToMem(this.readFile("."+pcbOnDisk.getPid()).toUpperCase(), memPart);
+	        	_MemoryManager.setPartitionAsUsed(memPart);
+
+	        	//clears file 
+	        	this.clearData(diskTSB);
+
+	        	//debugger;
+				this.createFileName("."+pcbForSwap.getPid());
+	        	this.writeFile("."+pcbForSwap.getPid(), hexFromMem);
+
+	        	pcbForSwap.setLocation("disk");
+
+        	}else{
+        		var nap = _MemoryManager.findNextAvailPart();
+        		pcbOnDisk.setPartition(nap);
+        		_MemoryManager.setPartitionAsUsed(nap);
+        		_MemoryManager.addToMem(this.readFile("."+pcbOnDisk.getPid()).toUpperCase(), nap);
+        		this.clearData(diskTSB);
+
+        	}
+
+        	pcbOnDisk.setLocation("memory");
+
+        	return pcbOnDisk;
+        	
+        }
+
         public getAllFilenames(){
         	var filenames = "";
         	var strn = "";
@@ -122,7 +192,7 @@ module TSOS {
         		for(var b=0; b<8; b++){
         			strn = sessionStorage.getItem("0"+s+b);
 
-        			if(strn.substring(0,1) === "1"){
+        			if((strn.substring(0,1) === "1") && (strn.substring(4,5) != ".")){
         				filenames = filenames+" "+this.hexToString(strn.substring(4,124));
         			}
         		}
@@ -190,7 +260,7 @@ module TSOS {
         	if(nameSpace === "@@@"){
         		//OUT OF VIRTUAL MEMORY ERROR
         		//make interrupt
-        		_KernelInterruptQueue.enqueue(new Interrupt(FILENAME_FAILURE_IRQ, "Out of memory for file."));
+        		_KernelInterruptQueue.enqueue(new Interrupt(FILENAME_FAILURE_IRQ, "Out of disk space for file."));
 
         	}else if(this.findFileName(nameInString) != "@@@"){
         		_KernelInterruptQueue.enqueue(new Interrupt(FILENAME_FAILURE_IRQ, "Filename already exists"));
@@ -207,13 +277,15 @@ module TSOS {
         			sessionStorage.setItem(nameSpace, 1+stsb+nameInHex);
         		}
 
-        		this.testFilenameSuccess(nameInString, nameSpace);
+        		if(nameInString.substring(0,1) != "."){
+        			this.testFilenameSuccess(nameInString, nameSpace);
+        		}
 
         	}
         }
 
         public deleteFile(filename){
-        	debugger;
+        	//debugger;
         	if(this.findFileName(filename) === "@@@"){
         		//error not found
         		_KernelInterruptQueue.enqueue(new Interrupt(DELETE_SUCCESS_FAIL_IRQ, "Cannot find file"));
@@ -242,7 +314,11 @@ module TSOS {
         		return "";
         	}else{
         		//return string of stuffs
-        		return this.readTheData(fileNextUp);
+        		if(filename.substring(0,1) != "."){
+        			return this.readTheData(fileNextUp);
+        		}else{
+        			return this.readTheDataRegular(fileNextUp);
+        		}
         	}
         }
 
@@ -259,9 +335,28 @@ module TSOS {
         	return theData;
         }
 
+        public readTheDataRegular(aTSB){
+        	var theRawData = sessionStorage.getItem(aTSB).substring(4, 124);
+        	var nextTSB = sessionStorage.getItem(aTSB).substring(1, 4);
+        	var theData = this.cutOffHex(theRawData);
+
+        	if(nextTSB != "000"){
+        		var theTotalData = theData + this.readTheDataRegular(nextTSB);
+        		return theTotalData;
+        	}
+
+        	return theData;
+        }
+
         //assume its already stripped of quotations --- need to write success/failure
         public writeFile(filename, fileData){
-        	var dataHex = this.stringToHex(fileData);
+        	var dataHex = "";
+
+        	if(filename.substring(0,1) != "."){
+        		dataHex = this.stringToHex(fileData);
+        	}else{
+        		dataHex = fileData;
+        	}
         	var fileTSB = this.findFileName(filename);
         	var fileNextUp = this.findNextLink(fileTSB);
 
@@ -311,16 +406,28 @@ module TSOS {
         	}
         }
 
+
         public checkCorrectWrite(fName, fData){
+        	debugger;
         	var testName = this.readFile(fName);
 
-        	if(testName === fData){
-        		//success
-        		_KernelInterruptQueue.enqueue(new Interrupt(WRITE_FAIL_SUCCEED_IRQ, "Successfully written to "+fName));
+        	if(fName.substring(0,1) != "."){
+        		
+	        	if(testName === fData){
+	        		//success
+	        		_KernelInterruptQueue.enqueue(new Interrupt(WRITE_FAIL_SUCCEED_IRQ, "Successfully written to "+fName));
+	        	}else{
+	        		//failure
+	        		_KernelInterruptQueue.enqueue(new Interrupt(WRITE_FAIL_SUCCEED_IRQ, "Write failure."));
+	        	}
         	}else{
-        		//failure
-        		_KernelInterruptQueue.enqueue(new Interrupt(WRITE_FAIL_SUCCEED_IRQ, "Write failure."));
+        		if(testName != fData){
+
+        			_KernelInterruptQueue.enqueue(new Interrupt(WRITE_FAIL_SUCCEED_IRQ, "Error loading program"));
+
+        		}
         	}
+        	
         }
 
         public findNextLink(aTSB){

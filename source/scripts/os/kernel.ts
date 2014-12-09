@@ -139,14 +139,14 @@ module TSOS {
             if(_CurrentPCB != null){
                 outputReady = outputReady+ "PID: " + _CurrentPCB.getPid() +", State: " +_CurrentPCB.getState()+ ", PC: " +_CurrentPCB.getPC();
                 outputReady= outputReady + " , xReg: "+_CurrentPCB.getXReg() + ", yReg: " + _CurrentPCB.getYReg();
-                outputReady = outputReady + " , Acc: " + _CurrentPCB.getAccum() + ", zFlag: " + _CurrentPCB.getZFlag()+ ", Partition: " + _CurrentPCB.getPartition()+ "\n"+"\n";
+                outputReady = outputReady + " , Acc: " + _CurrentPCB.getAccum() + ", zFlag: " + _CurrentPCB.getZFlag()+ ", Partition: " + _CurrentPCB.getPartition()+ ", Location: "+ _CurrentPCB.getLocation()+ "\n"+"\n";
             }
 
             for(var i = 0; i<s; i++){
                 var temp = _ReadyQueue.dequeue();
                 outputReady = outputReady+ "PID: " + temp.getPid() +", State: " +temp.getState()+ ", PC: " +temp.getPC() + " , xReg: ";
                 outputReady = outputReady+ temp.getXReg() + ", yReg: " + temp.getYReg() + " , Acc: " + temp.getAccum();
-                outputReady = outputReady + ", zFlag: " + temp.getZFlag() +", Partition: " + temp.getPartition()+ "\n"+ "\n";
+                outputReady = outputReady + ", zFlag: " + temp.getZFlag() +", Partition: " + temp.getPartition()+ ", Location: "+ temp.getLocation()+ "\n"+ "\n";
 
                 _ReadyQueue.enqueue(temp);
 
@@ -355,13 +355,21 @@ module TSOS {
             _ReadyQueue.enqueue(tempPCB);
 
             _CurrentPCB = _ReadyQueue.dequeue();
+
+            if(_CurrentPCB.getLocation === "disk"){
+                _CurrentPCB = _HardDrive.swapFiles(_CurrentPCB);
+            }
             _CurrentPCB.setState("RUNNING");
 
             _CpuExecutionCount = 1;
         }
 
         public makeProccessRun(){
+            //debugger;
             _CurrentPCB = _ReadyQueue.dequeue();
+            if(_CurrentPCB.getLocation() === "disk"){
+                _CurrentPCB = _HardDrive.swapFiles(_CurrentPCB);
+            }
             _CurrentPCB.setState("RUNNING");
             _CpuExecutionCount = 1;
             _CPU.isExecuting = true;
