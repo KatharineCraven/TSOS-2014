@@ -117,6 +117,9 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellListFiles, "ls", " - Lists files on disk.");
             this.commandList[this.commandList.length] = sc;
 
+            sc = new TSOS.ShellCommand(this.shellFormat, "format", " - Initialize all tracks sectors and blocks");
+            this.commandList[this.commandList.length] = sc;
+
             // Display the initial prompt.
             this.putPrompt();
         };
@@ -622,8 +625,11 @@ var TSOS;
         };
 
         Shell.prototype.shellCreate = function (args) {
-            //debugger;
-            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CREATE_FILENAME_IRQ, args[0]));
+            if (args[0].substring(0, 1) === ".") {
+                _StdOut.putText("Cannot create a file starting with '.'");
+            } else {
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CREATE_FILENAME_IRQ, args[0]));
+            }
         };
 
         Shell.prototype.shellWrite = function (args) {
@@ -632,7 +638,7 @@ var TSOS;
             var x = 0;
 
             if (fileName.substring(0, 1) === ".") {
-                _StdOut.putText("Cannot read this kind of file.");
+                _StdOut.putText("Cannot write to this kind of file.");
                 _StdOut.advanceLine();
             } else if ((data.charAt(0) === "\"") && (data.charAt(data.length - 1) === "\"")) {
                 data = data.substring(1, data.length - 1);
@@ -665,6 +671,23 @@ var TSOS;
 
         Shell.prototype.shellListFiles = function () {
             _KernelInterruptQueue.enqueue(new TSOS.Interrupt(FILENAMES_LIST_IRQ, ""));
+        };
+
+        Shell.prototype.shellFormat = function () {
+            if (_ReadyQueue.getSize() > 0) {
+                _StdOut.putText("Please wait until the CPU is finished executing");
+                _StdOut.advanceLine();
+            } else {
+                _HardDrive.init();
+
+                if (_HardDrive.testEmpty() == false) {
+                    _StdOut.putText("Successfully formatted.");
+                    _StdOut.advanceLine();
+                } else {
+                    _StdOut.putText("An error occurred.");
+                    _StdOut.advanceLine();
+                }
+            }
         };
         return Shell;
     })();

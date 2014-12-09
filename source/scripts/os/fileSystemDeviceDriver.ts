@@ -43,6 +43,30 @@ module TSOS {
 
         }
 
+        public testEmpty(){
+        	var failed = false;
+
+        	var initI = "";
+
+        	//allocates 60 bytes for storage
+        	for(var i = 0; i<60; i++){
+        		//** will be displayed as 0, it is used as a character to inform that there is nothing stored here
+        		initI = initI+"@@";
+        	}
+
+        	for(var t = 0; t< 4; t++){
+        		for(var s = 0; s< 8; s++){
+        			for(var b = 0; b<8; b++){
+        				if(sessionStorage.getItem(""+t+s+b) != ("0"+"000"+initI)){
+        					failed = true;
+        				}
+        			}
+        		}
+        	}
+
+        	return failed;
+        }
+
         public stringToHex(strValue){
         	var hex = "";
         	var hexVal = "";
@@ -191,8 +215,8 @@ module TSOS {
         	for(var s = 0; s<8; s++){
         		for(var b=0; b<8; b++){
         			strn = sessionStorage.getItem("0"+s+b);
-
-        			if((strn.substring(0,1) === "1") && (strn.substring(4,5) != ".")){
+        			//debugger;
+        			if((strn.substring(0,1) === "1") && (this.hexToString(strn.substring(4,6)) != ".")){
         				filenames = filenames+" "+this.hexToString(strn.substring(4,124));
         			}
         		}
@@ -408,7 +432,7 @@ module TSOS {
 
 
         public checkCorrectWrite(fName, fData){
-        	debugger;
+        	//debugger;
         	var testName = this.readFile(fName);
 
         	if(fName.substring(0,1) != "."){

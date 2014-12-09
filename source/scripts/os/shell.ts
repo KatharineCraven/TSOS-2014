@@ -139,6 +139,9 @@ module TSOS {
             sc = new ShellCommand(this.shellListFiles, "ls", " - Lists files on disk.");
             this.commandList[this.commandList.length] = sc;
 
+            sc = new ShellCommand(this.shellFormat, "format", " - Initialize all tracks sectors and blocks");
+            this.commandList[this.commandList.length] = sc;
+
             // Display the initial prompt.
             this.putPrompt();
         }
@@ -651,8 +654,11 @@ module TSOS {
         }
 
         public shellCreate(args){
-            //debugger;
-            _KernelInterruptQueue.enqueue(new Interrupt(CREATE_FILENAME_IRQ, args[0]));
+            if(args[0].substring(0,1) === "."){
+                 _StdOut.putText("Cannot create a file starting with '.'");
+            }else{
+               _KernelInterruptQueue.enqueue(new Interrupt(CREATE_FILENAME_IRQ, args[0]));
+            }
         }
 
         public shellWrite(args){
@@ -662,7 +668,7 @@ module TSOS {
 
 
             if(fileName.substring(0,1) === "."){
-                _StdOut.putText("Cannot read this kind of file.");
+                _StdOut.putText("Cannot write to this kind of file.");
                 _StdOut.advanceLine(); 
 
             }else if( (data.charAt(0) === "\"") && (data.charAt(data.length-1) === "\"")){
@@ -700,6 +706,23 @@ module TSOS {
 
         public shellListFiles(){
             _KernelInterruptQueue.enqueue(new Interrupt(FILENAMES_LIST_IRQ, ""));
+        }
+
+        public shellFormat(){
+            if(_ReadyQueue.getSize() > 0){
+                _StdOut.putText("Please wait until the CPU is finished executing");
+                _StdOut.advanceLine(); 
+            }else{
+                _HardDrive.init();
+
+                if(_HardDrive.testEmpty() == false){
+                    _StdOut.putText("Successfully formatted.");
+                    _StdOut.advanceLine(); 
+                }else{
+                    _StdOut.putText("An error occurred.");
+                    _StdOut.advanceLine(); 
+                }
+            }
         }
 
     }
