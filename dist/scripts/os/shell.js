@@ -114,6 +114,9 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellDelete, "delete", "<filename> - Deletes file.");
             this.commandList[this.commandList.length] = sc;
 
+            sc = new TSOS.ShellCommand(this.shellListFiles, "ls", " - Lists files on disk.");
+            this.commandList[this.commandList.length] = sc;
+
             // Display the initial prompt.
             this.putPrompt();
         };
@@ -630,6 +633,10 @@ var TSOS;
 
         Shell.prototype.shellDelete = function (args) {
             _KernelInterruptQueue.enqueue(new TSOS.Interrupt(DELETE_IRQ, args[0]));
+        };
+
+        Shell.prototype.shellListFiles = function () {
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(FILENAMES_LIST_IRQ, ""));
         };
         return Shell;
     })();

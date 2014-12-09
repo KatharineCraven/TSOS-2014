@@ -114,6 +114,25 @@ module TSOS {
         	return str; 	
         }
 
+        public getAllFilenames(){
+        	var filenames = "";
+        	var strn = "";
+
+        	for(var s = 0; s<8; s++){
+        		for(var b=0; b<8; b++){
+        			strn = sessionStorage.getItem("0"+s+b);
+
+        			if(strn.substring(0,1) === "1"){
+        				filenames = filenames+" "+this.hexToString(strn.substring(4,124));
+        			}
+        		}
+        	}
+
+        	if(filenames === ""){
+        		filenames = "No files on disk.";
+        	}
+        	return filenames;
+        }
 
         public findNameSpace(){
         	//find available spot for filename

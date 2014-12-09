@@ -136,6 +136,9 @@ module TSOS {
             sc = new ShellCommand(this.shellDelete, "delete", "<filename> - Deletes file.");
             this.commandList[this.commandList.length] = sc;
 
+            sc = new ShellCommand(this.shellListFiles, "ls", " - Lists files on disk.");
+            this.commandList[this.commandList.length] = sc;
+
             // Display the initial prompt.
             this.putPrompt();
         }
@@ -658,6 +661,10 @@ module TSOS {
 
         public shellDelete(args){
             _KernelInterruptQueue.enqueue(new Interrupt(DELETE_IRQ, args[0]));
+        }
+
+        public shellListFiles(){
+            _KernelInterruptQueue.enqueue(new Interrupt(FILENAMES_LIST_IRQ, ""));
         }
 
     }

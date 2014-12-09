@@ -109,6 +109,26 @@ var TSOS;
             return str;
         };
 
+        FileSystemDeviceDriver.prototype.getAllFilenames = function () {
+            var filenames = "";
+            var strn = "";
+
+            for (var s = 0; s < 8; s++) {
+                for (var b = 0; b < 8; b++) {
+                    strn = sessionStorage.getItem("0" + s + b);
+
+                    if (strn.substring(0, 1) === "1") {
+                        filenames = filenames + " " + this.hexToString(strn.substring(4, 124));
+                    }
+                }
+            }
+
+            if (filenames === "") {
+                filenames = "No files on disk.";
+            }
+            return filenames;
+        };
+
         FileSystemDeviceDriver.prototype.findNameSpace = function () {
             //find available spot for filename
             var trSeBl = "@@@";

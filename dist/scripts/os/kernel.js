@@ -221,9 +221,18 @@ var TSOS;
                 case DELETE_SUCCESS_FAIL_IRQ:
                     this.deleteSuccessFail(params);
                     break;
+                case FILENAMES_LIST_IRQ:
+                    this.listFilenames();
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
+        };
+
+        Kernel.prototype.listFilenames = function () {
+            _StdOut.putText(_HardDrive.getAllFilenames());
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
         };
 
         Kernel.prototype.deleteFile = function (params) {
