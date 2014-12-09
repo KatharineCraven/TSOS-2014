@@ -181,6 +181,23 @@ var TSOS;
             }
         };
 
+        FileSystemDeviceDriver.prototype.deleteFile = function (filename) {
+            debugger;
+            if (this.findFileName(filename) === "@@@") {
+                //error not found
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(DELETE_SUCCESS_FAIL_IRQ, "Cannot find file"));
+            } else {
+                this.clearData(this.findFileName(filename));
+
+                if (this.findFileName(filename) === "@@@") {
+                    //sucess
+                    _KernelInterruptQueue.enqueue(new TSOS.Interrupt(DELETE_SUCCESS_FAIL_IRQ, "Successfully deleted file"));
+                } else {
+                    _KernelInterruptQueue.enqueue(new TSOS.Interrupt(DELETE_SUCCESS_FAIL_IRQ, "An error occured deleting file"));
+                }
+            }
+        };
+
         FileSystemDeviceDriver.prototype.readFile = function (filename) {
             //debugger;
             var fileTSB = this.findFileName(filename);

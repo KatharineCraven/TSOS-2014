@@ -62,6 +62,10 @@ var READ_FILE_IRQ: number = 17;
 
 var READ_ERROR_IRQ: number = 18;
 
+var DELETE_IRQ: number = 19;
+
+var DELETE_SUCCESS_FAIL_IRQ: number = 20;
+
 var _CpuExecutionCount;
 
 var _TEST = "";

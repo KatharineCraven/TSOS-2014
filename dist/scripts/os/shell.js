@@ -105,10 +105,13 @@ var TSOS;
             this.commandList[this.commandList.length] = sc;
 
             //
-            sc = new TSOS.ShellCommand(this.shellWrite, "write", "<filename> \"data\" - Writes data to a file.");
+            sc = new TSOS.ShellCommand(this.shellWrite, "write", "<filename> \"data\" - Writes data to a file. Overwrites, does not append.");
             this.commandList[this.commandList.length] = sc;
 
             sc = new TSOS.ShellCommand(this.shellRead, "read", "<filename> - Reads data from a file.");
+            this.commandList[this.commandList.length] = sc;
+
+            sc = new TSOS.ShellCommand(this.shellDelete, "delete", "<filename> - Deletes file.");
             this.commandList[this.commandList.length] = sc;
 
             // Display the initial prompt.
@@ -623,6 +626,10 @@ var TSOS;
 
         Shell.prototype.shellRead = function (args) {
             _KernelInterruptQueue.enqueue(new TSOS.Interrupt(READ_FILE_IRQ, args[0]));
+        };
+
+        Shell.prototype.shellDelete = function (args) {
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(DELETE_IRQ, args[0]));
         };
         return Shell;
     })();

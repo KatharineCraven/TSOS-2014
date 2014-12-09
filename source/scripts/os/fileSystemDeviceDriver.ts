@@ -193,6 +193,24 @@ module TSOS {
         	}
         }
 
+        public deleteFile(filename){
+        	debugger;
+        	if(this.findFileName(filename) === "@@@"){
+        		//error not found
+        		_KernelInterruptQueue.enqueue(new Interrupt(DELETE_SUCCESS_FAIL_IRQ, "Cannot find file"));
+        	}else{
+        		this.clearData(this.findFileName(filename));
+
+        		if(this.findFileName(filename) === "@@@"){
+        			//sucess
+        			_KernelInterruptQueue.enqueue(new Interrupt(DELETE_SUCCESS_FAIL_IRQ, "Successfully deleted file"));
+        		}else{
+        			_KernelInterruptQueue.enqueue(new Interrupt(DELETE_SUCCESS_FAIL_IRQ, "An error occured deleting file"));
+        		}
+        	}
+
+        }
+
         public readFile(filename){
         	//debugger;
         	var fileTSB = this.findFileName(filename);
@@ -315,7 +333,6 @@ module TSOS {
         	for(var i = 0; i<8; i++){
         		for(var j = 0; j<8; j++){
         			if((i+j) != 0){
-
 
 		        		searchTSB = "0"+i+j;
 

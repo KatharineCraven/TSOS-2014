@@ -232,9 +232,26 @@ module TSOS {
                 case READ_ERROR_IRQ:
                    this.readError(params);
                     break;
+                case DELETE_IRQ:
+                    this.deleteFile(params);
+                    break;
+                case DELETE_SUCCESS_FAIL_IRQ:
+                    this.deleteSuccessFail(params);
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
+        }
+
+        public deleteFile(params){
+            _HardDrive.deleteFile(params);
+        }
+
+        public deleteSuccessFail(params){
+            this.krnTrace(params);
+            _StdOut.putText(params);
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
         }
 
         public readTheFile(params){

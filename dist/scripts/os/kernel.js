@@ -215,9 +215,26 @@ var TSOS;
                 case READ_ERROR_IRQ:
                     this.readError(params);
                     break;
+                case DELETE_IRQ:
+                    this.deleteFile(params);
+                    break;
+                case DELETE_SUCCESS_FAIL_IRQ:
+                    this.deleteSuccessFail(params);
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
+        };
+
+        Kernel.prototype.deleteFile = function (params) {
+            _HardDrive.deleteFile(params);
+        };
+
+        Kernel.prototype.deleteSuccessFail = function (params) {
+            this.krnTrace(params);
+            _StdOut.putText(params);
+            _StdOut.advanceLine();
+            _OsShell.putPrompt();
         };
 
         Kernel.prototype.readTheFile = function (params) {
