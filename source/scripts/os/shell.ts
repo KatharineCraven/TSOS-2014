@@ -452,7 +452,6 @@ module TSOS {
             if(v == false){
                _StdOut.putText("Invalid Input");   
             }else{
-
                 //if(_LoadedProgram == -1){
                     //_MemoryManager.clearAllMem();
                     _CPUOutput.value = _CPU.displayCPU();

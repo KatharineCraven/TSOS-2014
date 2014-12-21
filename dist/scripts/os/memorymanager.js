@@ -62,7 +62,8 @@ var TSOS;
             this.xc = (256 * partition) - 256;
 
             for (var l = 0; l < input.length; l = l + 2) {
-                if (l > 255) {
+                //whoopsie
+                if ((l / 2) > 255) {
                     //ERROR
                     _KernelInterruptQueue.enqueue(new TSOS.Interrupt(MEM_OUT_OF_BOUNDS, partition));
                     this.xc = 0;
